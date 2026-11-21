@@ -1,0 +1,29 @@
+{
+  "app": {
+    "name": "Saksham Multitrade",
+    "logout": "Log out",
+    "switchLanguage": "हिंदी"
+  },
+  "login": {
+    "title": "Log in",
+    "phone": "Mobile number",
+    "phoneHint": "10-digit number",
+    "sendCode": "Send code",
+    "code": "6-digit code",
+    "codeSentTo": "Code sent to {phone}",
+    "verify": "Log in",
+    "changeNumber": "Change number",
+    "resend": "Send code again"
+  },
+  "errors": {
+    "NOT_REGISTERED": "This number is not registered. Please contact your Panchayat Leader.",
+    "ACCOUNT_SUSPENDED": "This account is suspended. Please contact the office.",
+    "OTP_TOO_SOON": "Please wait 30 seconds before asking for a new code.",
+    "INVALID_OTP": "The code is wrong or has expired.",
+    "VALIDATION": "Please check what you entered.",
+    "INTERNAL": "Something went wrong. Please try again."
+  },
+  "member": { "title": "My schemes" },
+  "agent": { "title": "Agent dashboard" },
+  "admin": { "title": "Admin dashboard" }
+}

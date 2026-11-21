@@ -20,12 +20,18 @@ npm run db:migrate   # apply migrations
 npm run dev          # http://localhost:3000
 ```
 
+### Logging in (dev)
+
+Login is phone + 6-digit code. In dev no SMS is sent: the code is printed in the `npm run dev` terminal (`[sms] to 99999…: Saksham Multitrade login code: 123456`). Only numbers that already exist in the `User` table can log in. Seed users arrive in Feature 2.
+
+After editing `prisma/schema.prisma`, run `npm run db:migrate` and then `npx prisma generate`. Prisma 7 doesn't regenerate the client on migrate.
+
 ## Checks
 
 ```sh
 npm run lint
 npm run typecheck
-npm test
+npm test        # uses TEST_DATABASE_URL (a separate DB), applies migrations, tests clear their own tables
 ```
 
 ## Layout

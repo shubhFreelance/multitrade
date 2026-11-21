@@ -1,7 +1,8 @@
-export default function Home() {
-  return (
-    <main className="flex flex-1 items-center justify-center p-4">
-      <h1 className="text-2xl font-semibold">Saksham Multitrade</h1>
-    </main>
-  );
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/server/session";
+import { homeFor } from "@/shared/auth";
+
+export default async function Home() {
+  const user = await getCurrentUser();
+  redirect(user ? homeFor(user.role) : "/login");
 }
