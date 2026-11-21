@@ -7,7 +7,7 @@ export const batchStatuses = ["OPEN", "RUNNING", "CLOSED"] as const; // in order
 export type BatchStatus = (typeof batchStatuses)[number];
 
 /** Prefix of token numbers, e.g. UPH-B03-0457. */
-export const schemePrefix: Record<SchemeCode, string> = { UPAHAR: "UPH", MANPASAND: "MNP", GOLD: "GLD" };
+export const schemePrefix: Record<SchemeCode, string> = { UPAHAR: "UPH", MANPASAND: "MAN", GOLD: "GLD" };
 export const batchLabel = (code: SchemeCode, number: number) => `${schemePrefix[code]}-B${String(number).padStart(2, "0")}`;
 
 const paise = z.number().int().positive().max(100_000_000_00); // up to ₹10 crore
