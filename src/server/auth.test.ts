@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { db } from "@/lib/db";
+import { resetDb } from "../../test/db";
 import { getUserByToken, logout, requestOtp, requireRole, verifyOtp } from "./auth";
 import { sendSms } from "./sms";
 
@@ -15,9 +16,7 @@ const skipResendWait = () => db.otpCode.update({ where: { phone: PHONE }, data: 
 
 beforeEach(async () => {
   vi.mocked(sendSms).mockClear();
-  await db.session.deleteMany();
-  await db.otpCode.deleteMany();
-  await db.user.deleteMany();
+  await resetDb();
   await db.user.create({ data: { phone: PHONE, name: "Asha", role: "MEMBER" } });
 });
 

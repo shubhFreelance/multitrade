@@ -21,9 +21,80 @@
     "OTP_TOO_SOON": "Please wait 30 seconds before asking for a new code.",
     "INVALID_OTP": "The code is wrong or has expired.",
     "VALIDATION": "Please check what you entered.",
-    "INTERNAL": "Something went wrong. Please try again."
+    "INTERNAL": "Something went wrong. Please try again.",
+    "UNAUTHENTICATED": "Please log in again.",
+    "FORBIDDEN": "You are not allowed to do this.",
+    "NOT_FOUND": "Not found. It may have been removed.",
+    "CONFLICT": "That already exists. Refresh and try again.",
+    "BATCH_LOCKED": "This batch is running, so only its status can change.",
+    "BATCH_STATUS_BACKWARDS": "A batch status can only move forward."
   },
-  "member": { "title": "My schemes" },
-  "agent": { "title": "Agent dashboard" },
-  "admin": { "title": "Admin dashboard" }
+  "member": {
+    "title": "My schemes"
+  },
+  "agent": {
+    "title": "Agent dashboard"
+  },
+  "admin": {
+    "title": "Admin dashboard",
+    "nav": {
+      "home": "Home",
+      "schemes": "Schemes",
+      "batches": "Batches",
+      "products": "Products"
+    },
+    "schemes": {
+      "title": "Schemes",
+      "nameEn": "Name (English)",
+      "nameHi": "Name (Hindi)",
+      "installment": "Monthly installment (₹)",
+      "tenure": "Tenure (months)",
+      "commission": "Agent commission",
+      "rule": {
+        "FLAT": "{amount} per paid installment",
+        "PERCENT": "{percent}% of each paid installment",
+        "TIER": "₹80–₹200 per paid installment by product tier. Tier table not received yet."
+      }
+    },
+    "batches": {
+      "title": "Batches",
+      "new": "New batch",
+      "create": "Create batch",
+      "scheme": "Scheme",
+      "startMonth": "First installment month",
+      "size": "Members in batch",
+      "winnersPerDraw": "Winners per monthly draw",
+      "status": "Status",
+      "starts": "starts {month}",
+      "statuses": {
+        "OPEN": "Open for enrolment",
+        "RUNNING": "Running",
+        "CLOSED": "Closed"
+      },
+      "locked": "This batch has started. Its month, size and winners are fixed; only the status can change."
+    },
+    "products": {
+      "title": "Products",
+      "new": "New product",
+      "create": "Add product",
+      "empty": "No products yet.",
+      "name": "Name",
+      "nameHi": "Name in Hindi (optional)",
+      "price": "Price (₹)",
+      "stock": "In stock",
+      "schemes": "Available in schemes",
+      "active": "Active (shown to members and admins)",
+      "inStock": "{count} in stock"
+    }
+  },
+  "common": {
+    "save": "Save",
+    "saved": "Saved",
+    "back": "Back"
+  },
+  "schemes": {
+    "UPAHAR": "Upahar",
+    "MANPASAND": "Manpasand",
+    "GOLD": "Gold"
+  }
 }

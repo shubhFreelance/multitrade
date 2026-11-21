@@ -32,6 +32,7 @@ model User {
 
   agentProfile  AgentProfile?
   memberProfile MemberProfile?
+  auditLogs     AuditLog[]
 }
 
 model AgentProfile {
@@ -113,4 +114,29 @@ model OtpCode {
   expiresAt DateTime
   attempts  Int      @default(0)
   createdAt DateTime @default(now())
+}
+
+model Product {
+  id        String       @id @default(cuid())
+  name      String
+  nameHi    String?
+  price     Int // paise
+  schemes   SchemeCode[]
+  stock     Int          @default(0)
+  active    Boolean      @default(true) // inactive instead of deleted: fulfilments will reference products
+  createdAt DateTime     @default(now())
+}
+
+// Who did what, for admin actions, cash verification, draws, payouts and manual edits.
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String
+  actor     User     @relation(fields: [actorId], references: [id])
+  action    String // e.g. "batch.update"
+  entity    String
+  entityId  String
+  data      Json?
+  createdAt DateTime @default(now())
+
+  @@index([entity, entityId])
 }

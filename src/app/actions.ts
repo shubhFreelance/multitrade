@@ -2,20 +2,14 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { ZodError } from "zod";
 import { logout, requestOtp, verifyOtp } from "@/server/auth";
-import { AppError } from "@/server/errors";
+import { toAppError } from "@/server/errors";
 import { clearSessionCookie, getRequestToken, setSessionCookie } from "@/server/session";
 import { homeFor, requestOtpInput, verifyOtpInput } from "@/shared/auth";
 
 type ActionResult = { error?: string };
 
-const errorCode = (e: unknown) => {
-  if (e instanceof AppError) return e.code;
-  if (e instanceof ZodError) return "VALIDATION";
-  console.error(e);
-  return "INTERNAL";
-};
+const errorCode = (e: unknown) => toAppError(e).code;
 
 export async function sendOtpAction(phone: string): Promise<ActionResult> {
   try {
