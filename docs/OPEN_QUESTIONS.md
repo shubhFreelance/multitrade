@@ -15,3 +15,4 @@ Each item has the default the app uses until the client answers. Defaults live i
 | 9 | Gold | Which gold purity is used for the Gold Plan, and how are making charges set? | GST 3%. Purity and making charges are entered by admin. |
 | 10 | Login | Can people sign themselves up (members or agent applicants), or does every account start from an agent/admin? | Only numbers already in the system can log in. Members are created at enrolment (Feature 5). |
 | 11 | SMS | MSG91 account, sender ID and DLT-approved OTP template? | Dev logs the code to the server console. Production refuses to send until configured. |
+| 12 | Company details | CIN, registered address and registration numbers for the footer and receipts? | Blank in the `company` config value until provided. |

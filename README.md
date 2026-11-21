@@ -17,8 +17,20 @@ npm install
 cp .env.example .env
 npm run db:up        # start Postgres in Docker
 npm run db:migrate   # apply migrations
+npm run db:seed      # settings, 3 schemes with 1 batch each, demo users (safe to re-run)
 npm run dev          # http://localhost:3000
 ```
+
+### Demo logins (dev only)
+
+| Phone | Role |
+|-------|------|
+| 9999999999 | Super Admin |
+| 9800000001, 9800000002 | Agent (approved) |
+| 9800000003 | Agent (not yet approved) |
+| 9700000001 – 9700000030 | Member |
+
+Demo users are never created when `NODE_ENV=production`. Settings and schemes are, but only if missing, so admin edits are never overwritten.
 
 ### Logging in (dev)
 

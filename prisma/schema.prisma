@@ -1,6 +1,7 @@
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
+  importFileExtension = "ts"
 }
 
 datasource db {
@@ -28,6 +29,69 @@ model User {
   status    UserStatus @default(ACTIVE)
   createdAt DateTime   @default(now())
   sessions  Session[]
+
+  agentProfile  AgentProfile?
+  memberProfile MemberProfile?
+}
+
+model AgentProfile {
+  userId        String  @id
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  panchayat     String
+  pan           String?
+  payoutDetails Json? // bank account / UPI
+  approved      Boolean @default(false)
+}
+
+model MemberProfile {
+  userId  String  @id
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  address String
+  village String
+  nominee String?
+}
+
+enum SchemeCode {
+  UPAHAR
+  MANPASAND
+  GOLD
+}
+
+model Scheme {
+  id                String     @id @default(cuid())
+  code              SchemeCode @unique
+  nameEn            String
+  nameHi            String
+  installmentAmount Int // paise
+  tenureMonths      Int
+  commissionRule    Json // { type: "TIER", tiers } | { type: "FLAT", amount } | { type: "PERCENT", bps }
+  batches           Batch[]
+}
+
+enum BatchStatus {
+  OPEN // taking enrolments
+  RUNNING
+  CLOSED
+}
+
+model Batch {
+  id             String      @id @default(cuid())
+  schemeId       String
+  scheme         Scheme      @relation(fields: [schemeId], references: [id])
+  number         Int // 3 → "B03" in token numbers
+  startMonth     DateTime    @db.Date // first day of the month of installment 1
+  size           Int
+  winnersPerDraw Int
+  status         BatchStatus @default(OPEN)
+
+  @@unique([schemeId, number])
+}
+
+// Business settings that admins can change. Values are JSON; money in paise, percentages in basis points.
+model Config {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
 }
 
 model Session {
