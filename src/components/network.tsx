@@ -21,7 +21,7 @@ export async function PeriodTabs({ current, base }: { current: Period; base: str
       {periods.map((p) => (
         <Link
           key={p}
-          href={`${base}?period=${p}`}
+          href={`${base}${base.includes("?") ? "&" : "?"}period=${p}`}
           aria-current={p === current ? "page" : undefined}
           className="flex min-h-11 flex-1 items-center justify-center rounded-full px-4 text-[15px] font-medium text-muted-foreground aria-[current=page]:bg-primary aria-[current=page]:text-primary-foreground sm:flex-none"
         >

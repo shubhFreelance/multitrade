@@ -574,7 +574,8 @@
       "all": "All time",
       "in": {
         "week": "this week",
-        "month": "this month"
+        "month": "this month",
+        "all": "in all"
       }
     },
     "people": "Members",
@@ -599,7 +600,39 @@
     "direct": "Joined directly on the website (no agent)",
     "noMembers": "This agent hasn't enrolled anyone yet.",
     "enrolledBy": "Enrolled by {name} ({phone})",
-    "downloadStatement": "Download statement (CSV)"
+    "downloadStatement": "Download statement (CSV)",
+    "viewLabel": "Show",
+    "view": {
+      "agents": "Agents",
+      "members": "Members"
+    },
+    "filterLabel": "Agent status",
+    "filter": {
+      "all": "All",
+      "approved": "Approved",
+      "waiting": "Waiting for approval",
+      "suspended": "Suspended"
+    },
+    "sourceLabel": "How members joined",
+    "source": {
+      "direct": "Joined directly",
+      "agent": "Through an agent"
+    },
+    "cards": {
+      "agents": "Agents",
+      "agentsJoined": "{count, plural, =0 {none joined {period}} one {# joined {period}} other {# joined {period}}}",
+      "enrolledByAgents": "Members enrolled by agents",
+      "schemesJoined": "{count, plural, one {# scheme joined {period}} other {# schemes joined {period}}}",
+      "notPaidYet": "{amount} not paid out yet",
+      "collectedThroughAgents": "{period, select, week {Collected through agents this week} month {Collected through agents this month} other {Collected through agents, last 12 months}}",
+      "schemesCount": "{count, plural, one {# scheme} other {# schemes}}",
+      "collected": "{amount} collected {period}",
+      "joinedOverTime": "{period, select, week {Schemes joined this week} month {Schemes joined this month} other {Schemes joined, last 12 months}}"
+    },
+    "noAgents": "No agent matches this filter.",
+    "noMembersHere": "Nobody here yet.",
+    "agentMoney": "Commission not paid out yet {unpaid}, paid out {paidOut}. Agent since {day}.",
+    "enrolledByShort": "Enrolled by {name}"
   },
   "completion": {
     "maturedTitle": "{scheme} complete: every month is paid",

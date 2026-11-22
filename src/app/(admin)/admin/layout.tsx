@@ -13,9 +13,9 @@ export default async function Layout({ children }: { children: React.ReactNode }
     { href: "/admin/fulfilment", text: t("fulfilment"), icon: "fulfilment" },
     { href: "/admin/draws", text: t("draws"), icon: "draws" },
     { href: "/admin/agents", text: t("agents"), icon: "agents" },
+    { href: "/admin/network", text: t("network"), icon: "network" },
     ...(user.role === "SUPER_ADMIN"
       ? ([
-          { href: "/admin/network", text: t("network"), icon: "network" },
           { href: "/admin/campaign", text: t("campaign"), icon: "campaign" },
           { href: "/admin/invoices", text: t("invoices"), icon: "invoices" },
         ] as NavLink[])

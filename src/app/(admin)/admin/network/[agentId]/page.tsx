@@ -8,12 +8,14 @@ import { getAgentNetwork } from "@/server/network";
 import { PageHeader } from "@/components/ui-bits";
 import { Download, Users } from "lucide-react";
 import { requirePageUser } from "@/server/session";
+import { adminRoles } from "@/shared/auth";
 
 export default async function AgentNetworkPage({ params, searchParams }: PageProps<"/admin/network/[agentId]">) {
   const t = await getTranslations("network");
   const tc = await getTranslations("common");
   const { agentId } = await params;
-  const net = await getAgentNetwork(await requirePageUser(["SUPER_ADMIN"]), agentId, (await searchParams).period).catch((err) =>
+  const user = await requirePageUser(adminRoles);
+  const net = await getAgentNetwork(user, agentId, (await searchParams).period).catch((err) =>
     toAppError(err).code === "NOT_FOUND" ? notFound() : Promise.reject(err),
   );
 
@@ -23,6 +25,7 @@ export default async function AgentNetworkPage({ params, searchParams }: PagePro
         ← {tc("back")}
       </Link>
       <PageHeader tone="blue" icon={Users} title={net.agent.name} intro={t("agentLine", { panchayat: net.agent.panchayat, phone: net.agent.phone })}>
+        {user.role === "SUPER_ADMIN" && (
         <a
           href={`/api/v1/admin/agents/${net.agent.id}/statement`}
           download
@@ -31,6 +34,7 @@ export default async function AgentNetworkPage({ params, searchParams }: PagePro
           <Download aria-hidden className="size-4" />
           {t("downloadStatement")}
         </a>
+        )}
       </PageHeader>
       <PeriodTabs current={net.period} base={`/admin/network/${agentId}`} />
       <Figures

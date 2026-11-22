@@ -574,7 +574,8 @@
       "all": "अब तक",
       "in": {
         "week": "इस हफ़्ते",
-        "month": "इस महीने"
+        "month": "इस महीने",
+        "all": "कुल"
       }
     },
     "people": "सदस्य",
@@ -599,7 +600,39 @@
     "direct": "वेबसाइट से खुद जुड़े (कोई एजेंट नहीं)",
     "noMembers": "इस एजेंट ने अभी किसी को नहीं जोड़ा है।",
     "enrolledBy": "{name} ({phone}) ने जोड़ा",
-    "downloadStatement": "स्टेटमेंट डाउनलोड करें (CSV)"
+    "downloadStatement": "स्टेटमेंट डाउनलोड करें (CSV)",
+    "viewLabel": "दिखाएँ",
+    "view": {
+      "agents": "एजेंट",
+      "members": "सदस्य"
+    },
+    "filterLabel": "एजेंट की स्थिति",
+    "filter": {
+      "all": "सभी",
+      "approved": "मंज़ूर",
+      "waiting": "मंज़ूरी बाकी",
+      "suspended": "निलंबित"
+    },
+    "sourceLabel": "सदस्य कैसे जुड़े",
+    "source": {
+      "direct": "खुद जुड़े",
+      "agent": "एजेंट के ज़रिए"
+    },
+    "cards": {
+      "agents": "एजेंट",
+      "agentsJoined": "{count, plural, =0 {{period} कोई नहीं जुड़ा} other {{period} # जुड़े}}",
+      "enrolledByAgents": "एजेंटों के जोड़े सदस्य",
+      "schemesJoined": "{period} {count} योजनाएँ जुड़ीं",
+      "notPaidYet": "{amount} का भुगतान बाकी",
+      "collectedThroughAgents": "{period, select, week {इस हफ़्ते एजेंटों से वसूली} month {इस महीने एजेंटों से वसूली} other {एजेंटों से वसूली, पिछले 12 महीने}}",
+      "schemesCount": "{count} योजनाएँ",
+      "collected": "{period} {amount} की वसूली",
+      "joinedOverTime": "{period, select, week {इस हफ़्ते जुड़ी योजनाएँ} month {इस महीने जुड़ी योजनाएँ} other {जुड़ी योजनाएँ, पिछले 12 महीने}}"
+    },
+    "noAgents": "इस फ़िल्टर में कोई एजेंट नहीं।",
+    "noMembersHere": "यहाँ अभी कोई नहीं।",
+    "agentMoney": "कमीशन, भुगतान बाकी {unpaid}, भुगतान हो चुका {paidOut}। {day} से एजेंट।",
+    "enrolledByShort": "{name} ने जोड़ा"
   },
   "completion": {
     "maturedTitle": "{scheme} पूरी: सारी किस्तें जमा",

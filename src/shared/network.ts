@@ -17,3 +17,13 @@ const mondayOf = (today: string) => {
   d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7));
   return d.toISOString().slice(0, 10);
 };
+
+// Members tab: who joined on their own, and who an agent enrolled.
+export const memberSources = ["direct", "agent"] as const;
+export type MemberSource = (typeof memberSources)[number];
+export const memberSourceInput = z.enum(memberSources).catch("direct");
+
+// Agents tab filter.
+export const agentFilters = ["all", "approved", "waiting", "suspended"] as const;
+export type AgentFilter = (typeof agentFilters)[number];
+export const agentFilterInput = z.enum(agentFilters).catch("all");

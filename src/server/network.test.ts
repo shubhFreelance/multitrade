@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 import type { SessionUser } from "@/shared/auth";
 import { periodStart } from "@/shared/network";
 import { failsWith, makeUser, resetDb } from "../../test/db";
-import { getAgentNetwork, getMyNetwork, getNetworkEnrolment, networkOverview } from "./network";
+import { getAgentNetwork, getMyNetwork, getNetworkEnrolment, membersOverview, networkOverview } from "./network";
 import { simulateTestPayment, startPayment } from "./payments";
 
 let superAdmin: SessionUser, admin: SessionUser, agent: SessionUser, agent2: SessionUser, m1: SessionUser, m2: SessionUser, direct: SessionUser;
@@ -95,15 +95,51 @@ describe("agent network", () => {
   });
 });
 
+describe("members overview", () => {
+  it("splits members who joined directly from those an agent enrolled, and counts both", async () => {
+    const e1 = await enrol(m1, agent, 1);
+    await enrol(m2, agent2, 2);
+    const d = await enrol(direct, null, 3);
+    await pay(m1, e1, 0);
+    await pay(direct, d, 0);
+
+    const viaAgents = await membersOverview(admin, "month", "agent");
+    expect(viaAgents.totals).toMatchObject({ people: 3, joined: 3, direct: 1, throughAgents: 2, collected: 4_000_00 });
+    expect(viaAgents.members.map((m) => [m.tokenNumber, m.agent?.phone])).toEqual(
+      expect.arrayContaining([["MAN-B01-0001", agent.phone], ["MAN-B01-0002", agent2.phone]]),
+    );
+    expect(viaAgents.members).toHaveLength(2);
+    expect(viaAgents.joinedSeries.counts.reduce((a, b) => a + b, 0)).toBe(3);
+
+    const directOnly = await membersOverview(admin, "month", "direct");
+    expect(directOnly.members.map((m) => [m.tokenNumber, m.agent])).toEqual([["MAN-B01-0003", null]]);
+    expect((await membersOverview(admin, "month", "nonsense")).source).toBe("direct");
+  });
+
+  it("agents overview charts collections through agents and counts agents who joined", async () => {
+    const e1 = await enrol(m1, agent, 1);
+    const d = await enrol(direct, null, 2);
+    await pay(m1, e1, 0);
+    await pay(direct, d, 0); // joined directly: not collected "through agents"
+    const o = await networkOverview(admin, "week");
+    expect(o.collectedSeries.totals.reduce((a, b) => a + b, 0)).toBe(2_000_00);
+    expect(o.collectedSeries.keys).toHaveLength(7);
+    expect(o.agentsJoined).toBe(2);
+  });
+});
+
 describe("access control", () => {
   it("agents see only their own members; only the super admin sees everyone", async () => {
     const e1 = await enrol(m1, agent, 1);
     expect((await getMyNetwork(agent2, "all")).members).toEqual([]);
     await failsWith(getNetworkEnrolment(agent2, e1), "NOT_FOUND");
     await expect(getNetworkEnrolment(superAdmin, e1)).resolves.toMatchObject({ id: e1 });
-    for (const u of [admin, agent, m1]) {
+    // Admins see it too (client, Nov 2026); agents and members don't.
+    await expect(networkOverview(admin, "all")).resolves.toMatchObject({ period: "all" });
+    for (const u of [agent, m1]) {
       await failsWith(networkOverview(u, "all"), "FORBIDDEN");
       await failsWith(getAgentNetwork(u, agent.id, "all"), "FORBIDDEN");
+      await failsWith(membersOverview(u, "all", "direct"), "FORBIDDEN");
     }
     await failsWith(getMyNetwork(m1, "all"), "FORBIDDEN");
     await failsWith(getNetworkEnrolment(m1, e1), "FORBIDDEN");
