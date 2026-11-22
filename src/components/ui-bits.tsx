@@ -5,7 +5,10 @@ import type { GlassTone } from "./glass";
 
 export type Tint = GlassTone | "amber";
 
-/** The coloured top of an inner page: icon, title and a line of intro on a glass gradient. */
+/**
+ * The top of an inner page: an icon in the section's tint, the title and a line of intro, on the plain canvas.
+ * Gradients are kept for cards that carry data (client, Nov 2026).
+ */
 export function PageHeader({
   tone,
   icon: Icon,
@@ -20,13 +23,13 @@ export function PageHeader({
   children?: React.ReactNode;
 }) {
   return (
-    <header className={`glass glass-${tone} flex min-h-40 flex-col justify-between gap-6 p-5 lg:min-h-48 lg:p-8`}>
-      <span aria-hidden className="grid size-11 place-items-center rounded-full bg-white/20 ring-1 ring-white/35">
+    <header className="flex items-start gap-3.5 px-1 pt-1">
+      <span aria-hidden className={`tint-${tone} text-tint mt-0.5 grid size-11 shrink-0 place-items-center rounded-2xl`}>
         <Icon className="size-5" />
       </span>
-      <div>
-        <h1 className="text-[30px] leading-[1.1] font-semibold tracking-tight lg:text-[40px]">{title}</h1>
-        {intro && <p className="mt-1.5 max-w-3xl text-white/90 lg:text-lg">{intro}</p>}
+      <div className="min-w-0">
+        <h1 className="text-[26px] leading-tight font-semibold tracking-tight lg:text-[28px]">{title}</h1>
+        {intro && <p className="mt-0.5 max-w-3xl text-muted-foreground">{intro}</p>}
         {children}
       </div>
     </header>
