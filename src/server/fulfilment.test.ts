@@ -39,14 +39,14 @@ beforeEach(async () => {
 });
 
 describe("price maths, exact to the paisa", () => {
-  it("gold: rate × weight + making + 3% GST on both", () => {
-    // ₹7,234.56/g × 10.255 g = ₹74,190.4128 → ₹74,190.41; making ₹1,500.00; GST 3% of ₹75,690.41 = ₹2,270.7123 → ₹2,270.71.
-    const p = goldPrice({ ratePerGram: 7_234_56, weightMg: 10_255, making: 1_500_00, gstBps: 300 });
-    expect(p).toMatchObject({ gold: 74_190_41, making: 1_500_00, gst: 2_270_71, total: 77_961_12 });
-    expect(p.gold + p.making + p.gst).toBe(p.total);
+  it("gold: rate × weight + making, GST 3% on the gold and 5% on the making", () => {
+    // ₹7,234.56/g × 10.255 g = ₹74,190.4128 → ₹74,190.41; GST 3% = ₹2,225.7123 → ₹2,225.71; making ₹1,500.00, GST 5% = ₹75.00.
+    const p = goldPrice({ ratePerGram: 7_234_56, weightMg: 10_255, making: 1_500_00, goldGstBps: 300, makingGstBps: 500 });
+    expect(p).toMatchObject({ gold: 74_190_41, goldGst: 2_225_71, making: 1_500_00, makingGst: 75_00, gst: 2_300_71, total: 77_991_12 });
+    expect(p.gold + p.goldGst + p.making + p.makingGst).toBe(p.total);
   });
   it("difference is the price above the plan value, never negative", () => {
-    expect(differenceDue(77_961_12, 24_000_00)).toBe(53_961_12);
+    expect(differenceDue(77_991_12, 24_000_00)).toBe(53_991_12);
     expect(differenceDue(25_999_99, 24_000_00)).toBe(1_999_99);
     expect(differenceDue(18_500_00, 24_000_00)).toBe(0);
   });
@@ -89,8 +89,8 @@ describe("fulfilment", () => {
     await setGoldRate(admin, { ratePerGram: 7_234_56 }); // corrected the same day
     await failsWith(allocate(admin, id, {}), "VALIDATION");
     const f = await allocate(admin, id, { weightMg: 10_255, making: 1_500_00 });
-    expect(f).toMatchObject({ price: 77_961_12, differenceDue: 53_961_12, priceDetails: expect.objectContaining({ ratePerGram: 7_234_56, gst: 2_270_71 }) });
-    expect((await listMyCompletions(member))[0]).toMatchObject({ status: "ALLOCATED", price: 77_961_12, differenceDue: 53_961_12, differencePaid: false });
+    expect(f).toMatchObject({ price: 77_991_12, differenceDue: 53_991_12, priceDetails: expect.objectContaining({ ratePerGram: 7_234_56, goldGst: 2_225_71, makingGst: 75_00 }) });
+    expect((await listMyCompletions(member))[0]).toMatchObject({ status: "ALLOCATED", price: 77_991_12, differenceDue: 53_991_12, differencePaid: false });
   });
 
   it("can't allocate before the member answers", async () => {

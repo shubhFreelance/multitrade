@@ -88,7 +88,7 @@ REST endpoints under `/api/v1`, shared by the web app and the future mobile app.
 | POST | `/api/v1/admin/agent-invoices/:id/paid` | super admin | `{ utr }` | the invoice, now `PAID`; its commission lines become `PAID` |
 | POST | `/api/v1/admin/agent-invoices/:id/cancel` | super admin | (none) | the invoice, now `CANCELLED`; its lines go back for the next invoice. Paid invoices can't be cancelled. |
 
-Gold price: `goldPrice()` in `src/shared/fulfilment.ts`: rate per gram × weight (rounded to the paisa) + making charges + GST (`goldGstBps`, default 300 = 3%) on both, rounded once. Difference = price − plan value, never below 0.
+Gold price: `goldPrice()` in `src/shared/fulfilment.ts`: rate per gram × weight (rounded to the paisa) + GST on the gold (`goldGstBps`, 300 = 3%) + making charges + GST on making (`makingGstBps`, 500 = 5%), each part rounded once. Difference = price − what the member has paid (PAID months only; waived months don't count), never below 0.
 
 Invoices: every counted member payment gets a gapless number per Indian financial year (`SM/2026-27/000123`), assigned in the same transaction. Agent invoices are numbered `SMC/2026-27/0001`. TDS uses the `tdsBps` setting (default 200 = 2%), rounded to the paisa. PDFs follow the viewer's language (Hindi or English).
 

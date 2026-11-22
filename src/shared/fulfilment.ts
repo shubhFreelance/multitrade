@@ -1,20 +1,21 @@
 // Price maths for fulfilment, in paise. Pure: shared by web, API and the mobile app.
 import { z } from "zod";
 
-export const GOLD_PURITY = "22K"; // CONFIRM #20: one purity for now
+export const GOLD_PURITY = "22K"; // one daily rate, 22K (client, #20)
 
 /**
- * Gold price on the day: rate × weight, plus making charges, plus GST on both.
- * Each part is rounded to the paisa once, so the parts always add up to the total.
+ * Gold price on the day: rate × weight, plus making charges, plus GST: 3% on the gold and 5% on the making charges
+ * (settings goldGstBps and makingGstBps; client, #20). Each part is rounded to the paisa once, so the parts add up to the total.
  */
-export function goldPrice({ ratePerGram, weightMg, making, gstBps }: { ratePerGram: number; weightMg: number; making: number; gstBps: number }) {
-  const gold = Math.round((ratePerGram * weightMg) / 1000);
-  const gst = Math.round(((gold + making) * gstBps) / 10_000);
-  return { ratePerGram, weightMg, gold, making, gstBps, gst, total: gold + making + gst };
+export function goldPrice(p: { ratePerGram: number; weightMg: number; making: number; goldGstBps: number; makingGstBps: number }) {
+  const gold = Math.round((p.ratePerGram * p.weightMg) / 1000);
+  const goldGst = Math.round((gold * p.goldGstBps) / 10_000);
+  const makingGst = Math.round((p.making * p.makingGstBps) / 10_000);
+  return { ...p, gold, goldGst, makingGst, gst: goldGst + makingGst, total: gold + p.making + goldGst + makingGst };
 }
 export type GoldPrice = ReturnType<typeof goldPrice>;
 
-/** What the member pays on top of what their plan is worth. Never negative: a cheaper item is no refund (CONFIRM #18). */
+/** What the member pays on top of what they have paid. Never negative: a cheaper item is no refund (CONFIRM #4). */
 export const differenceDue = (price: number, planValue: number) => Math.max(0, price - planValue);
 
 /** "10", "10.5", "10.250" grams → milligrams; null if not a weight with up to 3 decimals. */

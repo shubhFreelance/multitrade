@@ -82,7 +82,8 @@ describe("prompts on completion", () => {
   it("a draw winner gets the prompt too", async () => {
     const e = await setup("GOLD");
     await runMonthlyDraw(admin, { batchId: e.batchId, monthNo: 1 });
-    expect(await listMyCompletions(member)).toEqual([expect.objectContaining({ reason: "WON", scheme: expect.objectContaining({ code: "GOLD" }) })]);
+    // Only what was paid (3 months) counts towards the gold, not the waived months.
+    expect(await listMyCompletions(member)).toEqual([expect.objectContaining({ reason: "WON", value: 6_000_00, scheme: expect.objectContaining({ code: "GOLD" }) })]);
     expect(vi.mocked(sendSms).mock.calls[0][1]).toContain(`${e.tokenNumber} ने`);
   });
 

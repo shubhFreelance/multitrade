@@ -16,12 +16,12 @@ const include = {
       batch: { include: { scheme: true } },
       member: { select: { name: true, phone: true } },
       agent: { select: { name: true, phone: true } },
-      installments: { select: { amount: true } },
+      installments: { where: { status: "PAID" }, select: { amount: true } }, // only paid months count (#18)
     },
   },
 } satisfies Prisma.FulfilmentInclude;
 
-/** What the plan is worth towards the product: every month of it, waived months included (CONFIRM #18). */
+/** What the member has paid, which counts towards the product. Waived months don't count (client, #18). */
 const planValue = (installments: { amount: number }[]) => installments.reduce((t, i) => t + i.amount, 0);
 
 /** Today's rate (India date), or null if the admin hasn't entered it yet. */
@@ -44,7 +44,8 @@ export async function listFulfilments(user: SessionUser | null) {
     upaharProducts: products.filter((p) => p.schemes.includes("UPAHAR")),
     goldRate: rate,
     recentRates: rates,
-    gstBps: await getConfigInt("goldGstBps", 300),
+    goldGstBps: await getConfigInt("goldGstBps", 300),
+    makingGstBps: await getConfigInt("makingGstBps", 500),
   };
 }
 
@@ -83,7 +84,7 @@ async function takeStock(tx: Prisma.TransactionClient, productId: string) {
 export async function allocate(user: SessionUser | null, id: string, input: unknown) {
   const admin = requireRole(user, adminRoles);
   const { productId, weightMg, making } = allocateInput.parse(input);
-  const gstBps = await getConfigInt("goldGstBps", 300);
+  const [goldGstBps, makingGstBps] = await Promise.all([getConfigInt("goldGstBps", 300), getConfigInt("makingGstBps", 500)]);
   const rate = await todaysGoldRate();
 
   return db.$transaction(async (tx) => {
@@ -107,7 +108,7 @@ export async function allocate(user: SessionUser | null, id: string, input: unkn
       case "GOLD": {
         if (!rate) throw new AppError("NO_GOLD_RATE", "Enter today's gold rate first", 409);
         if (!weightMg || making === undefined) throw new AppError("VALIDATION", "Enter the weight and making charges", 400);
-        const p = goldPrice({ ratePerGram: rate.ratePerGram, weightMg, making, gstBps });
+        const p = goldPrice({ ratePerGram: rate.ratePerGram, weightMg, making, goldGstBps, makingGstBps });
         data = { price: p.total, priceDetails: p, differenceDue: differenceDue(p.total, value) };
         break;
       }

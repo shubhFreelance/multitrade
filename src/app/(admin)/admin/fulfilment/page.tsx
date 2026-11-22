@@ -32,8 +32,10 @@ export default async function FulfilmentPage() {
             <dd className="text-right">{formatPaise(g.gold)}</dd>
             <dt>{t("making")}</dt>
             <dd className="text-right">{formatPaise(g.making)}</dd>
-            <dt>{t("gst", { pct: g.gstBps / 100 })}</dt>
-            <dd className="text-right">{formatPaise(g.gst)}</dd>
+            <dt>{t("goldGst", { pct: g.goldGstBps / 100 })}</dt>
+            <dd className="text-right">{formatPaise(g.goldGst)}</dd>
+            <dt>{t("makingGst", { pct: g.makingGstBps / 100 })}</dt>
+            <dd className="text-right">{formatPaise(g.makingGst)}</dd>
           </>
         )}
         <dt className="font-semibold">{t("price")}</dt>
@@ -87,7 +89,7 @@ export default async function FulfilmentPage() {
                 <Field label={t("weight")} name="weight" inputMode="decimal" placeholder="10.000" required />
                 <Field label={t("makingRupees")} name="making" inputMode="decimal" placeholder="1500" required />
               </div>
-              <p className="text-[15px] text-muted-foreground">{t("usesRate", { rate: formatPaise(data.goldRate.ratePerGram), pct: data.gstBps / 100 })}</p>
+              <p className="text-[15px] text-muted-foreground">{t("usesRate", { rate: formatPaise(data.goldRate.ratePerGram), goldPct: data.goldGstBps / 100, makingPct: data.makingGstBps / 100 })}</p>
             </ActionForm>
           ) : (
             <p className="rounded-lg bg-mist p-3 text-due-ink">{t("needRate")}</p>

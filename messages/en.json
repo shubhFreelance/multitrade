@@ -282,28 +282,29 @@
       "agent": "Agent {name}",
       "deliverTo": "Deliver to: {address}",
       "product": "Chose: {name}, {price}",
-      "worth": "Plan worth {value}.",
+      "worth": "Paid so far {value}.",
       "chooseUpahar": "Upahar product to give",
       "productOption": "{name}, {price} ({stock} in stock)",
       "allocate": "Allocate this product",
       "allocateChosen": "Allocate the chosen product",
       "weight": "Weight (grams)",
       "makingRupees": "Making charges (₹)",
-      "usesRate": "Priced at today's rate of {rate} per gram, plus making charges, plus {pct}% GST.",
+      "usesRate": "Priced at today's rate of {rate} per gram, plus making charges, plus GST ({goldPct}% on gold, {makingPct}% on making charges).",
       "priceGold": "Price the gold",
       "needRate": "Enter today's gold rate above to price this.",
       "goldLine": "Gold {weight} g at {rate}/g",
       "making": "Making charges",
-      "gst": "GST {pct}%",
       "price": "Price",
-      "planValue": "Plan value",
+      "planValue": "Already paid",
       "difference": "Member pays",
       "ref": "Receipt number or UTR",
       "recordDifference": "Record {amount} received",
       "differencePaid": "Difference received ({ref}) on {day}.",
       "deliver": "Mark delivered",
       "confirmDeliver": "Has {name} ({token}) received the product?",
-      "deliveredOn": "Delivered on {day}."
+      "deliveredOn": "Delivered on {day}.",
+      "goldGst": "GST {pct}% on gold",
+      "makingGst": "GST {pct}% on making charges"
     },
     "dashboard": {
       "todo": "To do",
@@ -563,8 +564,8 @@
     "wonTitle": "You won the {scheme} draw",
     "ask": {
       "UPAHAR": "Your gift is ready. Confirm where we should deliver it.",
-      "MANPASAND": "Choose your product. Your plan is worth {value}; if the product costs more, you pay the difference.",
-      "GOLD": "Book your gold purchase. The price is that day's gold rate times the weight, plus making charges and GST; your plan is worth {value} towards it. The office will call you to fix the day."
+      "MANPASAND": "Choose your product. The {value} you have paid counts towards it; if the product costs more, you pay the difference.",
+      "GOLD": "Book your gold purchase. The price is that day's gold rate times the weight, plus making charges, plus GST. The {value} you have paid counts towards it. The office will call you to fix the day."
     },
     "submit": {
       "UPAHAR": "Confirm address",
@@ -575,7 +576,7 @@
     "chooseProduct": "Products you can choose",
     "noProducts": "No product is available right now. Please check again soon, or call the office.",
     "payDifference": "You pay {amount} more",
-    "covered": "Covered by your plan",
+    "covered": "Covered by what you have paid",
     "confirmedTitle": "{scheme} ({token}): we have your answer",
     "confirmedAddress": "Delivery to: {address}",
     "confirmedProduct": "You chose {product}. Delivery to: {address}",
@@ -584,7 +585,7 @@
     "officeWillCall": "The office will call you about delivery.",
     "todayGoldRate": "Today's gold rate: {rate} per gram ({purity}).",
     "goldPriced": "Gold {weight} g at {rate}/g, making charges {making}, GST {gst}.",
-    "finalPrice": "Price {price}; your plan covers {value}.",
+    "finalPrice": "Price {price}; you have paid {value} towards it.",
     "payBeforeDelivery": "Pay {amount} to the office before delivery.",
     "differenceReceived": "Your payment of the difference is received.",
     "nothingToPay": "Nothing more to pay."

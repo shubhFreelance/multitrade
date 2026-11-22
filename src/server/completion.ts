@@ -97,7 +97,7 @@ export async function listMyCompletions(user: SessionUser | null) {
   const [rows, profile] = await Promise.all([
     db.fulfilment.findMany({
       where: { enrolment: { memberId: member.id }, status: { in: ["PENDING", "CONFIRMED", "ALLOCATED"] } },
-      include: { product: true, enrolment: { include: { batch: { include: { scheme: true } }, installments: { select: { amount: true } } } } },
+      include: { product: true, enrolment: { include: { batch: { include: { scheme: true } }, installments: { where: { status: "PAID" }, select: { amount: true } } } } },
       orderBy: { createdAt: "asc" },
     }),
     db.memberProfile.findUnique({ where: { userId: member.id } }),
@@ -108,7 +108,7 @@ export async function listMyCompletions(user: SessionUser | null) {
     ? await db.product.findMany({ where: { active: true, stock: { gt: 0 }, schemes: { has: "MANPASAND" } }, orderBy: { price: "asc" } })
     : [];
   return rows.map((f) => {
-    // What the member's plan is worth: every month counts, including months waived by a draw win. CONFIRM #18.
+    // What the member has paid counts towards the product; months waived by a draw win don't (client, #18).
     const value = f.enrolment.installments.reduce((t, i) => t + i.amount, 0);
     return {
       id: f.id,

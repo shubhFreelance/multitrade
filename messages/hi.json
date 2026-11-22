@@ -282,28 +282,29 @@
       "agent": "एजेंट {name}",
       "deliverTo": "पता: {address}",
       "product": "चुना: {name}, {price}",
-      "worth": "योजना की कीमत {value}।",
+      "worth": "अब तक भरे {value}।",
       "chooseUpahar": "देने के लिए उपहार",
       "productOption": "{name}, {price} ({stock} स्टॉक में)",
       "allocate": "यह सामान तय करें",
       "allocateChosen": "चुना हुआ सामान तय करें",
       "weight": "वज़न (ग्राम)",
       "makingRupees": "बनवाई (₹)",
-      "usesRate": "आज के भाव {rate} प्रति ग्राम पर, साथ में बनवाई और {pct}% GST।",
+      "usesRate": "आज के भाव {rate} प्रति ग्राम पर, साथ में बनवाई और GST (सोने पर {goldPct}%, बनवाई पर {makingPct}%)।",
       "priceGold": "सोने की कीमत लगाएँ",
       "needRate": "इसकी कीमत लगाने के लिए ऊपर आज का भाव डालें।",
       "goldLine": "सोना {weight} ग्राम, {rate}/ग्राम",
       "making": "बनवाई",
-      "gst": "GST {pct}%",
       "price": "कीमत",
-      "planValue": "योजना की कीमत",
+      "planValue": "पहले से भरा",
       "difference": "सदस्य भरेगा",
       "ref": "रसीद नंबर या UTR",
       "recordDifference": "{amount} मिले, दर्ज करें",
       "differencePaid": "बाकी रकम मिली ({ref}), {day}।",
       "deliver": "दे दिया, दर्ज करें",
       "confirmDeliver": "क्या {name} ({token}) को सामान मिल गया?",
-      "deliveredOn": "{day} को दिया।"
+      "deliveredOn": "{day} को दिया।",
+      "goldGst": "सोने पर GST {pct}%",
+      "makingGst": "बनवाई पर GST {pct}%"
     },
     "dashboard": {
       "todo": "करना है",
@@ -563,8 +564,8 @@
     "wonTitle": "आपने {scheme} का ड्रॉ जीता",
     "ask": {
       "UPAHAR": "आपका उपहार तैयार है। बताइए उसे कहाँ पहुँचाना है।",
-      "MANPASAND": "अपना सामान चुनें। आपकी योजना {value} की है; सामान महँगा हो तो बाकी रकम आप भरेंगे।",
-      "GOLD": "अपनी सोने की ख़रीद बुक करें। कीमत उस दिन का सोने का भाव × वज़न, साथ में बनवाई और GST है; इसमें आपकी योजना के {value} जुड़ेंगे। दिन तय करने के लिए दफ़्तर आपको कॉल करेगा।"
+      "MANPASAND": "अपना सामान चुनें। आपकी भरी हुई {value} की रकम इसमें जुड़ेगी; सामान महँगा हो तो बाकी रकम आप भरेंगे।",
+      "GOLD": "अपनी सोने की ख़रीद बुक करें। कीमत उस दिन का सोने का भाव × वज़न, साथ में बनवाई और GST है। आपकी भरी हुई {value} की रकम इसमें जुड़ेगी। दिन तय करने के लिए दफ़्तर आपको कॉल करेगा।"
     },
     "submit": {
       "UPAHAR": "पता पक्का करें",
@@ -575,7 +576,7 @@
     "chooseProduct": "आप ये सामान चुन सकते हैं",
     "noProducts": "अभी कोई सामान उपलब्ध नहीं है। कृपया जल्द फिर देखें, या दफ़्तर को कॉल करें।",
     "payDifference": "आपको {amount} और भरने होंगे",
-    "covered": "योजना में शामिल",
+    "covered": "आपकी भरी रकम में शामिल",
     "confirmedTitle": "{scheme} ({token}): आपका जवाब मिल गया",
     "confirmedAddress": "पहुँचाने का पता: {address}",
     "confirmedProduct": "आपने {product} चुना। पहुँचाने का पता: {address}",
@@ -584,7 +585,7 @@
     "officeWillCall": "डिलीवरी के लिए दफ़्तर आपको कॉल करेगा।",
     "todayGoldRate": "आज सोने का भाव: {rate} प्रति ग्राम ({purity})।",
     "goldPriced": "सोना {weight} ग्राम, {rate}/ग्राम, बनवाई {making}, GST {gst}।",
-    "finalPrice": "कीमत {price}; आपकी योजना से {value}।",
+    "finalPrice": "कीमत {price}; इसमें आपके भरे हुए {value} जुड़े।",
     "payBeforeDelivery": "सामान मिलने से पहले दफ़्तर में {amount} भरें।",
     "differenceReceived": "बाकी रकम मिल गई है।",
     "nothingToPay": "और कुछ नहीं भरना।"

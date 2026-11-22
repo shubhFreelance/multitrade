@@ -13,7 +13,8 @@ const config: Record<string, unknown> = {
   defaultAfterMissedInARow: 2, // CONFIRM #2
   bonusUnlock: { scooter: 6, goldChain: 12, scope: "ENROLMENT" }, // paid months to unlock each prize; CONFIRM #5: or "CUMULATIVE"
   bonusRewards: { scooters: 5, goldChains: 1 },
-  goldGstBps: 300,
+  goldGstBps: 300, // GST on the gold value (client, #20)
+  makingGstBps: 500, // GST on making charges (client, #20)
   tdsBps: 200, // CONFIRM #8 with the CA (Section 194H)
   recruitmentCampaign: {
     // CONFIRM #7
@@ -29,8 +30,8 @@ const config: Record<string, unknown> = {
 };
 
 const schemes = [
-  // CONFIRM #3: Upahar tier table (₹80–₹200 per paid installment) is unknown, so tiers is empty until the client sends it.
-  { code: "UPAHAR", nameEn: "Upahar Plan", nameHi: "उपहार योजना", commissionRule: { type: "TIER", tiers: [] } },
+  // Client, #3: flat ₹80 per paid installment until the ₹80–₹200 tier table arrives.
+  { code: "UPAHAR", nameEn: "Upahar Plan", nameHi: "उपहार योजना", commissionRule: { type: "FLAT", amount: 80_00 } },
   { code: "MANPASAND", nameEn: "Manpasand Plan", nameHi: "मनपसंद योजना", commissionRule: { type: "FLAT", amount: 50_00 } },
   { code: "GOLD", nameEn: "Gold Plan", nameHi: "गोल्ड योजना", commissionRule: { type: "PERCENT", bps: 100 } },
 ] as const;
