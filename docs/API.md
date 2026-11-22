@@ -36,6 +36,10 @@ REST endpoints under `/api/v1`, shared by the web app and the future mobile app.
 | POST | `/api/v1/me/enrolments` | member | `{ batchId }` | `{ id, tokenNumber, installments }` (201): a signed-in member joins another batch directly |
 | GET | `/api/v1/me/enrolments` | member | (none) | the member's own enrolments, newest first: `EnrolmentView[]` |
 | GET | `/api/v1/me/draws` | member | (none) | monthly draw results for the member's batches, newest first: `{ batch, scheme, monthNo, createdAt, seed, eligibleCount, winners: [{ token, mine }] }[]` |
+| GET | `/api/v1/me/completions` | member | (none) | enrolments that matured or won a draw, waiting for the member (`PENDING`) or the office (`CONFIRMED`): `{ id, reason, status, tokenNumber, scheme, value, address, product, products }[]`. `products` (Manpasand only) lists what can be chosen, each with `difference` = price minus `value`, never below 0. |
+| POST | `/api/v1/me/completions/:id` | member | Upahar `{ address }`, Manpasand `{ address, productId }`, Gold `{}` | the completion, now `CONFIRMED` |
+| GET | `/api/v1/me/notifications` | member | (none) | `{ id, type: "MATURED" | "WON", createdAt, readAt, tokenNumber, scheme }[]`, newest first; the app renders the text from `type` |
+| POST | `/api/v1/me/notifications/read` | member | (none) | `null`; marks all as read |
 | GET | `/api/v1/me/bonus` | member | (none) | `{ prize: "SCOOTER" | "GOLD_CHAIN", count, needed, paid, remaining, unlocked }[]`: scooters unlock at 6 paid months, the gold chain at 12 (setting `bonusUnlock`); worked out from PAID installments (pending cash, waived months and defaulted enrolments don't count) |
 | GET | `/api/v1/agent/enrolments` | agent | (none) | enrolments this agent made, those owing money first: `EnrolmentView[]` |
 
@@ -105,6 +109,9 @@ Batch rules: `status` only moves forward (`OPEN` → `RUNNING` → `CLOSED`). On
 | `DRAW_OUT_OF_ORDER` | 409 | An earlier month's draw hasn't been run |
 | `DRAW_NOT_OPEN` | 409 | The month hasn't started, or it is the last month (no draw) |
 | `NO_ELIGIBLE` | 409 | Nobody in the batch can win right now |
+| `ALREADY_CONFIRMED` | 409 | The member already answered this completion |
+| `ADDRESS_REQUIRED` | 400 | Upahar or Manpasand without a delivery address |
+| `PRODUCT_UNAVAILABLE` | 409 | Manpasand product missing, inactive, out of stock or not a Manpasand product |
 | `PERIOD_NOT_OVER` | 409 | Agent invoices asked for the current or a future month |
 | `INVOICE_NOT_ISSUED` | 409 | Paying or cancelling an invoice that is already paid or cancelled |
 | `UNAUTHENTICATED` | 401 | No valid session |

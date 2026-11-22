@@ -1,11 +1,13 @@
 import { getTranslations } from "next-intl/server";
 import { AppHeader } from "@/components/app-header";
 import { SideNav } from "@/components/side-nav";
+import { countUnread } from "@/server/completion";
 import { requirePageUser } from "@/server/session";
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
   const user = await requirePageUser(["MEMBER"]);
   const t = await getTranslations("member.nav");
+  const unread = await countUnread(user);
   return (
     <>
       <AppHeader user={user} />
@@ -16,6 +18,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
             ["/member", t("schemes")],
             ["/member/join", t("join")],
             ["/member/draws", t("draws")],
+            ["/member/messages", t("messages", { count: unread })],
             ["/member/account", t("account")],
           ]}
         />

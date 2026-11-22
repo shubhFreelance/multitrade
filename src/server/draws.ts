@@ -8,6 +8,7 @@ import { runDrawInput } from "@/shared/draws";
 import { todayInIndia } from "@/shared/tracker";
 import { audit } from "./audit";
 import { requireRole } from "./auth";
+import { sendQueuedSmsSafely, startCompletion } from "./completion";
 import { getConfigInt } from "./config";
 import { AppError } from "./errors";
 
@@ -88,7 +89,7 @@ export async function runMonthlyDraw(user: SessionUser | null, input: unknown) {
   const graceDays = await getConfigInt("overdueAfterDays", 10);
   const today = todayInIndia();
 
-  return db.$transaction(async (tx) => {
+  const result = await db.$transaction(async (tx) => {
     // One draw at a time per batch.
     await tx.$queryRaw`select id from "Batch" where id = ${batchId} for update`;
     const batch = await tx.batch.findUnique({ where: { id: batchId }, include: { scheme: true } });
@@ -131,9 +132,12 @@ export async function runMonthlyDraw(user: SessionUser | null, input: unknown) {
       where: { enrolmentId: { in: winnerIds }, monthNo: { gt: monthNo }, status: { in: ["DUE", "OVERDUE"] }, payments: { none: { status: "PENDING" } } },
       data: { status: "WAIVED" },
     });
+    for (const id of winnerIds) await startCompletion(tx, id, "WON");
     await audit(tx, admin.id, "draw.run", "Draw", draw.id, { batchId, monthNo, eligible: eligible.length, winners });
     return { id: draw.id, monthNo, seed, eligibleCount: eligible.length, winners };
   });
+  await sendQueuedSmsSafely();
+  return result;
 }
 
 /** Draw results for the batches the member is in, newest first, with the member's own wins marked. */

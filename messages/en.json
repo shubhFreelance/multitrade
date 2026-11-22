@@ -44,7 +44,10 @@
     "DRAW_ALREADY_RUN": "This month's draw has already been run.",
     "DRAW_OUT_OF_ORDER": "Run the earlier months' draws first.",
     "DRAW_NOT_OPEN": "This draw can't be run yet.",
-    "NO_ELIGIBLE": "No member is eligible for this draw yet."
+    "NO_ELIGIBLE": "No member is eligible for this draw yet.",
+    "ALREADY_CONFIRMED": "You have already done this.",
+    "ADDRESS_REQUIRED": "Enter the delivery address.",
+    "PRODUCT_UNAVAILABLE": "Choose a product that is available."
   },
   "member": {
     "title": "My schemes",
@@ -55,7 +58,8 @@
       "schemes": "My schemes",
       "draws": "Draw results",
       "join": "Join a scheme",
-      "account": "My details"
+      "account": "My details",
+      "messages": "{count, plural, =0 {Messages} other {Messages (#)}}"
     },
     "status": {
       "ACTIVE": "paying",
@@ -452,5 +456,37 @@
     "direct": "Joined directly on the website (no agent)",
     "noMembers": "This agent hasn't enrolled anyone yet.",
     "enrolledBy": "Enrolled by {name} ({phone})"
+  },
+  "completion": {
+    "maturedTitle": "{scheme} complete: every month is paid",
+    "wonTitle": "You won the {scheme} draw",
+    "ask": {
+      "UPAHAR": "Your gift is ready. Confirm where we should deliver it.",
+      "MANPASAND": "Choose your product. Your plan is worth {value}; if the product costs more, you pay the difference.",
+      "GOLD": "Book your gold purchase. The price is that day's gold rate times the weight, plus making charges and GST; your plan is worth {value} towards it. The office will call you to fix the day."
+    },
+    "submit": {
+      "UPAHAR": "Confirm address",
+      "MANPASAND": "Choose this product",
+      "GOLD": "Book my gold purchase"
+    },
+    "address": "Delivery address",
+    "chooseProduct": "Products you can choose",
+    "noProducts": "No product is available right now. Please check again soon, or call the office.",
+    "payDifference": "You pay {amount} more",
+    "covered": "Covered by your plan",
+    "confirmedTitle": "{scheme} ({token}): we have your answer",
+    "confirmedAddress": "Delivery to: {address}",
+    "confirmedProduct": "You chose {product}. Delivery to: {address}",
+    "confirmedGold": "Your gold purchase is booked.",
+    "differenceDue": "{amount} more to pay at delivery.",
+    "officeWillCall": "The office will call you about delivery."
+  },
+  "messages": {
+    "title": "Messages",
+    "empty": "No messages yet.",
+    "new": "New:",
+    "MATURED": "All installments of {scheme} ({token}) are paid. Claim your product on My schemes.",
+    "WON": "{token} won the {scheme} draw. No more installments to pay. Claim your product on My schemes."
   }
 }

@@ -8,6 +8,7 @@ import { commissionFor } from "@/shared/commission";
 import { audit } from "./audit";
 import { requireRole } from "./auth";
 import { AppError } from "./errors";
+import { sendQueuedSmsSafely, startCompletion } from "./completion";
 import { nextMemberInvoiceNo } from "./invoices";
 
 type Tx = Prisma.TransactionClient;
@@ -72,6 +73,7 @@ async function settleSuccess(tx: Tx, paymentId: string, data: Prisma.PaymentUpda
   const unpaid = await tx.installment.count({ where: { enrolmentId: inst.enrolmentId, status: { in: ["DUE", "OVERDUE"] } } });
   if (unpaid === 0 && inst.enrolment.status === "ACTIVE") {
     await tx.enrolment.update({ where: { id: inst.enrolmentId }, data: { status: "MATURED" } });
+    await startCompletion(tx, inst.enrolmentId, "MATURED");
   }
   return settled;
 }
@@ -100,7 +102,7 @@ type Outcome = { status: "SUCCESS" | "FAILED"; gatewayPaymentId: string; amount:
  * only the first call for an order changes anything.
  */
 export async function confirmPayment(orderId: string, outcome: Outcome) {
-  return db.$transaction(async (tx) => {
+  const result = await db.$transaction(async (tx) => {
     // Lock the order so two deliveries of the same webhook can't both settle it.
     await tx.$queryRaw`select id from "Payment" where "orderId" = ${orderId} for update`;
     const p = await tx.payment.findUnique({ where: { orderId } });
@@ -116,6 +118,8 @@ export async function confirmPayment(orderId: string, outcome: Outcome) {
     }
     return settleSuccess(tx, p.id, { gatewayPaymentId: outcome.gatewayPaymentId });
   });
+  await sendQueuedSmsSafely(); // e.g. the "all paid" SMS, only once the payment is saved
+  return result;
 }
 
 /** Test provider only: the member plays the gateway and decides how the payment ends. */
@@ -170,7 +174,7 @@ export async function listPendingCash(user: SessionUser | null) {
 /** Admin confirms the office received the cash: it now counts as paid. */
 export async function verifyCash(user: SessionUser | null, paymentId: string) {
   const admin = requireRole(user, adminRoles);
-  return db.$transaction(async (tx) => {
+  const result = await db.$transaction(async (tx) => {
     await tx.$queryRaw`select id from "Payment" where id = ${paymentId} for update`;
     const p = await tx.payment.findUnique({ where: { id: paymentId } });
     if (!p || p.method !== "CASH") throw new AppError("NOT_FOUND", "Not found", 404);
@@ -179,6 +183,8 @@ export async function verifyCash(user: SessionUser | null, paymentId: string) {
     await audit(tx, admin.id, "cash.verify", "Payment", p.id, { amount: p.amount, result: settled.status });
     return settled;
   });
+  await sendQueuedSmsSafely();
+  return result;
 }
 
 /** Admin rejects a cash entry (not received, wrong amount): the month is unpaid again. */

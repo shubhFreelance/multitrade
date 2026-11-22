@@ -60,6 +60,8 @@ A full pass, start to finish:
 
 11. **Tracking:** as an agent, **My members** shows members, schemes joined and commission for this week, this month or all time, and each member's progress and commission; **Details** opens one member. As the super admin, **Agents and members** shows every agent (and members who joined directly) with collections and commission; tap an agent to see their members.
 
+12. **Completion:** when a member pays their last month, or wins a draw, a green card at the top of **My schemes** asks them to act: confirm the delivery address (Upahar), choose a product (Manpasand; add products under the admin's **Products** with the Manpasand scheme) or book the gold purchase (Gold). It stays until they answer. An SMS (printed in the terminal) and a message under **Messages** go out too.
+
 Things worth checking: paying a later month before an earlier one is refused; a paid month can't be paid again; paying all 12 marks the scheme Matured; Hindi and English both read correctly.
 
 Set `PAYMENT_PROVIDER` to nothing to switch online payment off (the Pay button disappears). The test checkout never runs unless it is set to `test`, so keep it unset in production.

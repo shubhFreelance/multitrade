@@ -43,6 +43,7 @@ model User {
   agentInvoices   AgentInvoice[] @relation("AgentInvoices")
   invoicesCreated AgentInvoice[] @relation("InvoicesCreated")
   drawsRun        Draw[]         @relation("DrawsRun")
+  notifications   Notification[]
 }
 
 model AgentProfile {
@@ -138,14 +139,15 @@ model OtpCode {
 }
 
 model Product {
-  id        String       @id @default(cuid())
-  name      String
-  nameHi    String?
-  price     Int // paise
-  schemes   SchemeCode[]
-  stock     Int          @default(0)
-  active    Boolean      @default(true) // inactive instead of deleted: fulfilments will reference products
-  createdAt DateTime     @default(now())
+  id          String       @id @default(cuid())
+  name        String
+  nameHi      String?
+  price       Int // paise
+  schemes     SchemeCode[]
+  stock       Int          @default(0)
+  active      Boolean      @default(true) // inactive instead of deleted: fulfilments will reference products
+  createdAt   DateTime     @default(now())
+  fulfilments Fulfilment[]
 }
 
 // Who did what, for admin actions, cash verification, draws, payouts and manual edits.
@@ -184,6 +186,7 @@ model Enrolment {
   createdAt    DateTime        @default(now())
   installments Installment[]
   drawWins     DrawWinner[]
+  fulfilment   Fulfilment?
 
   @@unique([batchId, seq])
   @@index([memberId])
@@ -346,4 +349,53 @@ model DrawWinner {
 
   @@unique([drawId, enrolmentId])
   @@index([enrolmentId])
+}
+
+enum FulfilmentReason {
+  MATURED
+  WON
+}
+
+enum FulfilmentStatus {
+  PENDING // waiting for the member: confirm address (Upahar), choose product (Manpasand), book purchase (Gold)
+  CONFIRMED // member has acted; the office takes it from here (Feature 14)
+  DELIVERED
+}
+
+// What a member gets when an enrolment matures or wins a draw. Created by the same transaction that matures it or runs the draw.
+model Fulfilment {
+  id          String           @id @default(cuid())
+  enrolmentId String           @unique
+  enrolment   Enrolment        @relation(fields: [enrolmentId], references: [id])
+  reason      FulfilmentReason
+  status      FulfilmentStatus @default(PENDING)
+  address     String? // delivery address the member confirmed (Upahar, Manpasand)
+  productId   String? // Manpasand: the product the member chose
+  product     Product?         @relation(fields: [productId], references: [id])
+  confirmedAt DateTime?
+  deliveredAt DateTime?
+  createdAt   DateTime         @default(now())
+
+  @@index([status])
+}
+
+enum NotificationType {
+  MATURED
+  WON
+}
+
+// In-app messages; text is rendered in the reader's language from `type`. Also sent by SMS when `sms` is set.
+model Notification {
+  id          String           @id @default(cuid())
+  userId      String
+  user        User             @relation(fields: [userId], references: [id])
+  type        NotificationType
+  enrolmentId String?
+  sms         Boolean          @default(false)
+  smsSentAt   DateTime? // null with sms = true: still to send (retried by the next send)
+  readAt      DateTime?
+  createdAt   DateTime         @default(now())
+
+  @@index([userId, createdAt])
+  @@index([sms, smsSentAt])
 }
