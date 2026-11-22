@@ -60,6 +60,8 @@ REST endpoints under `/api/v1`, shared by the web app and the future mobile app.
 | GET | `/api/v1/agent/network?period=` | agent | `period`: `week` (from Monday), `month` (default) or `all`, India time | `{ period, from, totals: { people, enrolments, joined, commission }, members: (EnrolmentView & { commission: { period, total } })[] }` |
 | GET | `/api/v1/agent/network/:id` (an enrolment) | that agent, super admin | (none) | `EnrolmentView` plus `commission`: the commission lines from that member |
 | GET | `/api/v1/agent/campaign` | agent | (none) | `{ campaign, started, ended, awarded, count, reached, next, toNext }` or `null` if there is no campaign |
+| GET | `/api/v1/agent/statement` | agent | (none) | CSV (`text/csv`, UTF-8 with BOM): every commission line (installment and recruitment bonus) and every payout (paid invoice with gross, TDS, net, UTR), by date. Labels in the viewer's language; amounts as plain rupees (`1234.50`). |
+| GET | `/api/v1/admin/agents/:id/statement` | super admin | (none) | the same CSV for one agent |
 | GET | `/api/v1/agent/invoices` | agent | (none) | the agent's commission invoices (not cancelled), newest first |
 | GET | `/api/v1/agent-invoices/:id/pdf` | that agent, super admin | (none) | agent commission invoice PDF |
 | GET | `/api/v1/admin/invoices?q=` | super admin | `q` searches member invoices | `{ agentInvoices, uninvoicedTotal, uninvoicedCount, awaitingRate, memberInvoices }` |

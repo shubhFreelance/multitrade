@@ -70,6 +70,8 @@ A full pass, start to finish:
 
 16. **Recruitment campaign:** agents see the campaign progress bar on their home page. As the super admin, **Campaign** shows each agent's count and lets you edit the dates and tiers; after the end date, **Award** adds each agent's bonus to their commission (it then goes on their next invoice).
 
+17. **Payouts and statements:** payouts are the monthly agent invoices (step 7): the super admin marks each paid with a UTR, after TDS. Agents download their full statement (commission, bonuses, payouts) as CSV from **My commission**; the super admin can download any agent's from **Agents and members**.
+
 Things worth checking: paying a later month before an earlier one is refused; a paid month can't be paid again; paying all 12 marks the scheme Matured; Hindi and English both read correctly.
 
 Set `PAYMENT_PROVIDER` to nothing to switch online payment off (the Pay button disappears). The test checkout never runs unless it is set to `test`, so keep it unset in production.

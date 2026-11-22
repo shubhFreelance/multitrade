@@ -34,6 +34,9 @@ export default async function CommissionPage() {
         </div>
       </dl>
       {awaitingRate > 0 && <p className="rounded-xl p-3 text-due-ink ring-1 ring-due">{t("awaitingRate", { count: awaitingRate })}</p>}
+      <a href="/api/v1/agent/statement" download className="flex min-h-12 items-center justify-center rounded-xl font-semibold text-primary ring-1 ring-primary hover:bg-mist">
+        {t("downloadStatement")}
+      </a>
 
       <section aria-labelledby="invoices">
         <h2 id="invoices" className="border-b-2 border-primary pb-1 text-lg font-semibold">

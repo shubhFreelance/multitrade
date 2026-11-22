@@ -136,7 +136,8 @@
       },
       "pdf": "PDF",
       "bonusLine": "सदस्य जोड़ो बोनस",
-      "bonusCampaign": "अभियान {campaign}।"
+      "bonusCampaign": "अभियान {campaign}।",
+      "downloadStatement": "स्टेटमेंट डाउनलोड करें (CSV)"
     },
     "nav": {
       "label": "विभाग",
@@ -524,7 +525,8 @@
     "notApproved": "मंज़ूरी बाकी",
     "direct": "वेबसाइट से खुद जुड़े (कोई एजेंट नहीं)",
     "noMembers": "इस एजेंट ने अभी किसी को नहीं जोड़ा है।",
-    "enrolledBy": "{name} ({phone}) ने जोड़ा"
+    "enrolledBy": "{name} ({phone}) ने जोड़ा",
+    "downloadStatement": "स्टेटमेंट डाउनलोड करें (CSV)"
   },
   "completion": {
     "maturedTitle": "{scheme} पूरी: सारी किस्तें जमा",
@@ -616,5 +618,30 @@
     "tierBonus": "बोनस (₹)",
     "settingsHint": "कम स्तर चाहिए तो पंक्तियाँ खाली छोड़ें। तारीखें बदलने से नया अभियान शुरू होता है।",
     "save": "अभियान सेव करें"
+  },
+  "statement": {
+    "commission": "कमीशन",
+    "bonus": "सदस्य जोड़ो बोनस",
+    "payout": "भुगतान",
+    "rateMissing": "दर बाकी",
+    "status": {
+      "EARNED": "कमाया",
+      "PAID": "भुगतान हुआ",
+      "REVERSED": "वापस"
+    },
+    "col": {
+      "date": "तारीख",
+      "type": "प्रकार",
+      "member": "सदस्य या अभियान",
+      "token": "टोकन",
+      "month": "महीना",
+      "commission": "कमीशन (₹)",
+      "invoice": "इनवॉइस",
+      "gross": "कुल (₹)",
+      "tds": "TDS (₹)",
+      "net": "आपको मिला (₹)",
+      "utr": "UTR",
+      "status": "स्थिति"
+    }
   }
 }

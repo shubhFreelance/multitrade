@@ -136,7 +136,8 @@
       },
       "pdf": "PDF",
       "bonusLine": "Recruitment bonus",
-      "bonusCampaign": "Campaign {campaign}."
+      "bonusCampaign": "Campaign {campaign}.",
+      "downloadStatement": "Download statement (CSV)"
     },
     "nav": {
       "label": "Sections",
@@ -524,7 +525,8 @@
     "notApproved": "not approved",
     "direct": "Joined directly on the website (no agent)",
     "noMembers": "This agent hasn't enrolled anyone yet.",
-    "enrolledBy": "Enrolled by {name} ({phone})"
+    "enrolledBy": "Enrolled by {name} ({phone})",
+    "downloadStatement": "Download statement (CSV)"
   },
   "completion": {
     "maturedTitle": "{scheme} complete: every month is paid",
@@ -616,5 +618,30 @@
     "tierBonus": "Bonus (₹)",
     "settingsHint": "Leave rows empty to use fewer tiers. Changing the dates starts a new campaign.",
     "save": "Save campaign"
+  },
+  "statement": {
+    "commission": "Commission",
+    "bonus": "Recruitment bonus",
+    "payout": "Payout",
+    "rateMissing": "Rate pending",
+    "status": {
+      "EARNED": "Earned",
+      "PAID": "Paid",
+      "REVERSED": "Reversed"
+    },
+    "col": {
+      "date": "Date",
+      "type": "Type",
+      "member": "Member or campaign",
+      "token": "Token",
+      "month": "Month",
+      "commission": "Commission (₹)",
+      "invoice": "Invoice",
+      "gross": "Gross (₹)",
+      "tds": "TDS (₹)",
+      "net": "Paid to you (₹)",
+      "utr": "UTR",
+      "status": "Status"
+    }
   }
 }

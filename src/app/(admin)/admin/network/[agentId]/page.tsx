@@ -23,6 +23,9 @@ export default async function AgentNetworkPage({ params, searchParams }: PagePro
       <div>
         <h1 className="text-xl font-semibold">{net.agent.name}</h1>
         <p className="text-muted-foreground">{t("agentLine", { panchayat: net.agent.panchayat, phone: net.agent.phone })}</p>
+        <a href={`/api/v1/admin/agents/${net.agent.id}/statement`} download className="mt-1 inline-block font-medium text-primary underline underline-offset-4">
+          {t("downloadStatement")}
+        </a>
       </div>
       <PeriodTabs current={net.period} base={`/admin/network/${agentId}`} />
       <Figures
