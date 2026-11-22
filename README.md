@@ -52,7 +52,7 @@ A full pass, start to finish:
    `docker compose exec db psql -U saksham -c "update \"Commission\" set \"createdAt\" = now() - interval '1 month';"`
    Then **Mark paid** with a UTR, and download the PDF as the super admin or as the agent.
 
-8. **Bonus draw:** a member's dashboard ends with a bonus card. It stays locked until one enrolment has 6 confirmed payments; cash waiting for the office doesn't count.
+8. **Bonus draw:** a member's dashboard ends with a bonus card. Scooters unlock at 6 confirmed payments in one scheme, the gold chain at 12; cash waiting for the office doesn't count.
 
 9. **Draws:** as an admin, open **Draws** and tap **Run the month 1 draw** on a batch whose first month has started (the seeded batches start in December; create a batch with an earlier start month to test now). Winners see a green "You won" note on their scheme card and the result under **Draw results**.
 

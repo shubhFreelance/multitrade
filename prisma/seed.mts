@@ -10,7 +10,7 @@ const config: Record<string, unknown> = {
   company: { name: "Saksham Multitrade Pvt Ltd", cin: "", address: "", registrations: [] }, // CONFIRM: real legal details
   overdueAfterDays: 10, // CONFIRM #2
   defaultAfterMissedInARow: 2, // CONFIRM #2
-  bonusUnlock: { paidInstallments: 6, scope: "ENROLMENT" }, // CONFIRM #5: or "CUMULATIVE"
+  bonusUnlock: { scooter: 6, goldChain: 12, scope: "ENROLMENT" }, // paid months to unlock each prize; CONFIRM #5: or "CUMULATIVE"
   bonusRewards: { scooters: 5, goldChains: 1 },
   goldGstBps: 300,
   tdsBps: 200, // CONFIRM #8 with the CA (Section 194H)

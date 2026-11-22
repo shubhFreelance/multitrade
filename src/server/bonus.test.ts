@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { db } from "@/lib/db";
 import type { SessionUser } from "@/shared/auth";
-import { bonusStatus, defaultBonusRewards } from "@/shared/bonus";
+import { bonusStatus, defaultBonusRewards, type PrizeStatus } from "@/shared/bonus";
 import { failsWith, makeUser, resetDb } from "../../test/db";
 import { getMyBonus } from "./bonus";
 import { recordCash, simulateTestPayment, startPayment, verifyCash } from "./payments";
@@ -15,7 +15,7 @@ beforeEach(async () => {
   vi.stubEnv("PAYMENT_PROVIDER", "test");
   await resetDb();
   [admin, agent, member] = await Promise.all([makeUser("SUPER_ADMIN", "9999999999"), makeUser("AGENT", "9800000001"), makeUser("MEMBER", "9700000001")]);
-  await db.config.create({ data: { key: "bonusUnlock", value: { paidInstallments: 6, scope: "ENROLMENT" } } });
+  await db.config.create({ data: { key: "bonusUnlock", value: { scooter: 6, goldChain: 12, scope: "ENROLMENT" } } });
   const scheme = await db.scheme.create({
     data: { code: "MANPASAND", nameEn: "Manpasand Plan", nameHi: "मनपसंद योजना", installmentAmount: 2_000_00, tenureMonths: 12, commissionRule: { type: "FLAT", amount: 50_00 } },
   });
@@ -35,16 +35,27 @@ beforeEach(async () => {
 });
 afterEach(() => vi.unstubAllEnvs());
 
+const prize = (ps: PrizeStatus[], p: string) => ps.find((x) => x.prize === p);
+
 describe("bonus unlock", () => {
-  it("5 paid is locked; pending cash for the 6th doesn't count; verified, it unlocks", async () => {
+  it("scooters: 5 paid is locked; pending cash for the 6th doesn't count; verified, it unlocks", async () => {
     for (const m of months.slice(0, 5)) await pay(m.id);
-    expect(await getMyBonus(member)).toMatchObject({ unlocked: false, paid: 5, remaining: 1 });
+    expect(prize(await getMyBonus(member), "SCOOTER")).toMatchObject({ unlocked: false, paid: 5, remaining: 1, count: 5 });
 
     const cash = await recordCash(agent, months[5].id);
-    expect(await getMyBonus(member)).toMatchObject({ unlocked: false, paid: 5 });
+    expect(prize(await getMyBonus(member), "SCOOTER")).toMatchObject({ unlocked: false, paid: 5 });
 
     await verifyCash(admin, cash.id);
-    expect(await getMyBonus(member)).toMatchObject({ unlocked: true, paid: 6, remaining: 0, rewards: defaultBonusRewards });
+    const after = await getMyBonus(member);
+    expect(prize(after, "SCOOTER")).toMatchObject({ unlocked: true, paid: 6, remaining: 0 });
+    expect(prize(after, "GOLD_CHAIN")).toMatchObject({ unlocked: false, paid: 6, needed: 12, remaining: 6, count: 1 });
+  });
+
+  it("the gold chain unlocks only with all 12 months paid", async () => {
+    for (const m of months.slice(0, 11)) await pay(m.id);
+    expect(prize(await getMyBonus(member), "GOLD_CHAIN")).toMatchObject({ unlocked: false, remaining: 1 });
+    await pay(months[11].id);
+    expect(prize(await getMyBonus(member), "GOLD_CHAIN")).toMatchObject({ unlocked: true, paid: 12 });
   });
 
   it("only members can ask", async () => {
@@ -53,11 +64,14 @@ describe("bonus unlock", () => {
 });
 
 describe("bonusStatus", () => {
-  const rule = { paidInstallments: 6, scope: "ENROLMENT" as const };
+  const rule = { scooter: 6, goldChain: 12, scope: "ENROLMENT" as const };
   it("counts one enrolment by default, all of them when cumulative, and never a defaulted one", () => {
-    const es = [{ status: "ACTIVE", paid: 3 }, { status: "MATURED", paid: 4 }, { status: "DEFAULTED", paid: 9 }];
-    expect(bonusStatus(es, rule, defaultBonusRewards)).toMatchObject({ unlocked: false, paid: 4, remaining: 2 });
-    expect(bonusStatus(es, { ...rule, scope: "CUMULATIVE" }, defaultBonusRewards)).toMatchObject({ unlocked: true, paid: 6 });
-    expect(bonusStatus([], rule, defaultBonusRewards)).toMatchObject({ unlocked: false, paid: 0, remaining: 6 });
+    const es = [{ status: "ACTIVE", paid: 3 }, { status: "MATURED", paid: 4 }, { status: "DEFAULTED", paid: 12 }];
+    expect(bonusStatus(es, rule, defaultBonusRewards)[0]).toMatchObject({ prize: "SCOOTER", unlocked: false, paid: 4, remaining: 2 });
+    expect(bonusStatus(es, { ...rule, scope: "CUMULATIVE" }, defaultBonusRewards).map((p) => p.unlocked)).toEqual([true, false]);
+    expect(bonusStatus([], rule, defaultBonusRewards)[0]).toMatchObject({ unlocked: false, paid: 0, remaining: 6 });
+  });
+  it("leaves out a prize with a count of 0", () => {
+    expect(bonusStatus([], rule, { scooters: 5, goldChains: 0 }).map((p) => p.prize)).toEqual(["SCOOTER"]);
   });
 });

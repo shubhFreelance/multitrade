@@ -32,7 +32,7 @@ REST endpoints under `/api/v1`, shared by the web app and the future mobile app.
 
 | GET | `/api/v1/me/enrolments` | member | (none) | the member's own enrolments, newest first: `EnrolmentView[]` |
 | GET | `/api/v1/me/draws` | member | (none) | monthly draw results for the member's batches, newest first: `{ batch, scheme, monthNo, createdAt, seed, eligibleCount, winners: [{ token, mine }] }[]` |
-| GET | `/api/v1/me/bonus` | member | (none) | `{ unlocked, paid, needed, remaining, rewards: { scooters, goldChains } }`; worked out from PAID installments (pending cash, waived months and defaulted enrolments don't count) |
+| GET | `/api/v1/me/bonus` | member | (none) | `{ prize: "SCOOTER" | "GOLD_CHAIN", count, needed, paid, remaining, unlocked }[]`: scooters unlock at 6 paid months, the gold chain at 12 (setting `bonusUnlock`); worked out from PAID installments (pending cash, waived months and defaulted enrolments don't count) |
 | GET | `/api/v1/agent/enrolments` | agent | (none) | enrolments this agent made, those owing money first: `EnrolmentView[]` |
 
 `EnrolmentView`: `{ id, tokenNumber, status, scheme: { code, nameEn, nameHi }, member: { name, phone }, agent: { name, phone }, summary }`. `summary` is computed with `summarize()` from `src/shared/tracker.ts` using today's date in India: `{ slots: [{ monthNo, dueDate, amount, status, state }], total, paidCount, paidTotal, next, dueNowCount, dueNowTotal }`, where `state` is `PAID`, `WAIVED`, `OVERDUE`, `DUE_NOW` (due date reached, not paid) or `UPCOMING`.

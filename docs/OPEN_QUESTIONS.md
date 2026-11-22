@@ -8,7 +8,7 @@ Each item has the default the app uses until the client answers. Defaults live i
 | 2 | Overdue / default | When is an installment overdue, and when is a member defaulted? | Overdue 10 days after due date. 2 missed in a row means defaulted: out of draws until cleared. Further action is manual by admin. |
 | 3 | Upahar commission | What is the product tier table for ₹80–₹200 per paid installment? | Not set. Needs the tier table before Feature 9 (Commission). |
 | 4 | Manpasand | What happens if the chosen product costs **less** than the amount paid? | Not decided. Needs an answer before Feature 14 (Fulfilment). |
-| 5 | Bonus unlock | Is "6 paid installments" counted in **one enrolment** or **across all enrolments**? | One enrolment. |
+| 5 | Bonus unlock | Is "6 paid installments" counted in **one enrolment** or **across all enrolments**? | One enrolment. Scooters unlock at 6 paid months, the gold chain at 12 (client, Nov 2026). |
 | 6 | Agent levels | Single-level commission only, or upline/downline? | Single-level: only the enrolling agent earns. |
 | 7 | Recruitment bonus | When does an enrolment count towards the campaign, and does the agent get only the highest tier? | Counts after its 1st installment is paid. Agent gets the highest tier reached, not the sum. |
 | 8 | TDS | TDS % on agent commission (Section 194H)? Confirm with the CA. | Config value, set per CA advice. |

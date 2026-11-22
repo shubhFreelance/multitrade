@@ -24,7 +24,7 @@ export default async function MemberHome() {
           {enrolments.map((e) => (
             <EnrolmentCard key={e.id} e={e} canPay={canPayOnline()} />
           ))}
-          <BonusCard b={bonus} />
+          <BonusCard prizes={bonus} />
         </>
       )}
     </div>
