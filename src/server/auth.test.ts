@@ -12,7 +12,7 @@ const PHONE = "9876543210";
 const lastCode = () => vi.mocked(sendSms).mock.calls.at(-1)![1].match(/\d{6}/)![0];
 const wrongCode = (code: string) => (code === "000000" ? "111111" : "000000");
 /** Lets a new code be requested without waiting 30 seconds. */
-const skipResendWait = () => db.otpCode.update({ where: { phone: PHONE }, data: { createdAt: new Date(0) } });
+const skipResendWait = () => db.otpCode.updateMany({ where: { phone: PHONE }, data: { createdAt: new Date(0) } });
 
 beforeEach(async () => {
   vi.mocked(sendSms).mockClear();
@@ -62,7 +62,7 @@ describe("OTP login", () => {
 
   it("rejects an expired code", async () => {
     await requestOtp(PHONE);
-    await db.otpCode.update({ where: { phone: PHONE }, data: { expiresAt: new Date(Date.now() - 1000) } });
+    await db.otpCode.updateMany({ where: { phone: PHONE }, data: { expiresAt: new Date(Date.now() - 1000) } });
     await expect(verifyOtp(PHONE, lastCode())).rejects.toMatchObject({ code: "INVALID_OTP" });
   });
 

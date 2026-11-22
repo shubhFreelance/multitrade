@@ -16,3 +16,4 @@ Each item has the default the app uses until the client answers. Defaults live i
 | 10 | Login | Can people sign themselves up (members or agent applicants), or does every account start from an agent/admin? | Only numbers already in the system can log in. Members are created at enrolment (Feature 5). |
 | 11 | SMS | MSG91 account, sender ID and DLT-approved OTP template? | Dev logs the code to the server console. Production refuses to send until configured. |
 | 12 | Company details | CIN, registered address and registration numbers for the footer and receipts? | Blank in the `company` config value until provided. |
+| 13 | Due date | Which day of the month is each installment due? Can members join a batch after its first month has started? | Due on the 1st of each month from the batch start month. Joining is allowed while the batch is Open; a late joiner's earlier months are already due. |

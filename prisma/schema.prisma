@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
   importFileExtension = "ts"
 }
 
@@ -33,6 +33,9 @@ model User {
   agentProfile  AgentProfile?
   memberProfile MemberProfile?
   auditLogs     AuditLog[]
+
+  enrolments      Enrolment[] @relation("MemberEnrolments")
+  agentEnrolments Enrolment[] @relation("AgentEnrolments")
 }
 
 model AgentProfile {
@@ -84,6 +87,7 @@ model Batch {
   size           Int
   winnersPerDraw Int
   status         BatchStatus @default(OPEN)
+  enrolments     Enrolment[]
 
   @@unique([schemeId, number])
 }
@@ -107,13 +111,22 @@ model Session {
   @@index([userId])
 }
 
-// One live code per phone; replaced on every new request.
+enum OtpPurpose {
+  LOGIN
+  ENROL // member confirms an enrolment an agent started
+}
+
+// One live code per phone and purpose; replaced on every new request.
 model OtpCode {
-  phone     String   @id
+  phone     String
+  purpose   OtpPurpose @default(LOGIN)
+  context   String     @default("") // what the code approves, e.g. the batch id for ENROL
   codeHash  String
   expiresAt DateTime
-  attempts  Int      @default(0)
-  createdAt DateTime @default(now())
+  attempts  Int        @default(0)
+  createdAt DateTime   @default(now())
+
+  @@id([phone, purpose])
 }
 
 model Product {
@@ -139,4 +152,49 @@ model AuditLog {
   createdAt DateTime @default(now())
 
   @@index([entity, entityId])
+}
+
+enum EnrolmentStatus {
+  ACTIVE
+  MATURED
+  DEFAULTED
+}
+
+// One member in one batch. A member can have several.
+model Enrolment {
+  id           String          @id @default(cuid())
+  memberId     String
+  member       User            @relation("MemberEnrolments", fields: [memberId], references: [id])
+  agentId      String
+  agent        User            @relation("AgentEnrolments", fields: [agentId], references: [id])
+  batchId      String
+  batch        Batch           @relation(fields: [batchId], references: [id])
+  seq          Int // 457 → token ...-0457
+  tokenNumber  String          @unique
+  status       EnrolmentStatus @default(ACTIVE)
+  createdAt    DateTime        @default(now())
+  installments Installment[]
+
+  @@unique([batchId, seq])
+  @@index([memberId])
+  @@index([agentId])
+}
+
+enum InstallmentStatus {
+  DUE
+  PAID
+  OVERDUE
+  WAIVED
+}
+
+model Installment {
+  id          String            @id @default(cuid())
+  enrolmentId String
+  enrolment   Enrolment         @relation(fields: [enrolmentId], references: [id])
+  monthNo     Int // 1..tenure
+  dueDate     DateTime          @db.Date
+  amount      Int // paise, copied from the scheme at enrolment
+  status      InstallmentStatus @default(DUE)
+
+  @@unique([enrolmentId, monthNo])
 }

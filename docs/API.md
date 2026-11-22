@@ -26,6 +26,12 @@ REST endpoints under `/api/v1`, shared by the web app and the future mobile app.
 | GET | `/api/v1/admin/agents` | admin | (none) | `{ id, phone, name, status, createdAt, agentProfile: { panchayat, approved } }[]`, waiting-for-approval first |
 | PATCH | `/api/v1/admin/agents/:id` | admin | `{ approved?, status?: "ACTIVE" \| "SUSPENDED" }` | `{ updated: true }`. Suspending logs the agent out everywhere. Non-agent ids are `NOT_FOUND`. |
 
+| GET | `/api/v1/agent/batches` | approved agent | (none) | open batches with a free seat: `{ id, label, schemeCode, schemeNameEn, schemeNameHi, installmentAmount, tenureMonths, startMonth, seatsLeft }[]` |
+| POST | `/api/v1/agent/enrolments/code` | approved agent | `{ phone, batchId }` | `{ existingMember }`. Texts the member a code that approves joining that batch. |
+| POST | `/api/v1/agent/enrolments` | approved agent | `{ phone, batchId, code, name?, village?, address?, nominee? }` (name, village, address required for a new phone) | `{ id, tokenNumber, installments }` (201) |
+
+Enrolment: the code is sent to the member's phone and only works for the batch it was sent for. On success the member is created if new, the next token number is assigned (`UPH-B01-0001`), and one installment per month of the tenure is created, due on the 1st of each month from the batch's start month.
+
 "admin" means role `ADMIN` or `SUPER_ADMIN`. Money fields (`installmentAmount`, `price`) are integer paise. Every admin change is written to the audit log.
 
 Batch rules: `status` only moves forward (`OPEN` → `RUNNING` → `CLOSED`). Once a batch is not `OPEN`, only `status` can change.
@@ -43,5 +49,10 @@ Batch rules: `status` only moves forward (`OPEN` → `RUNNING` → `CLOSED`). On
 | `CONFLICT` | 409 | Duplicate (e.g. two batches created at the same moment) |
 | `BATCH_LOCKED` | 409 | Changing month/size/winners of a batch that isn't `OPEN` |
 | `BATCH_STATUS_BACKWARDS` | 409 | Moving a batch's status backwards |
+| `AGENT_NOT_APPROVED` | 403 | Agent not approved yet |
+| `PHONE_IN_USE` | 409 | Phone belongs to an agent or admin |
+| `BATCH_NOT_OPEN` | 409 | Batch isn't taking enrolments |
+| `BATCH_FULL` | 409 | Batch has no free seat |
+| `MEMBER_DETAILS_REQUIRED` | 400 | New member without name, village or address |
 | `UNAUTHENTICATED` | 401 | No valid session |
 | `FORBIDDEN` | 403 | Signed in, wrong role |

@@ -27,14 +27,38 @@
     "NOT_FOUND": "Not found. It may have been removed.",
     "CONFLICT": "That already exists. Refresh and try again.",
     "BATCH_LOCKED": "This batch is running, so only its status can change.",
-    "BATCH_STATUS_BACKWARDS": "A batch status can only move forward."
+    "BATCH_STATUS_BACKWARDS": "A batch status can only move forward.",
+    "AGENT_NOT_APPROVED": "Your account is not approved yet.",
+    "PHONE_IN_USE": "This number belongs to a staff account and can't be enrolled as a member.",
+    "BATCH_NOT_OPEN": "This batch is no longer taking enrolments.",
+    "BATCH_FULL": "This batch is full. Choose another batch.",
+    "MEMBER_DETAILS_REQUIRED": "Enter the member name, village and address."
   },
   "member": {
     "title": "My schemes"
   },
   "agent": {
     "title": "Agent dashboard",
-    "awaitingApproval": "Your account is waiting for approval by the office. You can enrol members once it is approved."
+    "awaitingApproval": "Your account is waiting for approval by the office. You can enrol members once it is approved.",
+    "enrol": {
+      "title": "Enrol a member",
+      "noBatches": "No batch is open for enrolment right now.",
+      "phone": "Member mobile number",
+      "batch": "Scheme and batch",
+      "batchOption": "{label} · {scheme} · {amount} × {months} months · from {start} · {seats} seats left",
+      "sendCode": "Send code to member",
+      "newMember": "New member. A code was sent to {phone}. Fill in their details and ask them for the code.",
+      "existingMember": "Existing member. A code was sent to {phone}. Ask them for the code.",
+      "name": "Member name",
+      "village": "Village",
+      "address": "Address",
+      "nominee": "Nominee (optional)",
+      "code": "Code from member SMS",
+      "confirm": "Enrol member",
+      "back": "Change number or batch",
+      "done": "Member enrolled. Their token number is:",
+      "another": "Enrol another member"
+    }
   },
   "admin": {
     "title": "Admin dashboard",
