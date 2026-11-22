@@ -12,6 +12,12 @@ const OTP_MAX_ATTEMPTS = 5;
 export const sha256 = (s: string) => createHash("sha256").update(s).digest("hex");
 
 /**
+ * Testing before SMS is set up: SHOW_OTP_ON_SCREEN="true" hands each code back so the screen can show it.
+ * Never in production mode, whatever the setting: anyone could log in as anyone.
+ */
+export const codesOnScreen = () => process.env.SHOW_OTP_ON_SCREEN === "true" && process.env.NODE_ENV !== "production";
+
+/**
  * Texts a new 6-digit code, replacing any earlier one for this phone and purpose.
  * `context` is what the code approves (e.g. a batch id); `consumeCode` must be given the same value.
  */
@@ -26,6 +32,7 @@ export async function sendCode(phone: string, purpose: OtpPurpose, context: stri
   const data = { codeHash: sha256(phone + code), context, expiresAt: new Date(Date.now() + OTP_TTL_MS), attempts: 0, createdAt: new Date() };
   await db.otpCode.upsert({ where: key, create: { phone, purpose, ...data }, update: data });
   await sendSms(phone, message(code));
+  return codesOnScreen() ? { testCode: code } : {};
 }
 
 /** Consumes the code, or throws INVALID_OTP (wrong, expired, used, for another context, or after 5 wrong tries). */

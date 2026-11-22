@@ -34,7 +34,7 @@ Demo users are never created when `NODE_ENV=production`. Settings and schemes ar
 
 ### Logging in (dev)
 
-Login is phone + 6-digit code. In dev no SMS is sent: the code is printed in the `npm run dev` terminal (`[sms] to 99999…: Saksham Multitrade login code: 123456`). Only numbers that already exist in the `User` table can log in; new members join at `/join`.
+Login is phone + 6-digit code. While `SHOW_OTP_ON_SCREEN="true"` is in `.env`, the code also appears on the login, join and enrol screens (for testing before SMS is set up; ignored in production; remove it after testing). In dev no SMS is sent: the code is printed in the `npm run dev` terminal (`[sms] to 99999…: Saksham Multitrade login code: 123456`). Only numbers that already exist in the `User` table can log in; new members join at `/join`.
 
 ## Testing payments (QA)
 

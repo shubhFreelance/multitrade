@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { db } from "@/lib/db";
 import { resetDb } from "../../test/db";
 import { getUserByToken, logout, requestOtp, requireRole, verifyOtp } from "./auth";
@@ -73,6 +73,25 @@ describe("OTP login", () => {
     await requestOtp(PHONE);
     if (first !== lastCode()) await expect(verifyOtp(PHONE, first)).rejects.toMatchObject({ code: "INVALID_OTP" });
     await expect(verifyOtp(PHONE, lastCode())).resolves.toBeTruthy();
+  });
+});
+
+describe("codes on screen for testing", () => {
+  afterEach(() => vi.unstubAllEnvs());
+
+  it("returns the code only while SHOW_OTP_ON_SCREEN is on", async () => {
+    vi.stubEnv("SHOW_OTP_ON_SCREEN", "true");
+    const { testCode } = await requestOtp(PHONE);
+    expect(testCode).toBe(lastCode());
+    await skipResendWait();
+    vi.stubEnv("SHOW_OTP_ON_SCREEN", "false");
+    expect(await requestOtp(PHONE)).toEqual({});
+  });
+
+  it("never in production mode, whatever the setting", async () => {
+    vi.stubEnv("SHOW_OTP_ON_SCREEN", "true");
+    vi.stubEnv("NODE_ENV", "production");
+    expect(await requestOtp(PHONE)).toEqual({});
   });
 });
 

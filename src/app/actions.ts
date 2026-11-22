@@ -9,14 +9,13 @@ import { clearSessionCookie, getRequestToken, setSessionCookie } from "@/server/
 import { homeFor, requestOtpInput, verifyOtpInput } from "@/shared/auth";
 import type { EnrolConfirm } from "@/shared/enrolment";
 
-type ActionResult = { error?: string };
+type ActionResult = { error?: string; testCode?: string };
 
 const errorCode = (e: unknown) => toAppError(e).code;
 
 export async function sendOtpAction(phone: string): Promise<ActionResult> {
   try {
-    await requestOtp(requestOtpInput.parse({ phone }).phone);
-    return {};
+    return await requestOtp(requestOtpInput.parse({ phone }).phone);
   } catch (e) {
     return { error: errorCode(e) };
   }

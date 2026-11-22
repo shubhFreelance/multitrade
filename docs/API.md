@@ -9,7 +9,7 @@ REST endpoints under `/api/v1`, shared by the web app and the future mobile app.
 
 | Method | Path | Who | Input | Output |
 |--------|------|-----|-------|--------|
-| POST | `/api/v1/auth/otp` | anyone | `{ phone }` | `{ sent: true }` |
+| POST | `/api/v1/auth/otp` | anyone | `{ phone }` | `{ sent: true, testCode? }`. `testCode` (also on `/join/code` and `/agent/enrolments/code`) is returned only while `SHOW_OTP_ON_SCREEN="true"` for testing, never in production. |
 | POST | `/api/v1/auth/verify` | anyone | `{ phone, code, device? }` | `{ token, expiresAt, user }` |
 | POST | `/api/v1/auth/logout` | signed in | (none) | `{ loggedOut: true }` |
 | GET | `/api/v1/me` | signed in | (none) | `{ id, phone, name, role, language }` |

@@ -7,6 +7,7 @@ import { confirmJoinAction, sendJoinCodeAction } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { TestCode } from "@/components/test-code";
 
 export type BatchOption = { id: string; text: string };
 
@@ -27,6 +28,7 @@ export function EnrolForm({ batches, mode = "agent" }: { batches: BatchOption[];
   const [step, setStep] = useState<"start" | "confirm" | "done">("start");
   const [f, setF] = useState({ phone: "", batchId: batches[0]?.id ?? "", name: "", village: "", address: "", nominee: "", code: "" });
   const [existing, setExisting] = useState(false);
+  const [testCode, setTestCode] = useState<string>();
   const [token, setToken] = useState("");
   const [error, setError] = useState<string>();
   const [pending, startTransition] = useTransition();
@@ -39,6 +41,7 @@ export function EnrolForm({ batches, mode = "agent" }: { batches: BatchOption[];
       if ("error" in res) return setError(res.error);
       setError(undefined);
       setExisting(res.existingMember);
+      setTestCode(res.testCode);
       setStep("confirm");
     });
 
@@ -99,6 +102,7 @@ export function EnrolForm({ batches, mode = "agent" }: { batches: BatchOption[];
           <p className="text-sm text-muted-foreground">
             {t(`${ns}.${existing ? "existingMember" : "newMember"}`, { phone: f.phone })}
           </p>
+          <TestCode code={testCode} />
           {!existing && (
             <>
               <TextField id="name" label={t(`${ns}.name`)} value={f.name} onChange={set("name")} required />

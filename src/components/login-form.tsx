@@ -6,6 +6,7 @@ import { sendOtpAction, verifyOtpAction } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { TestCode } from "@/components/test-code";
 
 export function LoginForm() {
   const t = useTranslations();
@@ -13,12 +14,14 @@ export function LoginForm() {
   const [code, setCode] = useState("");
   const [step, setStep] = useState<"phone" | "code">("phone");
   const [error, setError] = useState<string>();
+  const [testCode, setTestCode] = useState<string>();
   const [pending, startTransition] = useTransition();
 
   const send = () =>
     startTransition(async () => {
       const res = await sendOtpAction(phone);
       setError(res.error);
+      setTestCode(res.testCode);
       if (!res.error) setStep("code");
     });
 
@@ -57,6 +60,7 @@ export function LoginForm() {
       ) : (
         <div className="flex flex-col gap-2">
           <p className="text-sm text-muted-foreground">{t("login.codeSentTo", { phone })}</p>
+          <TestCode code={testCode} />
           <Label htmlFor="code">{t("login.code")}</Label>
           <Input
             id="code"

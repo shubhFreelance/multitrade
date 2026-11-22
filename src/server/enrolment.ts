@@ -118,12 +118,12 @@ function memberFor(existing: { id: string } | null, input: { phone: string; name
 }
 
 /** Step 1: texts the member a code that approves joining this batch. */
-export async function sendEnrolmentCode(user: SessionUser | null, input: unknown): Promise<{ existingMember: boolean }> {
+export async function sendEnrolmentCode(user: SessionUser | null, input: unknown): Promise<{ existingMember: boolean; testCode?: string }> {
   const agent = await requireApprovedAgent(user);
   const { phone, batchId } = enrolCodeInput.parse(input);
   const member = await memberByPhone(phone);
   const { scheme } = await openBatch(db, batchId);
-  await sendCode(
+  const sent = await sendCode(
     phone,
     "ENROL",
     batchId,
@@ -132,7 +132,7 @@ export async function sendEnrolmentCode(user: SessionUser | null, input: unknown
       `${formatPaise(scheme.installmentAmount)} a month for ${scheme.tenureMonths} months. ` +
       `Code: ${code}. Give it to the agent only if you agree.`,
   );
-  return { existingMember: member !== null };
+  return { existingMember: member !== null, ...sent };
 }
 
 /** Step 2: with the member's code, creates the member (if new), the enrolment and its installments. */
@@ -147,11 +147,11 @@ export async function confirmEnrolment(user: SessionUser | null, input: unknown)
 // ---- Joining directly (no agent) ----
 
 /** Step 1 on the website: texts a code to the phone, proving the person joining owns it. */
-export async function sendJoinCode(input: unknown): Promise<{ existingMember: boolean }> {
+export async function sendJoinCode(input: unknown): Promise<{ existingMember: boolean; testCode?: string }> {
   const { phone, batchId } = enrolCodeInput.parse(input);
   const member = await memberByPhone(phone);
   const { scheme } = await openBatch(db, batchId);
-  await sendCode(
+  const sent = await sendCode(
     phone,
     "ENROL",
     batchId,
@@ -159,7 +159,7 @@ export async function sendJoinCode(input: unknown): Promise<{ existingMember: bo
       `Saksham Multitrade: you are joining ${scheme.nameEn}, ${formatPaise(scheme.installmentAmount)} a month for ${scheme.tenureMonths} months. ` +
       `Code: ${code}. Do not share it.`,
   );
-  return { existingMember: member !== null };
+  return { existingMember: member !== null, ...sent };
 }
 
 /** Step 2: with the code, creates the member (if new) and the enrolment, and logs them in. */

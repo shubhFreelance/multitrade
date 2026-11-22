@@ -13,9 +13,10 @@ async function findActiveUser(phone: string) {
   return user;
 }
 
-export async function requestOtp(phone: string): Promise<void> {
+/** Texts a login code. `testCode` is set only while codes are shown on screen for testing (see otp.ts). */
+export async function requestOtp(phone: string): Promise<{ testCode?: string }> {
   await findActiveUser(phone);
-  await sendCode(phone, "LOGIN", "", (code) => `Saksham Multitrade login code: ${code}. Valid for 5 minutes. Do not share it.`);
+  return sendCode(phone, "LOGIN", "", (code) => `Saksham Multitrade login code: ${code}. Valid for 5 minutes. Do not share it.`);
 }
 
 export async function verifyOtp(phone: string, code: string, device?: string): Promise<LoginResult> {

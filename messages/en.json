@@ -340,7 +340,8 @@
   "common": {
     "save": "Save",
     "saved": "Saved",
-    "back": "Back"
+    "back": "Back",
+    "testCodeNote": "Test code (shown here because SMS is not set up yet):"
   },
   "schemes": {
     "UPAHAR": "Upahar",

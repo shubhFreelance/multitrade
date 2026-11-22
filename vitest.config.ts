@@ -6,7 +6,7 @@ export default defineConfig({
   resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
   test: {
     globalSetup: "./test/global-setup.ts",
-    env: { DATABASE_URL: process.env.TEST_DATABASE_URL ?? "" },
+    env: { DATABASE_URL: process.env.TEST_DATABASE_URL ?? "", SHOW_OTP_ON_SCREEN: "false" }, // tests turn on-screen codes on themselves
     fileParallelism: false, // tests share one database
   },
 });
