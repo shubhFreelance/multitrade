@@ -39,7 +39,7 @@ export default async function MyDrawsPage() {
           </article>
         );
       })}
-      {draws.length === 0 && bonusDraws.length === 0 && <p className="rounded-2xl bg-card p-4 ring-1 ring-border">{t("none")}</p>}
+      {draws.length === 0 && bonusDraws.length === 0 && <p className="rounded-2xl bg-card p-4">{t("none")}</p>}
       {draws.map((d) => {
         const won = d.winners.some((w) => w.mine);
         return (

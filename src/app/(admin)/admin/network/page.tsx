@@ -52,7 +52,7 @@ export default async function NetworkPage({ searchParams }: PageProps<"/admin/ne
       <ul className="flex flex-col gap-3">
         {o.agents.map((a) => (
           <li key={a.id}>
-            <Link href={`/admin/network/${a.id}?period=${o.period}`} className="flex flex-col gap-2 rounded-xl bg-card p-4 ring-1 ring-border hover:ring-primary">
+            <Link href={`/admin/network/${a.id}?period=${o.period}`} className="flex flex-col gap-2 rounded-xl bg-card p-4 hover:ring-primary">
               <p className="flex flex-wrap items-baseline justify-between gap-x-3">
                 <span className="text-lg font-semibold">{a.name}</span>
                 <span className="text-muted-foreground">

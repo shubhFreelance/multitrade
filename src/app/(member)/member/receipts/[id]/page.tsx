@@ -63,13 +63,15 @@ export default async function Receipt({ params }: PageProps<"/member/receipts/[i
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-5">
-      <article className="overflow-hidden rounded-2xl bg-card ring-1 ring-border">
-        <header className="flex items-center justify-between bg-primary px-4 py-3 text-primary-foreground">
-          <h1 className="text-xl font-semibold">{t("title")}</h1>
-          <span className="rounded-md bg-paid px-2.5 py-0.5 font-semibold">✓ {t("paid")}</span>
+      <article className="overflow-hidden rounded-[28px] bg-card">
+        <header className="glass-violet flex flex-col gap-3 px-5 pt-5 pb-6 text-white">
+          <div className="flex items-center justify-between">
+            <h1 className="text-xl font-semibold">{t("title")}</h1>
+            <span className="rounded-full bg-white px-3 py-1 text-[14px] font-semibold text-paid">✓ {t("paid")}</span>
+          </div>
+          <p className="text-[48px] leading-none font-semibold tracking-tight tabular-nums">{formatPaise(p.amount)}</p>
         </header>
-        <div className="flex flex-col gap-4 p-4">
-          <p className="text-5xl font-bold tracking-tight [font-stretch:80%]">{formatPaise(p.amount)}</p>
+        <div className="flex flex-col gap-4 p-5">
           {p.provider === "TEST" && (
             <p role="note" className="rounded-lg border-2 border-dashed border-due p-3 font-medium text-due-ink">
               {t("testNote")}

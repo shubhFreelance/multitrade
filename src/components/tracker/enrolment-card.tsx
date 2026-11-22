@@ -6,6 +6,7 @@ import { formatMonthYear } from "@/lib/dates";
 import { formatPaise } from "@/lib/money";
 import type { EnrolmentView } from "@/server/tracker";
 import type { SlotState } from "@/shared/tracker";
+import { schemeTone } from "@/components/glass";
 import { Beads } from "./beads";
 import { NextDue } from "./next-due";
 
@@ -25,18 +26,21 @@ export async function EnrolmentCard({ e, canPay }: { e: EnrolmentView; canPay: b
   const s = e.summary;
 
   return (
-    <article className="overflow-hidden rounded-2xl bg-card ring-1 ring-border">
-      <header className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 bg-primary px-4 pt-3 pb-2.5 text-primary-foreground">
-        <h2 className="text-xl font-semibold">{locale === "hi" ? e.scheme.nameHi : e.scheme.nameEn}</h2>
-        <p className="text-lg font-bold tracking-wider [font-stretch:75%]">
+    <article className="overflow-hidden rounded-[28px] bg-card">
+      <header className={`glass-${schemeTone[e.scheme.code] ?? "violet"} flex flex-wrap items-end justify-between gap-x-4 gap-y-2 px-5 pt-5 pb-4 text-white`}>
+        <div>
+          <h2 className="text-[22px] leading-tight font-semibold tracking-tight">{locale === "hi" ? e.scheme.nameHi : e.scheme.nameEn}</h2>
+          <p className="text-[15px] text-white/90">{t("paidSoFar", { amount: formatPaise(s.paidTotal) })}</p>
+        </div>
+        <p className="rounded-full bg-white/20 px-3 py-1 text-[14px] font-semibold tracking-wide ring-1 ring-white/30">
           <span className="sr-only">{t("token")} </span>
           {e.tokenNumber}
         </p>
       </header>
 
-      <div className="flex flex-col gap-4 px-4 pt-4 pb-3">
+      <div className="flex flex-col gap-4 px-5 pt-5 pb-4">
         {e.wonMonth !== null && (
-          <p className="rounded-xl bg-paid px-3 py-2.5 font-semibold text-white">
+          <p className="glass-sunrise rounded-2xl px-4 py-3 font-semibold text-white">
             {t("won", { month: e.wonMonth })}{" "}
             <Link href="/member/draws" className="font-normal underline underline-offset-4">
               {t("seeDraw")}
@@ -45,10 +49,7 @@ export async function EnrolmentCard({ e, canPay }: { e: EnrolmentView; canPay: b
         )}
         <Beads slots={s.slots} />
         <div className="flex flex-col gap-0.5">
-          <p>
-            {t("paidOf", { paid: s.paidCount, total: s.total })}{" "}
-            <span className="font-semibold">{t("paidSoFar", { amount: formatPaise(s.paidTotal) })}</span>
-          </p>
+          <p className="font-medium">{t("paidOf", { paid: s.paidCount, total: s.total })}</p>
           <NextDue summary={s} />
         </div>
 

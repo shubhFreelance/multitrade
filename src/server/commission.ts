@@ -1,6 +1,8 @@
 // What agents have earned. Commission rows are created by payments.ts when a payment is counted.
 import { db } from "@/lib/db";
 import type { SessionUser } from "@/shared/auth";
+import { rhythmThisMonth } from "@/shared/rhythm";
+import { todayInIndia } from "@/shared/tracker";
 import { requireRole } from "./auth";
 
 /** The signed-in agent's commission lines (newest first) and totals in paise. */
@@ -28,4 +30,15 @@ export async function listMyCommission(user: SessionUser | null) {
     paid: sum("PAID"), // commission settled by paid invoices, before TDS
     awaitingRate: lines.filter((l) => l.ruleMissing).length, // Upahar payments waiting for the tier table
   };
+}
+
+/** The signed-in agent's commission this month, by day, for the dot chart on their home page. */
+export async function myCommissionRhythm(user: SessionUser | null) {
+  const agent = requireRole(user, ["AGENT"]);
+  const today = todayInIndia();
+  const lines = await db.commission.findMany({
+    where: { agentId: agent.id, status: { not: "REVERSED" }, createdAt: { gte: new Date(`${today.slice(0, 8)}01T00:00:00+05:30`) } },
+    select: { createdAt: true, amount: true },
+  });
+  return rhythmThisMonth(lines.map((l) => ({ at: l.createdAt, amount: l.amount })), today);
 }

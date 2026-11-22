@@ -13,7 +13,9 @@
     "codeSentTo": "Code sent to {phone}",
     "verify": "Log in",
     "changeNumber": "Change number",
-    "resend": "Send code again"
+    "resend": "Send code again",
+    "hero": "Your scheme, month by month",
+    "heroSub": "Log in with your mobile number. We send a code to check it's you."
   },
   "errors": {
     "NOT_REGISTERED": "This number is not registered. Please contact your Panchayat Leader.",
@@ -67,13 +69,34 @@
       "draws": "Draw results",
       "join": "Join a scheme",
       "account": "My details",
-      "messages": "Messages"
+      "messages": "Messages",
+      "short": {
+        "schemes": "Home",
+        "join": "Join",
+        "draws": "Draws",
+        "messages": "Messages",
+        "account": "Me"
+      }
     },
     "status": {
       "ACTIVE": "paying",
       "MATURED": "all months paid",
       "DEFAULTED": "defaulted",
       "WON": "won a draw"
+    },
+    "home": {
+      "paidLabel": "Paid so far",
+      "acrossPayments": "{count, plural, one {across # payment} other {across # payments}}",
+      "dueNow": "Due now",
+      "overdueNow": "Overdue now",
+      "nextDue": "Next payment",
+      "allPaid": "All paid",
+      "SCOOTER": "Scooter draw",
+      "GOLD_CHAIN": "Gold chain draw",
+      "unlocked": "Unlocked",
+      "toUnlock": "{count, plural, one {# month to go} other {# months to go}}",
+      "bonusLink": "See the bonus draw",
+      "joinCta": "Join a scheme to start"
     }
   },
   "agent": {
@@ -144,7 +167,21 @@
       "home": "Home",
       "members": "My members",
       "enrol": "Enrol a member",
-      "commission": "My commission"
+      "commission": "My commission",
+      "short": {
+        "home": "Home",
+        "members": "Members",
+        "enrol": "Enrol",
+        "commission": "Earnings"
+      }
+    },
+    "home": {
+      "commissionMonth": "Commission this month",
+      "fromPayments": "{count, plural, =0 {no payments yet} one {from # payment} other {from # payments}}",
+      "members": "Members",
+      "schemes": "{count, plural, one {# scheme} other {# schemes}}",
+      "toCollect": "To collect now",
+      "fromMembers": "{count, plural, =0 {nobody owes now} one {from # member} other {from # members}}"
     }
   },
   "admin": {
@@ -160,7 +197,8 @@
       "draws": "Draws",
       "network": "Agents and members",
       "fulfilment": "Fulfilment",
-      "campaign": "Campaign"
+      "campaign": "Campaign",
+      "label": "Sections"
     },
     "schemes": {
       "title": "Schemes",
@@ -334,7 +372,9 @@
         "agents": "Download all agents",
         "payments": "Download payments",
         "commission": "Download commission"
-      }
+      },
+      "acrossPayments": "{count, plural, =0 {no payments yet} one {across # payment} other {across # payments}}",
+      "dueNowShort": "Due now"
     }
   },
   "common": {

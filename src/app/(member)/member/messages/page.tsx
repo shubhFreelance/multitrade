@@ -16,9 +16,9 @@ export default async function MessagesPage() {
     <div className="mx-auto flex w-full max-w-xl flex-col gap-5">
       <h1 className="text-[28px] leading-tight font-semibold">{t("title")}</h1>
       {list.length === 0 ? (
-        <p className="rounded-2xl bg-card p-4 ring-1 ring-border">{t("empty")}</p>
+        <p className="rounded-2xl bg-card p-4">{t("empty")}</p>
       ) : (
-        <ul className="divide-y divide-border rounded-2xl bg-card px-4 ring-1 ring-border">
+        <ul className="divide-y divide-border rounded-2xl bg-card px-4">
           {list.map((n) => (
             <li key={n.id} className="flex gap-3 py-3.5">
               <span aria-hidden className={`mt-2 size-2.5 shrink-0 rounded-full ${n.readAt ? "bg-transparent" : "bg-primary"}`} />

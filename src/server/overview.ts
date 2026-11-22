@@ -1,6 +1,7 @@
 // The admin home: what needs doing now, and (super admin only) where the money stands. Everything is counted from rows.
 import { db } from "@/lib/db";
 import { adminRoles, type SessionUser } from "@/shared/auth";
+import { rhythmThisMonth } from "@/shared/rhythm";
 import { todayInIndia } from "@/shared/tracker";
 import { requireRole } from "./auth";
 import { listDrawBatches } from "./draws";
@@ -42,16 +43,19 @@ export async function adminOverview(user: SessionUser | null) {
   };
   if (u.role !== "SUPER_ADMIN") return { ...ops, money: null };
 
-  const [collectedMonth, collectedAll, unpaidCommission, unpaidInvoices] = await Promise.all([
-    db.payment.aggregate({ where: { status: "SUCCESS", paidAt: { gte: monthStart } }, _sum: { amount: true } }),
+  const [monthPayments, collectedAll, unpaidCommission, unpaidInvoices] = await Promise.all([
+    // shortcut: loads this month's payments to chart them by day; group in SQL beyond tens of thousands a month.
+    db.payment.findMany({ where: { status: "SUCCESS", paidAt: { gte: monthStart } }, select: { paidAt: true, amount: true } }),
     db.payment.aggregate({ where: { status: "SUCCESS" }, _sum: { amount: true } }),
     db.commission.aggregate({ where: { status: "EARNED", invoiceId: null }, _sum: { amount: true } }),
     db.agentInvoice.aggregate({ where: { status: "ISSUED" }, _sum: { net: true }, _count: true }),
   ]);
+  const rhythm = rhythmThisMonth(monthPayments.map((p) => ({ at: p.paidAt!, amount: p.amount })), today);
   return {
     ...ops,
     money: {
-      collectedMonth: sum(collectedMonth),
+      rhythm,
+      collectedMonth: rhythm.total,
       collectedAll: sum(collectedAll),
       commissionNotInvoiced: sum(unpaidCommission),
       invoicesUnpaid: { count: unpaidInvoices._count, net: unpaidInvoices._sum.net ?? 0 },

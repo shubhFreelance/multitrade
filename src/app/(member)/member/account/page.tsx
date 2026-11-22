@@ -62,7 +62,7 @@ export default async function AccountPage() {
         })}
       </section>
 
-      <section aria-labelledby="profile" className="rounded-2xl bg-card p-4 ring-1 ring-border">
+      <section aria-labelledby="profile" className="rounded-2xl bg-card p-4">
         <h2 id="profile" className="text-lg font-semibold">
           {t("profile")}
         </h2>

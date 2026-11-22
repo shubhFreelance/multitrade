@@ -17,17 +17,23 @@ export default async function JoinPage() {
 
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-5 p-4">
-      <div className="flex items-center justify-between">
-        <p className="font-semibold">{t("app.name")}</p>
+      <div className="flex items-center justify-between px-1">
+        <span className="flex items-center gap-3 font-semibold">
+          <span aria-hidden className="grid size-11 place-items-center rounded-2xl bg-primary text-lg font-bold text-primary-foreground">
+            S
+          </span>
+          {t("app.name")}
+        </span>
         <LanguageSwitch />
       </div>
-      <div>
-        <h1 className="text-[28px] leading-tight font-semibold">{t("join.title")}</h1>
-        <p className="text-muted-foreground">{t("join.intro")}</p>
+      <div className="glass glass-sunrise flex min-h-52 flex-col justify-end p-6">
+        <h1 className="text-[34px] leading-[1.1] font-semibold tracking-tight">{t("join.title")}</h1>
+        <p className="mt-2 text-white/90">{t("join.intro")}</p>
       </div>
       {batches.length === 0 ? (
-        <p className="rounded-2xl bg-card p-4 ring-1 ring-border">{t("join.noBatches")}</p>
+        <p className="rounded-2xl bg-card p-4">{t("join.noBatches")}</p>
       ) : (
+        <div className="rounded-[28px] bg-card p-5">
         <EnrolForm
           mode="join"
           batches={batches.map((b) => ({
@@ -42,6 +48,7 @@ export default async function JoinPage() {
             }),
           }))}
         />
+        </div>
       )}
       <p className="text-muted-foreground">
         {t("join.haveAccount")}{" "}

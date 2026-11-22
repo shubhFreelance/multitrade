@@ -41,7 +41,7 @@ export default async function AgentMembers({ searchParams }: PageProps<"/agent/m
         ]}
       />
       {net.members.length === 0 ? (
-        <p className="rounded-2xl bg-card p-4 ring-1 ring-border">{t("empty")}</p>
+        <p className="rounded-2xl bg-card p-4">{t("empty")}</p>
       ) : (
         <>
           {dueNow.length > 0 && (
@@ -49,7 +49,7 @@ export default async function AgentMembers({ searchParams }: PageProps<"/agent/m
               <h2 id="due-now" className="border-b-2 border-due pb-1 text-lg font-semibold">
                 {t("dueNow", { count: dueNow.length })}
               </h2>
-              <ul className="divide-y divide-border">{dueNow.map(row)}</ul>
+              <ul className="mt-3 flex flex-col gap-3">{dueNow.map(row)}</ul>
             </section>
           )}
           {upToDate.length > 0 && (
@@ -57,7 +57,7 @@ export default async function AgentMembers({ searchParams }: PageProps<"/agent/m
               <h2 id="up-to-date" className="border-b-2 border-paid pb-1 text-lg font-semibold">
                 {t("upToDate", { count: upToDate.length })}
               </h2>
-              <ul className="divide-y divide-border">{upToDate.map(row)}</ul>
+              <ul className="mt-3 flex flex-col gap-3">{upToDate.map(row)}</ul>
             </section>
           )}
         </>

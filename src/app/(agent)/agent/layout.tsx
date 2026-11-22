@@ -9,17 +9,18 @@ export default async function Layout({ children }: { children: React.ReactNode }
   return (
     <>
       <AppHeader user={user} />
-      <div className="flex flex-1 flex-col md:flex-row">
+      <div className="flex flex-1 flex-col md:flex-row md:pt-2">
         <SideNav
           label={t("label")}
+          mobile="dock"
           links={[
-            ["/agent", t("home")],
-            ["/agent/members", t("members")],
-            ["/agent/enrol", t("enrol")],
-            ["/agent/commission", t("commission")],
+            { href: "/agent", text: t("home"), short: t("short.home"), icon: "home" },
+            { href: "/agent/members", text: t("members"), short: t("short.members"), icon: "members" },
+            { href: "/agent/enrol", text: t("enrol"), short: t("short.enrol"), icon: "enrol" },
+            { href: "/agent/commission", text: t("commission"), short: t("short.commission"), icon: "commission" },
           ]}
         />
-        <main className="min-w-0 flex-1 p-4">{children}</main>
+        <main className="min-w-0 flex-1 p-4 pb-28 md:px-6 md:pt-0 md:pb-8">{children}</main>
       </div>
     </>
   );

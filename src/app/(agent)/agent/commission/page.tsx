@@ -23,7 +23,7 @@ export default async function CommissionPage() {
       </Link>
       <h1 className="text-[28px] leading-tight font-semibold">{t("title")}</h1>
 
-      <dl className="grid grid-cols-2 overflow-hidden rounded-2xl bg-card ring-1 ring-border">
+      <dl className="grid grid-cols-2 overflow-hidden rounded-2xl bg-card">
         <div className="p-4">
           <dt className="text-muted-foreground">{t("earned")}</dt>
           <dd className="text-3xl font-bold [font-stretch:80%]">{formatPaise(earned)}</dd>

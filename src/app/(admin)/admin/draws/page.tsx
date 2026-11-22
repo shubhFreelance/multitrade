@@ -26,7 +26,7 @@ export default async function DrawsPage() {
         <p className="text-muted-foreground">{t("adminIntro")}</p>
       </div>
       {batches.map((b) => (
-        <section key={b.id} className="overflow-hidden rounded-xl bg-card ring-1 ring-border">
+        <section key={b.id} className="overflow-hidden rounded-xl bg-card">
           <header className="flex flex-wrap items-baseline justify-between gap-x-4 border-b px-4 py-3">
             <h2 className="text-lg font-semibold">
               {locale === "hi" ? b.scheme.nameHi : b.scheme.nameEn} <span className="font-bold tracking-wider [font-stretch:75%]">{b.label}</span>

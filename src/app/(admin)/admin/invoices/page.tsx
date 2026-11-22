@@ -34,7 +34,7 @@ export default async function InvoicesPage({ searchParams }: PageProps<"/admin/i
         <p>{t("uninvoiced", { amount: formatPaise(o.uninvoicedTotal), count: o.uninvoicedCount })}</p>
         {o.awaitingRate > 0 && <p className="rounded-xl p-3 text-due-ink ring-1 ring-due">{t("awaitingRate", { count: o.awaitingRate })}</p>}
 
-        <div className="rounded-xl bg-card p-4 ring-1 ring-border">
+        <div className="rounded-xl bg-card p-4">
           <ActionForm
             action={createAgentInvoicesAction}
             submitLabel={t("create")}
@@ -56,7 +56,7 @@ export default async function InvoicesPage({ searchParams }: PageProps<"/admin/i
         ) : (
           <ul className="flex flex-col gap-3">
             {o.agentInvoices.map((inv) => (
-              <li key={inv.id} className="flex flex-col gap-3 rounded-xl bg-card p-4 ring-1 ring-border">
+              <li key={inv.id} className="flex flex-col gap-3 rounded-xl bg-card p-4">
                 <div className="flex flex-wrap items-baseline justify-between gap-x-4">
                   <p className="font-semibold">
                     {inv.agent.name} <span className="font-normal text-muted-foreground">{formatMonthYear(`${inv.period}-01`, locale)}</span>
@@ -106,7 +106,7 @@ export default async function InvoicesPage({ searchParams }: PageProps<"/admin/i
         {o.memberInvoices.length === 0 ? (
           <p className="text-muted-foreground">{t("noMemberInvoices")}</p>
         ) : (
-          <ul className="divide-y divide-border rounded-xl bg-card ring-1 ring-border">
+          <ul className="divide-y divide-border rounded-xl bg-card">
             {o.memberInvoices.map((p) => (
               <li key={p.id} className="flex items-center justify-between gap-3 p-3">
                 <div className="min-w-0">

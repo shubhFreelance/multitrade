@@ -15,7 +15,7 @@ export function SelectField({ label, name, children, ...props }: { label: string
   return (
     <div className="flex flex-col gap-1.5">
       <Label htmlFor={name}>{label}</Label>
-      <select id={name} name={name} className="h-11 rounded-lg border border-input bg-transparent px-2.5" {...props}>
+      <select id={name} name={name} className="h-11 rounded-xl border border-input bg-card px-3" {...props}>
         {children}
       </select>
     </div>

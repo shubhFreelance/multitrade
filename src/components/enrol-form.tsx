@@ -88,7 +88,7 @@ export function EnrolForm({ batches, mode = "agent" }: { batches: BatchOption[];
           <TextField id="phone" label={t(`${ns}.phone`)} value={f.phone} onChange={digits("phone")} inputMode="numeric" maxLength={10} required autoFocus />
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="batch">{t(`${ns}.batch`)}</Label>
-            <select id="batch" className="h-12 rounded-lg border border-input bg-transparent px-2.5" value={f.batchId} onChange={(e) => set("batchId")(e.target.value)}>
+            <select id="batch" className="h-12 rounded-xl border border-input bg-card px-3" value={f.batchId} onChange={(e) => set("batchId")(e.target.value)}>
               {batches.map((b) => (
                 <option key={b.id} value={b.id}>
                   {b.text}

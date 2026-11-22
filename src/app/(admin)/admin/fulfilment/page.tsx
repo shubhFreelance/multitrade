@@ -52,7 +52,7 @@ export default async function FulfilmentPage() {
     const e = f.enrolment;
     const code = e.batch.scheme.code;
     return (
-      <li key={f.id} className="flex flex-col gap-3 rounded-xl bg-card p-4 ring-1 ring-border">
+      <li key={f.id} className="flex flex-col gap-3 rounded-xl bg-card p-4">
         <div>
           <p className="flex flex-wrap items-baseline justify-between gap-x-3">
             <span className="text-lg font-semibold">{e.member.name}</span>
@@ -118,7 +118,7 @@ export default async function FulfilmentPage() {
         <p className="text-muted-foreground">{t("intro")}</p>
       </div>
 
-      <section aria-labelledby="gold-rate" className="flex flex-col gap-3 rounded-xl bg-card p-4 ring-1 ring-border">
+      <section aria-labelledby="gold-rate" className="flex flex-col gap-3 rounded-xl bg-card p-4">
         <h2 id="gold-rate" className="text-lg font-semibold">
           {t("goldRate")}
         </h2>

@@ -24,7 +24,7 @@ export default async function CashPage() {
       </div>
       <ul className="flex flex-col gap-3">
         {pending.map((p) => (
-          <li key={p.id} className="flex flex-col gap-3 rounded-xl bg-card p-4 ring-1 ring-border sm:flex-row sm:items-center sm:justify-between">
+          <li key={p.id} className="flex flex-col gap-3 rounded-xl bg-card p-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-lg font-semibold">
                 {formatPaise(p.amount)} <span className="font-normal">{p.member.name}</span>

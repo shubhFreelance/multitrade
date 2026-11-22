@@ -26,7 +26,7 @@ export default async function CampaignPage() {
           <h2 id="standings" className="text-lg font-semibold">
             {t("standings", { start: formatDay(c.start, locale), end: formatDay(c.end, locale) })}
           </h2>
-          <ul className="divide-y divide-border rounded-xl bg-card px-4 ring-1 ring-border">
+          <ul className="divide-y divide-border rounded-xl bg-card px-4">
             {o.agents.map((a) => (
               <li key={a.id} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-3">
                 <span>
@@ -55,7 +55,7 @@ export default async function CampaignPage() {
         </section>
       )}
 
-      <section aria-labelledby="settings" className="flex flex-col gap-3 rounded-xl bg-card p-4 ring-1 ring-border">
+      <section aria-labelledby="settings" className="flex flex-col gap-3 rounded-xl bg-card p-4">
         <h2 id="settings" className="text-lg font-semibold">
           {t("settings")}
         </h2>

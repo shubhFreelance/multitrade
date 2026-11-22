@@ -1,6 +1,7 @@
 // Pieces shared by the agent's and the super admin's views of who enrolled whom.
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
+import { schemeTone } from "@/components/glass";
 import { Beads, Ticks } from "@/components/tracker/beads";
 import { NextDue } from "@/components/tracker/next-due";
 import { formatDay, formatMonthYear } from "@/lib/dates";
@@ -14,13 +15,13 @@ import { todayInIndia } from "@/shared/tracker";
 export async function PeriodTabs({ current, base }: { current: Period; base: string }) {
   const t = await getTranslations("network.period");
   return (
-    <nav aria-label={t("label")} className="flex gap-1 self-start rounded-xl bg-mist p-1">
+    <nav aria-label={t("label")} className="flex gap-1 self-stretch rounded-full bg-card p-1 sm:self-start">
       {periods.map((p) => (
         <Link
           key={p}
           href={`${base}?period=${p}`}
           aria-current={p === current ? "page" : undefined}
-          className="flex min-h-10 items-center rounded-lg px-3.5 text-[15px] font-medium text-muted-foreground aria-[current=page]:bg-card aria-[current=page]:text-foreground aria-[current=page]:shadow-sm"
+          className="flex min-h-11 flex-1 items-center justify-center rounded-full px-4 text-[15px] font-medium text-muted-foreground aria-[current=page]:bg-primary aria-[current=page]:text-primary-foreground sm:flex-none"
         >
           {t(p)}
         </Link>
@@ -32,11 +33,11 @@ export async function PeriodTabs({ current, base }: { current: Period; base: str
 /** A few figures side by side, each with its label underneath. */
 export function Figures({ items }: { items: [label: string, value: string][] }) {
   return (
-    <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl bg-border ring-1 ring-border sm:grid-cols-4">
+    <dl className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
       {items.map(([label, value]) => (
-        <div key={label} className="flex flex-col-reverse gap-0.5 bg-card px-4 py-3">
+        <div key={label} className="flex flex-col-reverse justify-end gap-1 rounded-3xl bg-card px-4 py-4">
           <dt className="text-[14px] leading-snug text-muted-foreground">{label}</dt>
-          <dd className="text-xl font-semibold tabular-nums">{value}</dd>
+          <dd className="text-[26px] leading-none font-semibold tracking-tight tabular-nums">{value}</dd>
         </div>
       ))}
     </dl>
@@ -51,7 +52,7 @@ export async function MemberRow({ e, period, href, children }: { e: Member; peri
   const tt = await getTranslations("tracker");
   const locale = await getLocale();
   return (
-    <li className="flex flex-col gap-2 py-3.5">
+    <li className="flex flex-col gap-2.5 rounded-[28px] bg-card p-5">
       <div className="flex items-baseline justify-between gap-3">
         <Link href={href} className="min-w-0 truncate text-lg font-semibold underline-offset-4 hover:underline">
           {e.member.name}
@@ -102,10 +103,10 @@ export async function MemberDetail({ e, children }: { e: Awaited<ReturnType<type
 
   return (
     <>
-      <article className="overflow-hidden rounded-2xl bg-card ring-1 ring-border">
-        <header className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 bg-primary px-4 pt-3 pb-2.5 text-primary-foreground">
-          <h1 className="text-xl font-semibold">{e.member.name}</h1>
-          <p className="text-lg font-bold tracking-wider [font-stretch:75%]">{e.tokenNumber}</p>
+      <article className="overflow-hidden rounded-[28px] bg-card">
+        <header className={`glass-${schemeTone[e.scheme.code] ?? "violet"} flex flex-wrap items-end justify-between gap-x-4 gap-y-1 px-5 pt-5 pb-4 text-white`}>
+          <h1 className="text-[26px] leading-tight font-semibold tracking-tight">{e.member.name}</h1>
+          <p className="rounded-full bg-white/20 px-3 py-1 text-[14px] font-semibold tracking-wide ring-1 ring-white/30">{e.tokenNumber}</p>
         </header>
         <div className="flex flex-col gap-4 px-4 pt-4 pb-4">
           <p className="text-muted-foreground">
@@ -135,7 +136,7 @@ export async function MemberDetail({ e, children }: { e: Awaited<ReturnType<type
         {e.commission.length === 0 ? (
           <p className="text-muted-foreground">{tc("empty")}</p>
         ) : (
-          <ul className="divide-y divide-border rounded-2xl bg-card px-4 ring-1 ring-border">
+          <ul className="divide-y divide-border rounded-2xl bg-card px-4">
             {e.commission.map((l) => (
               <li key={l.id} className="flex items-baseline justify-between gap-3 py-3">
                 <div>

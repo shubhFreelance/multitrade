@@ -17,7 +17,7 @@ export async function CompletionCard({ c }: { c: Completion }) {
   if (c.status === "CONFIRMED" || c.status === "ALLOCATED") {
     const g = c.priceDetails;
     return (
-      <section className="rounded-2xl bg-card p-4 ring-1 ring-paid/40">
+      <section className="rounded-[28px] bg-card p-5">
         <h2 className="text-lg font-semibold">{t("confirmedTitle", { scheme, token: c.tokenNumber })}</h2>
         <p>
           {code === "GOLD"
@@ -48,19 +48,19 @@ export async function CompletionCard({ c }: { c: Completion }) {
   const address = (
     <label className="flex flex-col gap-1.5">
       <span className="font-medium">{t("address")}</span>
-      <textarea name="address" defaultValue={c.address} required minLength={5} maxLength={300} rows={3} className="rounded-lg border border-input bg-card px-3 py-2 text-base" />
+      <textarea name="address" defaultValue={c.address} required minLength={5} maxLength={300} rows={3} className="rounded-2xl border border-input bg-card px-3.5 py-2.5 text-base" />
     </label>
   );
 
   return (
-    <section aria-labelledby={`c-${c.id}`} className="overflow-hidden rounded-2xl bg-card ring-2 ring-paid">
-      <header className="bg-paid px-4 py-3 text-white">
-        <h2 id={`c-${c.id}`} className="text-xl font-semibold">
+    <section aria-labelledby={`c-${c.id}`} className="overflow-hidden rounded-[28px] bg-card">
+      <header className="glass-sunrise px-5 pt-6 pb-5 text-white">
+        <h2 id={`c-${c.id}`} className="text-[26px] leading-tight font-semibold tracking-tight">
           {c.reason === "WON" ? t("wonTitle", { scheme }) : t("maturedTitle", { scheme })}
         </h2>
-        <p className="font-bold tracking-wider [font-stretch:75%]">{c.tokenNumber}</p>
+        <p className="mt-2 inline-block rounded-full bg-white/20 px-3 py-1 text-[14px] font-semibold tracking-wide ring-1 ring-white/30">{c.tokenNumber}</p>
       </header>
-      <div className="flex flex-col gap-3 p-4">
+      <div className="flex flex-col gap-3 p-5">
         <p>{t(`ask.${code}`, { value: formatPaise(c.value) })}</p>
         {c.goldRate && <p className="font-medium">{t("todayGoldRate", { rate: formatPaise(c.goldRate.ratePerGram), purity: c.goldRate.purity })}</p>}
         <ActionForm action={confirmFulfilmentAction.bind(null, c.id)} submitLabel={t(`submit.${code}`)} buttonClassName="h-12 w-full text-base font-semibold">
@@ -71,7 +71,7 @@ export async function CompletionCard({ c }: { c: Completion }) {
               <fieldset className="flex flex-col gap-2">
                 <legend className="mb-1.5 font-medium">{t("chooseProduct")}</legend>
                 {c.products.map((p) => (
-                  <label key={p.id} className="flex cursor-pointer items-start gap-3 rounded-xl p-3 ring-1 ring-border has-checked:ring-2 has-checked:ring-primary">
+                  <label key={p.id} className="flex cursor-pointer items-start gap-3 rounded-2xl bg-secondary p-4 has-checked:bg-card has-checked:ring-2 has-checked:ring-primary">
                     <input type="radio" name="productId" value={p.id} required className="mt-1 size-5 accent-primary" />
                     <span className="flex flex-1 flex-col">
                       <span className="flex justify-between gap-3 font-semibold">

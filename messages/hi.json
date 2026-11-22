@@ -13,7 +13,9 @@
     "codeSentTo": "{phone} पर कोड भेजा गया",
     "verify": "लॉग इन करें",
     "changeNumber": "नंबर बदलें",
-    "resend": "कोड फिर से भेजें"
+    "resend": "कोड फिर से भेजें",
+    "hero": "आपकी योजना, हर महीने का हिसाब",
+    "heroSub": "अपने मोबाइल नंबर से लॉग इन करें। पहचान के लिए हम एक कोड भेजेंगे।"
   },
   "errors": {
     "NOT_REGISTERED": "यह नंबर पंजीकृत नहीं है। कृपया अपने पंचायत लीडर से संपर्क करें।",
@@ -67,13 +69,34 @@
       "draws": "ड्रॉ के नतीजे",
       "join": "योजना से जुड़ें",
       "account": "मेरी जानकारी",
-      "messages": "संदेश"
+      "messages": "संदेश",
+      "short": {
+        "schemes": "होम",
+        "join": "जुड़ें",
+        "draws": "ड्रॉ",
+        "messages": "संदेश",
+        "account": "मैं"
+      }
     },
     "status": {
       "ACTIVE": "किस्तें जारी",
       "MATURED": "सारी किस्तें जमा",
       "DEFAULTED": "डिफ़ॉल्ट",
       "WON": "ड्रॉ जीता"
+    },
+    "home": {
+      "paidLabel": "अब तक जमा",
+      "acrossPayments": "{count} किस्तों में",
+      "dueNow": "अभी देय",
+      "overdueNow": "बकाया",
+      "nextDue": "अगली किस्त",
+      "allPaid": "सब जमा",
+      "SCOOTER": "स्कूटर ड्रॉ",
+      "GOLD_CHAIN": "सोने की चेन ड्रॉ",
+      "unlocked": "खुल गया",
+      "toUnlock": "{count} किस्तें बाकी",
+      "bonusLink": "बोनस ड्रॉ देखें",
+      "joinCta": "शुरू करने के लिए किसी योजना से जुड़ें"
     }
   },
   "agent": {
@@ -144,7 +167,21 @@
       "home": "होम",
       "members": "मेरे सदस्य",
       "enrol": "सदस्य जोड़ें",
-      "commission": "मेरा कमीशन"
+      "commission": "मेरा कमीशन",
+      "short": {
+        "home": "होम",
+        "members": "सदस्य",
+        "enrol": "जोड़ें",
+        "commission": "कमाई"
+      }
+    },
+    "home": {
+      "commissionMonth": "इस महीने कमीशन",
+      "fromPayments": "{count, plural, =0 {अभी कोई किस्त नहीं} other {# किस्तों से}}",
+      "members": "सदस्य",
+      "schemes": "{count} योजनाएँ",
+      "toCollect": "अभी वसूली",
+      "fromMembers": "{count, plural, =0 {अभी किसी पर बाकी नहीं} other {# सदस्यों से}}"
     }
   },
   "admin": {
@@ -160,7 +197,8 @@
       "draws": "ड्रॉ",
       "network": "एजेंट और सदस्य",
       "fulfilment": "डिलीवरी",
-      "campaign": "अभियान"
+      "campaign": "अभियान",
+      "label": "विभाग"
     },
     "schemes": {
       "title": "योजनाएँ",
@@ -334,7 +372,9 @@
         "agents": "सभी एजेंट डाउनलोड करें",
         "payments": "भुगतान डाउनलोड करें",
         "commission": "कमीशन डाउनलोड करें"
-      }
+      },
+      "acrossPayments": "{count, plural, =0 {अभी कोई किस्त नहीं} other {# किस्तों में}}",
+      "dueNowShort": "अभी देय"
     }
   },
   "common": {
