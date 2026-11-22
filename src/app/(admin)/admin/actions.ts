@@ -5,6 +5,7 @@ import { rupeesToPaise } from "@/lib/money";
 import { updateAgent } from "@/server/agents";
 import { rejectCash, verifyCash } from "@/server/payments";
 import { runMonthlyDraw } from "@/server/draws";
+import { runDailyAsAdmin } from "@/server/reminders";
 import { cancelAgentInvoice, createAgentInvoices, markAgentInvoicePaid } from "@/server/invoices";
 import { createBatch, createProduct, updateBatch, updateProduct, updateScheme } from "@/server/catalog";
 import { AppError, toAppError } from "@/server/errors";
@@ -84,3 +85,5 @@ export const markAgentInvoicePaidAction = async (id: string, _: FormState, fd: F
 export const cancelAgentInvoiceAction = async (id: string) => run((u) => cancelAgentInvoice(u, id));
 
 export const runDrawAction = async (batchId: string, monthNo: number) => run((u) => runMonthlyDraw(u, { batchId, monthNo }));
+
+export const runDailyAction = async () => run((u) => runDailyAsAdmin(u));

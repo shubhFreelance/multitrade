@@ -1,5 +1,6 @@
 import { getLocale, getTranslations } from "next-intl/server";
-import { formatDay } from "@/lib/dates";
+import { formatDay, formatMonthYear } from "@/lib/dates";
+import { formatPaise } from "@/lib/money";
 import { listMyNotifications, markAllRead } from "@/server/completion";
 import { requirePageUser } from "@/server/session";
 import { todayInIndia } from "@/shared/tracker";
@@ -24,7 +25,12 @@ export default async function MessagesPage() {
               <div>
                 <p className={n.readAt ? "" : "font-semibold"}>
                   {!n.readAt && <span className="sr-only">{t("new")} </span>}
-                  {t(n.type, { scheme: n.scheme ? (locale === "hi" ? n.scheme.nameHi : n.scheme.nameEn) : "", token: n.tokenNumber })}
+                  {t(n.type, {
+                    scheme: n.scheme ? (locale === "hi" ? n.scheme.nameHi : n.scheme.nameEn) : "",
+                    token: n.tokenNumber,
+                    month: n.dueDate ? formatMonthYear(n.dueDate, locale) : "",
+                    amount: n.amount === null ? "" : formatPaise(n.amount),
+                  })}
                 </p>
                 <p className="text-[14px] text-muted-foreground">{formatDay(todayInIndia(n.createdAt), locale)}</p>
               </div>

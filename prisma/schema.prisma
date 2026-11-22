@@ -201,14 +201,15 @@ enum InstallmentStatus {
 }
 
 model Installment {
-  id          String            @id @default(cuid())
-  enrolmentId String
-  enrolment   Enrolment         @relation(fields: [enrolmentId], references: [id])
-  monthNo     Int // 1..tenure
-  dueDate     DateTime          @db.Date
-  amount      Int // paise, copied from the scheme at enrolment
-  status      InstallmentStatus @default(DUE)
-  payments    Payment[]
+  id            String            @id @default(cuid())
+  enrolmentId   String
+  enrolment     Enrolment         @relation(fields: [enrolmentId], references: [id])
+  monthNo       Int // 1..tenure
+  dueDate       DateTime          @db.Date
+  amount        Int // paise, copied from the scheme at enrolment
+  status        InstallmentStatus @default(DUE)
+  payments      Payment[]
+  notifications Notification[]
 
   @@unique([enrolmentId, monthNo])
 }
@@ -382,20 +383,27 @@ model Fulfilment {
 enum NotificationType {
   MATURED
   WON
+  DUE_SOON
+  DUE_TODAY
+  OVERDUE
+  DEFAULTED
 }
 
 // In-app messages; text is rendered in the reader's language from `type`. Also sent by SMS when `sms` is set.
 model Notification {
-  id          String           @id @default(cuid())
-  userId      String
-  user        User             @relation(fields: [userId], references: [id])
-  type        NotificationType
-  enrolmentId String?
-  sms         Boolean          @default(false)
-  smsSentAt   DateTime? // null with sms = true: still to send (retried by the next send)
-  readAt      DateTime?
-  createdAt   DateTime         @default(now())
+  id            String           @id @default(cuid())
+  userId        String
+  user          User             @relation(fields: [userId], references: [id])
+  type          NotificationType
+  enrolmentId   String?
+  installmentId String? // reminders: the month they are about; with type, at most one of each
+  installment   Installment?     @relation(fields: [installmentId], references: [id])
+  sms           Boolean          @default(false)
+  smsSentAt     DateTime? // null with sms = true: still to send (retried by the next send)
+  readAt        DateTime?
+  createdAt     DateTime         @default(now())
 
+  @@unique([installmentId, type])
   @@index([userId, createdAt])
   @@index([sms, smsSentAt])
 }

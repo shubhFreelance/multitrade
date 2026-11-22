@@ -62,9 +62,21 @@ A full pass, start to finish:
 
 12. **Completion:** when a member pays their last month, or wins a draw, a green card at the top of **My schemes** asks them to act: confirm the delivery address (Upahar), choose a product (Manpasand; add products under the admin's **Products** with the Manpasand scheme) or book the gold purchase (Gold). It stays until they answer. An SMS (printed in the terminal) and a message under **Messages** go out too.
 
+13. **Reminders and overdue:** as the super admin, tap **Run the daily check now** on the admin home. It sends due-soon and due-now SMS (in the terminal), marks months overdue 10 days after the due date and marks members with 2 overdue months in a row as defaulted (out of the draws until they catch up). Members see the messages under **Messages**.
+
 Things worth checking: paying a later month before an earlier one is refused; a paid month can't be paid again; paying all 12 marks the scheme Matured; Hindi and English both read correctly.
 
 Set `PAYMENT_PROVIDER` to nothing to switch online payment off (the Pay button disappears). The test checkout never runs unless it is set to `test`, so keep it unset in production.
+
+## Daily job
+
+In production, have the host's scheduler call the daily job once a morning:
+
+```sh
+curl -X POST https://<your-domain>/api/v1/cron/daily -H "Authorization: Bearer $CRON_SECRET"
+```
+
+Set `CRON_SECRET` to a long random value. If it is unset the endpoint is off; the super admin can still run the job from the admin home.
 
 ## Schema changes
 

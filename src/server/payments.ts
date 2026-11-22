@@ -70,8 +70,13 @@ async function settleSuccess(tx: Tx, paymentId: string, data: Prisma.PaymentUpda
   const { amount, ruleMissing } = commissionFor(inst.enrolment.batch.scheme.commissionRule, p.amount);
   // Members who joined directly have no agent, so nobody earns commission.
   if (inst.enrolment.agentId) await tx.commission.create({ data: { agentId: inst.enrolment.agentId, paymentId: p.id, amount, ruleMissing } });
+  let status = inst.enrolment.status;
+  // A defaulted member who has caught up on every overdue month is back in the draws.
+  if (status === "DEFAULTED" && (await tx.installment.count({ where: { enrolmentId: inst.enrolmentId, status: "OVERDUE" } })) === 0) {
+    status = (await tx.enrolment.update({ where: { id: inst.enrolmentId }, data: { status: "ACTIVE" } })).status;
+  }
   const unpaid = await tx.installment.count({ where: { enrolmentId: inst.enrolmentId, status: { in: ["DUE", "OVERDUE"] } } });
-  if (unpaid === 0 && inst.enrolment.status === "ACTIVE") {
+  if (unpaid === 0 && status === "ACTIVE") {
     await tx.enrolment.update({ where: { id: inst.enrolmentId }, data: { status: "MATURED" } });
     await startCompletion(tx, inst.enrolmentId, "MATURED");
   }

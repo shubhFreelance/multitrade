@@ -47,7 +47,8 @@
     "NO_ELIGIBLE": "No member is eligible for this draw yet.",
     "ALREADY_CONFIRMED": "You have already done this.",
     "ADDRESS_REQUIRED": "Enter the delivery address.",
-    "PRODUCT_UNAVAILABLE": "Choose a product that is available."
+    "PRODUCT_UNAVAILABLE": "Choose a product that is available.",
+    "CRON_DISABLED": "The daily job is switched off."
   },
   "member": {
     "title": "My schemes",
@@ -240,6 +241,11 @@
       "find": "Find",
       "noMemberInvoices": "No member invoices found.",
       "pdf": "PDF"
+    },
+    "daily": {
+      "title": "Daily check",
+      "intro": "Runs every morning by itself: marks months overdue 10 days after the due date, marks members who missed 2 months in a row as defaulted, and sends due-soon, due-now and overdue SMS. Run it now if it missed a day, or to test.",
+      "run": "Run the daily check now"
     }
   },
   "common": {
@@ -487,6 +493,10 @@
     "empty": "No messages yet.",
     "new": "New:",
     "MATURED": "All installments of {scheme} ({token}) are paid. Claim your product on My schemes.",
-    "WON": "{token} won the {scheme} draw. No more installments to pay. Claim your product on My schemes."
+    "WON": "{token} won the {scheme} draw. No more installments to pay. Claim your product on My schemes.",
+    "DUE_SOON": "{amount} for {month} ({token}) is due soon.",
+    "DUE_TODAY": "{amount} for {month} ({token}) is due now.",
+    "OVERDUE": "{amount} for {month} ({token}) is overdue. Members with an overdue month can't win the monthly draw.",
+    "DEFAULTED": "{token} missed months in a row and is out of the draws. Pay what is owed to take part again."
   }
 }

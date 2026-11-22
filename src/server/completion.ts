@@ -1,7 +1,9 @@
 // When an enrolment matures or wins a draw, the member is asked to act, in the app until they do, and by SMS:
 // Upahar: confirm the delivery address. Manpasand: choose a product (and the address). Gold: book the purchase.
-import type { Prisma } from "@/generated/prisma/client";
+import type { NotificationType, Prisma } from "@/generated/prisma/client";
+import { formatMonthYear } from "@/lib/dates";
 import { db } from "@/lib/db";
+import { formatPaise } from "@/lib/money";
 import type { SessionUser } from "@/shared/auth";
 import { confirmFulfilmentInput } from "@/shared/completion";
 import { requireRole } from "./auth";
@@ -18,19 +20,43 @@ export async function startCompletion(tx: Tx, enrolmentId: string, reason: "MATU
   await tx.notification.create({ data: { userId: e.memberId, type: reason, enrolmentId, sms: true } });
 }
 
-const smsText = {
+type SmsContext = { scheme: string; token: string; month: string; amount: string };
+
+const smsText: Record<"en" | "hi", Record<NotificationType, (c: SmsContext) => string>> = {
   en: {
-    MATURED: (scheme: string, token: string) => `Saksham Multitrade: all installments of ${scheme} (${token}) are paid. Open the app to claim your product.`,
-    WON: (scheme: string, token: string) => `Saksham Multitrade: congratulations, ${token} won this month's ${scheme} draw. No more installments to pay. Open the app to claim your product.`,
+    MATURED: (c) => `Saksham Multitrade: all installments of ${c.scheme} (${c.token}) are paid. Open the app to claim your product.`,
+    WON: (c) => `Saksham Multitrade: congratulations, ${c.token} won this month's ${c.scheme} draw. No more installments to pay. Open the app to claim your product.`,
+    DUE_SOON: (c) => `Saksham Multitrade: ${c.amount} for ${c.month} (${c.token}) is due soon. Pay in the app or give cash to your Panchayat Leader.`,
+    DUE_TODAY: (c) => `Saksham Multitrade: ${c.amount} for ${c.month} (${c.token}) is due now. Pay in the app or give cash to your Panchayat Leader.`,
+    OVERDUE: (c) => `Saksham Multitrade: ${c.amount} for ${c.month} (${c.token}) is overdue. Members with an overdue month can't win the monthly draw. Please pay soon.`,
+    DEFAULTED: (c) => `Saksham Multitrade: ${c.token} has missed months in a row and is out of the draws. Pay what is owed to take part again.`,
   },
   hi: {
-    MATURED: (scheme: string, token: string) => `सक्षम मल्टीट्रेड: ${scheme} (${token}) की सारी किस्तें जमा हो गईं। अपना सामान लेने के लिए ऐप खोलें।`,
-    WON: (scheme: string, token: string) => `सक्षम मल्टीट्रेड: बधाई हो, ${token} ने ${scheme} का इस महीने का ड्रॉ जीता। अब कोई किस्त नहीं भरनी। अपना सामान लेने के लिए ऐप खोलें।`,
+    MATURED: (c) => `सक्षम मल्टीट्रेड: ${c.scheme} (${c.token}) की सारी किस्तें जमा हो गईं। अपना सामान लेने के लिए ऐप खोलें।`,
+    WON: (c) => `सक्षम मल्टीट्रेड: बधाई हो, ${c.token} ने ${c.scheme} का इस महीने का ड्रॉ जीता। अब कोई किस्त नहीं भरनी। अपना सामान लेने के लिए ऐप खोलें।`,
+    DUE_SOON: (c) => `सक्षम मल्टीट्रेड: ${c.month} की किस्त ${c.amount} (${c.token}) जल्द देय है। ऐप से भरें या अपने पंचायत लीडर को नकद दें।`,
+    DUE_TODAY: (c) => `सक्षम मल्टीट्रेड: ${c.month} की किस्त ${c.amount} (${c.token}) अब देय है। ऐप से भरें या अपने पंचायत लीडर को नकद दें।`,
+    OVERDUE: (c) => `सक्षम मल्टीट्रेड: ${c.month} की किस्त ${c.amount} (${c.token}) बकाया है। बकाया किस्त वाले सदस्य मासिक ड्रॉ नहीं जीत सकते। कृपया जल्द भरें।`,
+    DEFAULTED: (c) => `सक्षम मल्टीट्रेड: ${c.token} की लगातार किस्तें छूट गई हैं, इसलिए यह ड्रॉ से बाहर है। फिर से शामिल होने के लिए बकाया भरें।`,
   },
 };
 
+/** Scheme, token, month and amount a notification is about, in the reader's language. */
+async function contextFor(n: { enrolmentId: string | null; installmentId: string | null }, hi: boolean): Promise<SmsContext> {
+  const [e, i] = await Promise.all([
+    n.enrolmentId ? db.enrolment.findUnique({ where: { id: n.enrolmentId }, select: { tokenNumber: true, batch: { select: { scheme: true } } } }) : null,
+    n.installmentId ? db.installment.findUnique({ where: { id: n.installmentId }, select: { dueDate: true, amount: true } }) : null,
+  ]);
+  return {
+    scheme: e ? (hi ? e.batch.scheme.nameHi : e.batch.scheme.nameEn) : "",
+    token: e?.tokenNumber ?? "",
+    month: i ? formatMonthYear(i.dueDate.toISOString().slice(0, 10), hi ? "hi" : "en") : "",
+    amount: i ? formatPaise(i.amount) : "",
+  };
+}
+
 /**
- * Sends SMS for notifications that still need one. Call after the transaction that created them has committed.
+ * Sends up to 50 SMS for notifications that still need one. Call after the transaction that created them has committed.
  * Each one is claimed before sending, so two callers never send the same SMS; a failed send is released for the next call.
  */
 export async function sendQueuedSms() {
@@ -40,21 +66,20 @@ export async function sendQueuedSms() {
     orderBy: { createdAt: "asc" },
     take: 50,
   });
+  let sent = 0;
   for (const n of queued) {
     const claimed = await db.notification.updateMany({ where: { id: n.id, smsSentAt: null }, data: { smsSentAt: new Date() } });
     if (claimed.count === 0) continue;
     try {
-      const e = n.enrolmentId
-        ? await db.enrolment.findUnique({ where: { id: n.enrolmentId }, select: { tokenNumber: true, batch: { select: { scheme: true } } } })
-        : null;
       const hi = n.user.language === "hi";
-      const scheme = e ? (hi ? e.batch.scheme.nameHi : e.batch.scheme.nameEn) : "";
-      await sendSms(n.user.phone, smsText[hi ? "hi" : "en"][n.type](scheme, e?.tokenNumber ?? ""));
+      await sendSms(n.user.phone, smsText[hi ? "hi" : "en"][n.type](await contextFor(n, hi)));
+      sent++;
     } catch (err) {
       console.error(`SMS for notification ${n.id} failed`, err);
       await db.notification.update({ where: { id: n.id }, data: { smsSentAt: null } });
     }
   }
+  return { found: queued.length, sent };
 }
 
 /** Sends queued SMS without ever failing the caller: the money or draw is already saved. */
@@ -129,7 +154,12 @@ export async function confirmFulfilment(user: SessionUser | null, fulfilmentId: 
 /** The member's messages, newest first. */
 export async function listMyNotifications(user: SessionUser | null) {
   const member = requireRole(user, ["MEMBER"]);
-  const rows = await db.notification.findMany({ where: { userId: member.id }, orderBy: { createdAt: "desc" }, take: 100 });
+  const rows = await db.notification.findMany({
+    where: { userId: member.id },
+    include: { installment: { select: { dueDate: true, amount: true } } },
+    orderBy: { createdAt: "desc" },
+    take: 100,
+  });
   const tokens = new Map(
     (
       await db.enrolment.findMany({
@@ -140,7 +170,17 @@ export async function listMyNotifications(user: SessionUser | null) {
   );
   return rows.map((n) => {
     const e = n.enrolmentId ? tokens.get(n.enrolmentId) : undefined;
-    return { id: n.id, type: n.type, createdAt: n.createdAt, readAt: n.readAt, tokenNumber: e?.tokenNumber ?? "", scheme: e?.batch.scheme ?? null };
+    return {
+      id: n.id,
+      type: n.type,
+      createdAt: n.createdAt,
+      readAt: n.readAt,
+      tokenNumber: e?.tokenNumber ?? "",
+      scheme: e?.batch.scheme ?? null,
+      // reminders: the month ("YYYY-MM-DD") and amount in paise
+      dueDate: n.installment?.dueDate.toISOString().slice(0, 10) ?? null,
+      amount: n.installment?.amount ?? null,
+    };
   });
 }
 

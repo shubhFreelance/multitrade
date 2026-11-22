@@ -9,6 +9,7 @@ const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.
 const config: Record<string, unknown> = {
   company: { name: "Saksham Multitrade Pvt Ltd", cin: "", address: "", registrations: [] }, // CONFIRM: real legal details
   overdueAfterDays: 10, // CONFIRM #2
+  reminderDaysBefore: 3, // "due soon" reminder this many days before the due date
   defaultAfterMissedInARow: 2, // CONFIRM #2
   bonusUnlock: { scooter: 6, goldChain: 12, scope: "ENROLMENT" }, // paid months to unlock each prize; CONFIRM #5: or "CUMULATIVE"
   bonusRewards: { scooters: 5, goldChains: 1 },
