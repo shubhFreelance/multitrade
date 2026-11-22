@@ -1,3 +1,4 @@
+import { Package } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { ActionForm } from "@/components/action-form";
@@ -5,6 +6,7 @@ import { getProduct } from "@/server/catalog";
 import { requirePageUser } from "@/server/session";
 import { adminRoles } from "@/shared/auth";
 import { updateProductAction } from "../../actions";
+import { PageHeader } from "@/components/ui-bits";
 import { ProductFields } from "../product-fields";
 
 export default async function ProductPage({ params }: PageProps<"/admin/products/[id]">) {
@@ -17,7 +19,7 @@ export default async function ProductPage({ params }: PageProps<"/admin/products
       <Link href="/admin/products" className="-my-2 inline-flex min-h-11 items-center self-start text-[15px] hover:underline">
         ← {tc("back")}
       </Link>
-      <h1 className="text-xl font-semibold">{product.name}</h1>
+      <PageHeader tone="peach" icon={Package} title={product.name} />
       <ActionForm action={updateProductAction.bind(null, product.id)} submitLabel={tc("save")}>
         <ProductFields product={product} />
         <label className="flex min-h-11 items-center gap-3">

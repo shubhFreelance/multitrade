@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { formatDay } from "@/lib/dates";
 import { requirePageUser } from "@/server/session";
 import { getMyAccount } from "@/server/tracker";
+import { PageHeader } from "@/components/ui-bits";
 import { todayInIndia } from "@/shared/tracker";
 
 export default async function AccountPage() {
@@ -21,7 +22,7 @@ export default async function AccountPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-xl flex-col gap-5">
-      <h1 className="text-[28px] leading-tight font-semibold">{t("title")}</h1>
+      <PageHeader tone="pink" icon={UserRound} title={t("title")} />
 
       <section aria-labelledby="joined" className="flex flex-col gap-3">
         <h2 id="joined" className="text-lg font-semibold">

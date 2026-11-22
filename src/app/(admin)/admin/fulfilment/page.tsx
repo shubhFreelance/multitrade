@@ -1,3 +1,4 @@
+import { Gift } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ActionForm } from "@/components/action-form";
 import { Field, SelectField } from "@/components/field";
@@ -8,9 +9,11 @@ import { requirePageUser } from "@/server/session";
 import { adminRoles } from "@/shared/auth";
 import type { GoldPrice } from "@/shared/fulfilment";
 import { todayInIndia } from "@/shared/tracker";
+import { PageHeader, SectionTitle } from "@/components/ui-bits";
 import { allocateAction, deliveredAction, differencePaidAction, setGoldRateAction } from "../actions";
 
 type Data = Awaited<ReturnType<typeof listFulfilments>>;
+const groupTint = { CONFIRMED: "pink", ALLOCATED: "sunrise", PENDING: "amber", DELIVERED: "blue" } as const;
 type Item = Data["items"][number];
 
 export default async function FulfilmentPage() {
@@ -113,10 +116,7 @@ export default async function FulfilmentPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-xl font-semibold">{t("title")}</h1>
-        <p className="text-muted-foreground">{t("intro")}</p>
-      </div>
+      <PageHeader tone="pink" icon={Gift} title={t("title")} intro={t("intro")} />
 
       <section aria-labelledby="gold-rate" className="flex flex-col gap-3 rounded-xl bg-card p-4">
         <h2 id="gold-rate" className="text-lg font-semibold">
@@ -141,9 +141,9 @@ export default async function FulfilmentPage() {
 
       {groups.map(([status, items]) => (
         <section key={status} aria-labelledby={`g-${status}`} className="flex flex-col gap-3">
-          <h2 id={`g-${status}`} className="border-b pb-1 text-lg font-semibold">
+          <SectionTitle id={`g-${status}`} tint={groupTint[status]}>
             {t(`group.${status}`, { count: items.length })}
-          </h2>
+          </SectionTitle>
           {items.length === 0 ? <p className="text-muted-foreground">{t("none")}</p> : <ul className="flex flex-col gap-3">{items.map(card)}</ul>}
         </section>
       ))}

@@ -1,8 +1,10 @@
 // Pieces shared by the agent's and the super admin's views of who enrolled whom.
+import { Phone, Wallet } from "lucide-react";
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 import { schemeTone } from "@/components/glass";
 import { Beads, Ticks } from "@/components/tracker/beads";
+import { Avatar, Chip, type Tint } from "@/components/ui-bits";
 import { NextDue } from "@/components/tracker/next-due";
 import { formatDay, formatMonthYear } from "@/lib/dates";
 import { formatPaise } from "@/lib/money";
@@ -30,14 +32,16 @@ export async function PeriodTabs({ current, base }: { current: Period; base: str
   );
 }
 
-/** A few figures side by side, each with its label underneath. */
-export function Figures({ items }: { items: [label: string, value: string][] }) {
+const figureTints: Tint[] = ["violet", "blue", "sunrise", "coral"];
+
+/** A few figures side by side on pastel tiles, each with its label underneath. Tints rotate unless given. */
+export function Figures({ items }: { items: [label: string, value: string, tint?: Tint][] }) {
   return (
     <dl className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
-      {items.map(([label, value]) => (
-        <div key={label} className="flex flex-col-reverse justify-end gap-1 rounded-3xl bg-card px-4 py-4">
-          <dt className="text-[14px] leading-snug text-muted-foreground">{label}</dt>
-          <dd className="text-[26px] leading-none font-semibold tracking-tight tabular-nums">{value}</dd>
+      {items.map(([label, value, tint], i) => (
+        <div key={label} className={`tint-${tint ?? figureTints[i % figureTints.length]} flex flex-col-reverse justify-end gap-1.5 rounded-3xl px-4 py-4`}>
+          <dt className="text-[14px] leading-snug text-foreground/70">{label}</dt>
+          <dd className="text-tint text-[28px] leading-none font-semibold tracking-tight tabular-nums">{value}</dd>
         </div>
       ))}
     </dl>
@@ -51,22 +55,29 @@ export async function MemberRow({ e, period, href, children }: { e: Member; peri
   const t = await getTranslations("network");
   const tt = await getTranslations("tracker");
   const locale = await getLocale();
+  const tone = schemeTone[e.scheme.code] ?? "violet";
   return (
-    <li className="flex flex-col gap-2.5 rounded-[28px] bg-card p-5">
-      <div className="flex items-baseline justify-between gap-3">
-        <Link href={href} className="min-w-0 truncate text-lg font-semibold underline-offset-4 hover:underline">
-          {e.member.name}
-        </Link>
-        <span className="shrink-0 font-bold tracking-wide text-muted-foreground [font-stretch:75%]">{e.tokenNumber}</span>
+    <li className="flex flex-col gap-3 rounded-[28px] bg-card p-5">
+      <div className="flex items-center gap-3">
+        <Avatar name={e.member.name} tint={tone} />
+        <div className="min-w-0 flex-1">
+          <Link href={href} className="block truncate text-lg leading-tight font-semibold underline-offset-4 hover:underline">
+            {e.member.name}
+          </Link>
+          <Chip tint={tone} className="mt-1">
+            {locale === "hi" ? e.scheme.nameHi : e.scheme.nameEn}
+          </Chip>
+        </div>
+        <span className="shrink-0 rounded-full bg-secondary px-2.5 py-1 text-[13px] font-semibold tracking-wide text-muted-foreground">{e.tokenNumber}</span>
       </div>
       <Ticks slots={e.summary.slots} />
       <div className="text-[15px]">
         <p className="text-muted-foreground">
-          {locale === "hi" ? e.scheme.nameHi : e.scheme.nameEn}, {tt("paidOf", { paid: e.summary.paidCount, total: e.summary.total })}{" "}
-          {t("joinedOn", { day: formatDay(todayInIndia(e.createdAt), locale) })}
+          {tt("paidOf", { paid: e.summary.paidCount, total: e.summary.total })} {t("joinedOn", { day: formatDay(todayInIndia(e.createdAt), locale) })}
         </p>
         <NextDue summary={e.summary} />
-        <p>
+        <p className="mt-1 inline-flex items-center gap-2 font-medium">
+          <Wallet aria-hidden className="text-tint tint-violet size-4 bg-transparent" />
           {t("commissionLine", {
             period,
             label: period === "all" ? "" : t(`period.in.${period}`),
@@ -76,14 +87,15 @@ export async function MemberRow({ e, period, href, children }: { e: Member; peri
         </p>
       </div>
       <div className="flex gap-2">
-        <Link href={href} className="flex min-h-11 flex-1 items-center justify-center rounded-lg font-medium text-primary ring-1 ring-input hover:bg-mist">
+        <Link href={href} className={`tint-${tone} text-tint flex min-h-11 flex-1 items-center justify-center rounded-full font-semibold hover:brightness-95`}>
           {t("details")}
         </Link>
         <a
           href={`tel:+91${e.member.phone}`}
-          className="flex min-h-11 items-center rounded-lg px-4 font-medium text-primary ring-1 ring-input hover:bg-mist"
+          className="flex min-h-11 items-center gap-1.5 rounded-full bg-secondary px-4 font-medium hover:bg-muted"
           aria-label={t("callName", { name: e.member.name })}
         >
+          <Phone aria-hidden className="size-4" />
           {t("call")}
         </a>
       </div>

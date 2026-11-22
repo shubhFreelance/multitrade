@@ -1,3 +1,4 @@
+import { Banknote } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ActionForm } from "@/components/action-form";
 import { formatMonthYear } from "@/lib/dates";
@@ -5,6 +6,7 @@ import { formatPaise } from "@/lib/money";
 import { listPendingCash } from "@/server/payments";
 import { requirePageUser } from "@/server/session";
 import { adminRoles } from "@/shared/auth";
+import { Avatar, Chip, PageHeader } from "@/components/ui-bits";
 import { rejectCashAction, verifyCashAction } from "../actions";
 
 const when = (d: Date, locale: string) =>
@@ -18,16 +20,15 @@ export default async function CashPage() {
 
   return (
     <div className="flex flex-col gap-5">
-      <div>
-        <h1 className="text-xl font-semibold">{t("title")}</h1>
-        <p className="text-muted-foreground">{pending.length ? t("summary", { count: pending.length, amount: formatPaise(total) }) : t("empty")}</p>
-      </div>
+      <PageHeader tone="blue" icon={Banknote} title={t("title")} intro={pending.length ? t("summary", { count: pending.length, amount: formatPaise(total) }) : t("empty")} />
       <ul className="flex flex-col gap-3">
         {pending.map((p) => (
-          <li key={p.id} className="flex flex-col gap-3 rounded-xl bg-card p-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-lg font-semibold">
-                {formatPaise(p.amount)} <span className="font-normal">{p.member.name}</span>
+          <li key={p.id} className="flex flex-col gap-3 rounded-[28px] bg-card p-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex gap-3">
+              <Avatar name={p.member.name} tint="blue" />
+              <div>
+              <p className="flex flex-wrap items-center gap-2 text-lg font-semibold">
+                {p.member.name} <Chip tint="blue">{formatPaise(p.amount)}</Chip>
               </p>
               <p className="text-muted-foreground">
                 {t("line", {
@@ -37,6 +38,7 @@ export default async function CashPage() {
                   when: when(p.createdAt, locale),
                 })}
               </p>
+              </div>
             </div>
             <div className="flex gap-2">
               <ActionForm action={verifyCashAction.bind(null, p.id)} submitLabel={t("verify")} />

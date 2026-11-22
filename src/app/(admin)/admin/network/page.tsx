@@ -1,8 +1,10 @@
+import { Boxes } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Figures, PeriodTabs } from "@/components/network";
 import { formatPaise } from "@/lib/money";
 import { networkOverview } from "@/server/network";
+import { Avatar, PageHeader } from "@/components/ui-bits";
 import { requirePageUser } from "@/server/session";
 
 export default async function NetworkPage({ searchParams }: PageProps<"/admin/network">) {
@@ -36,10 +38,7 @@ export default async function NetworkPage({ searchParams }: PageProps<"/admin/ne
 
   return (
     <div className="flex flex-col gap-5">
-      <div>
-        <h1 className="text-xl font-semibold">{t("adminTitle")}</h1>
-        <p className="text-muted-foreground">{t("adminIntro")}</p>
-      </div>
+      <PageHeader tone="blue" icon={Boxes} title={t("adminTitle")} intro={t("adminIntro")} />
       <PeriodTabs current={o.period} base="/admin/network" />
       <Figures
         items={[
@@ -52,19 +51,22 @@ export default async function NetworkPage({ searchParams }: PageProps<"/admin/ne
       <ul className="flex flex-col gap-3">
         {o.agents.map((a) => (
           <li key={a.id}>
-            <Link href={`/admin/network/${a.id}?period=${o.period}`} className="flex flex-col gap-2 rounded-xl bg-card p-4 hover:ring-primary">
-              <p className="flex flex-wrap items-baseline justify-between gap-x-3">
-                <span className="text-lg font-semibold">{a.name}</span>
-                <span className="text-muted-foreground">
-                  {t("agentLine", { panchayat: a.panchayat, phone: a.phone })}
-                  {!a.approved && `, ${t("notApproved")}`}
-                </span>
-              </p>
+            <Link href={`/admin/network/${a.id}?period=${o.period}`} className="flex flex-col gap-3 rounded-[28px] bg-card p-5 hover:ring-2 hover:ring-primary/10">
+              <div className="flex items-center gap-3">
+                <Avatar name={a.name} tint={a.approved ? "violet" : "amber"} />
+                <div className="min-w-0">
+                  <p className="text-lg leading-tight font-semibold">{a.name}</p>
+                  <p className="text-[15px] text-muted-foreground">
+                    {t("agentLine", { panchayat: a.panchayat, phone: a.phone })}
+                    {!a.approved && `, ${t("notApproved")}`}
+                  </p>
+                </div>
+              </div>
               {figures(a, true)}
             </Link>
           </li>
         ))}
-        <li className="flex flex-col gap-2 rounded-xl bg-mist p-4">
+        <li className="tint-peach flex flex-col gap-2 rounded-[28px] p-5">
           <p className="text-lg font-semibold">{t("direct")}</p>
           {figures(o.direct, false)}
         </li>

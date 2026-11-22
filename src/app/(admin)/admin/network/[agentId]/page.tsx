@@ -5,6 +5,8 @@ import { Figures, MemberRow, PeriodTabs } from "@/components/network";
 import { formatPaise } from "@/lib/money";
 import { toAppError } from "@/server/errors";
 import { getAgentNetwork } from "@/server/network";
+import { PageHeader } from "@/components/ui-bits";
+import { Download, Users } from "lucide-react";
 import { requirePageUser } from "@/server/session";
 
 export default async function AgentNetworkPage({ params, searchParams }: PageProps<"/admin/network/[agentId]">) {
@@ -20,13 +22,16 @@ export default async function AgentNetworkPage({ params, searchParams }: PagePro
       <Link href={`/admin/network?period=${net.period}`} className="-my-2 inline-flex min-h-11 items-center self-start text-[15px] hover:underline">
         ← {tc("back")}
       </Link>
-      <div>
-        <h1 className="text-xl font-semibold">{net.agent.name}</h1>
-        <p className="text-muted-foreground">{t("agentLine", { panchayat: net.agent.panchayat, phone: net.agent.phone })}</p>
-        <a href={`/api/v1/admin/agents/${net.agent.id}/statement`} download className="mt-1 inline-flex min-h-11 items-center font-medium text-primary underline underline-offset-4">
+      <PageHeader tone="blue" icon={Users} title={net.agent.name} intro={t("agentLine", { panchayat: net.agent.panchayat, phone: net.agent.phone })}>
+        <a
+          href={`/api/v1/admin/agents/${net.agent.id}/statement`}
+          download
+          className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-4 font-semibold text-[#3443b3] hover:bg-white/90"
+        >
+          <Download aria-hidden className="size-4" />
           {t("downloadStatement")}
         </a>
-      </div>
+      </PageHeader>
       <PeriodTabs current={net.period} base={`/admin/network/${agentId}`} />
       <Figures
         items={[

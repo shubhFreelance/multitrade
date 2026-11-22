@@ -1,3 +1,4 @@
+import { FileText } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ActionForm } from "@/components/action-form";
 import { Field, SelectField } from "@/components/field";
@@ -6,6 +7,7 @@ import { formatPaise } from "@/lib/money";
 import { invoiceOverview } from "@/server/invoices";
 import { requirePageUser } from "@/server/session";
 import { todayInIndia } from "@/shared/tracker";
+import { PageHeader, SectionTitle } from "@/components/ui-bits";
 import { cancelAgentInvoiceAction, createAgentInvoicesAction, markAgentInvoicePaidAction } from "../actions";
 
 /** The last 12 months that have ended, newest first, as "YYYY-MM". */
@@ -25,12 +27,12 @@ export default async function InvoicesPage({ searchParams }: PageProps<"/admin/i
 
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-xl font-semibold">{t("title")}</h1>
+      <PageHeader tone="violet" icon={FileText} title={t("title")} />
 
       <section aria-labelledby="agent-invoices" className="flex flex-col gap-4">
-        <h2 id="agent-invoices" className="border-b-2 border-primary pb-1 text-lg font-semibold">
+        <SectionTitle id="agent-invoices" tint="violet">
           {t("agentTitle")}
-        </h2>
+        </SectionTitle>
         <p>{t("uninvoiced", { amount: formatPaise(o.uninvoicedTotal), count: o.uninvoicedCount })}</p>
         {o.awaitingRate > 0 && <p className="rounded-xl p-3 text-due-ink ring-1 ring-due">{t("awaitingRate", { count: o.awaitingRate })}</p>}
 
@@ -92,9 +94,9 @@ export default async function InvoicesPage({ searchParams }: PageProps<"/admin/i
       </section>
 
       <section aria-labelledby="member-invoices" className="flex flex-col gap-4">
-        <h2 id="member-invoices" className="border-b-2 border-primary pb-1 text-lg font-semibold">
+        <SectionTitle id="member-invoices" tint="blue">
           {t("memberTitle")}
-        </h2>
+        </SectionTitle>
         <form className="flex items-end gap-2" role="search">
           <div className="flex-1">
             <Field label={t("search")} name="q" defaultValue={typeof q === "string" ? q : ""} placeholder={t("searchHint")} />

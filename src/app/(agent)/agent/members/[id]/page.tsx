@@ -29,7 +29,7 @@ export default async function AgentMemberPage({ params }: PageProps<"/agent/memb
             action={recordCashAction.bind(null, next.id!)}
             submitLabel={t("recordCash", { amount: formatPaise(next.amount), month: formatMonthYear(next.dueDate, locale) })}
             confirm={t("confirmCash", { amount: formatPaise(next.amount), name: e.member.name, month: formatMonthYear(next.dueDate, locale) })}
-            buttonClassName="h-12 w-full bg-card text-base text-primary ring-1 ring-primary hover:bg-mist"
+            buttonClassName="h-12 w-full text-base font-semibold"
           />
         )}
       </MemberDetail>

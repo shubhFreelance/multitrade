@@ -1,3 +1,4 @@
+import { Plus } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ActionForm } from "@/components/action-form";
 import { schemeTone } from "@/components/glass";
@@ -5,6 +6,7 @@ import { formatMonthYear } from "@/lib/dates";
 import { formatPaise } from "@/lib/money";
 import { listJoinableBatches } from "@/server/enrolment";
 import { requirePageUser } from "@/server/session";
+import { PageHeader } from "@/components/ui-bits";
 import { joinBatchAction } from "../actions";
 
 export default async function MemberJoinPage() {
@@ -15,10 +17,7 @@ export default async function MemberJoinPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-xl flex-col gap-5">
-      <div>
-        <h1 className="text-[28px] leading-tight font-semibold">{t("title")}</h1>
-        <p className="text-muted-foreground">{t("memberIntro")}</p>
-      </div>
+      <PageHeader tone="sunrise" icon={Plus} title={t("title")} intro={t("memberIntro")} />
       {batches.length === 0 && <p className="rounded-2xl bg-card p-4">{t("noBatches")}</p>}
       {batches.map((b) => {
         const scheme = locale === "hi" ? b.schemeNameHi : b.schemeNameEn;

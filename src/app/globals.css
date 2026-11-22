@@ -196,4 +196,15 @@
       radial-gradient(110% 100% at 100% 100%, #c2410c 0%, transparent 55%),
       linear-gradient(150deg, #ec6f9a 0%, #f39a6b 55%, #d9572a 100%);
   }
+
+  /* Pastel tints for tiles, chips and secondary buttons: a soft wash of each glass colour with a deep ink for text
+     (each ink passes 4.5:1 on its wash). Use with text-tint for the ink. */
+  .tint-violet { background-color: #eee8fc; --tint-ink: #4e33b5; }
+  .tint-blue { background-color: #e7eafd; --tint-ink: #3443b3; }
+  .tint-coral { background-color: #fde6e3; --tint-ink: #b02d22; }
+  .tint-pink { background-color: #fde6f0; --tint-ink: #a51d5e; }
+  .tint-sunrise { background-color: #e3f3e6; --tint-ink: #1f7539; }
+  .tint-peach { background-color: #fdebe0; --tint-ink: #a8431a; }
+  .tint-amber { background-color: #fbf1dc; --tint-ink: #7a5000; }
+  .text-tint { color: var(--tint-ink); }
 }

@@ -1,9 +1,11 @@
+import { UserPlus } from "lucide-react";
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 import { EnrolForm } from "@/components/enrol-form";
 import { formatPaise } from "@/lib/money";
 import { getMyAgentProfile } from "@/server/agents";
 import { listOpenBatches } from "@/server/enrolment";
+import { PageHeader } from "@/components/ui-bits";
 import { requirePageUser } from "@/server/session";
 
 export default async function EnrolPage() {
@@ -19,11 +21,11 @@ export default async function EnrolPage() {
       <Link href="/agent" className="-my-2 inline-flex min-h-11 items-center self-start text-[15px] hover:underline">
         ← {tc("back")}
       </Link>
-      <h1 className="text-xl font-semibold">{t("enrol.title")}</h1>
+      <PageHeader tone="peach" icon={UserPlus} title={t("enrol.title")} />
       {!approved ? (
-        <p className="rounded-xl border p-4">{t("awaitingApproval")}</p>
+        <p className="rounded-[28px] bg-card p-5">{t("awaitingApproval")}</p>
       ) : batches.length === 0 ? (
-        <p className="rounded-xl border p-4">{t("enrol.noBatches")}</p>
+        <p className="rounded-[28px] bg-card p-5">{t("enrol.noBatches")}</p>
       ) : (
         <EnrolForm
           batches={batches.map((b) => ({

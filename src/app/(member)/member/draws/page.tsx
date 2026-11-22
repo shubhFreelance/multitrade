@@ -1,8 +1,10 @@
+import { Trophy } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { formatDay } from "@/lib/dates";
 import { listBonusDraws } from "@/server/bonus";
 import { listMyDraws } from "@/server/draws";
 import { requirePageUser } from "@/server/session";
+import { PageHeader } from "@/components/ui-bits";
 import { todayInIndia } from "@/shared/tracker";
 
 export default async function MyDrawsPage() {
@@ -15,10 +17,7 @@ export default async function MyDrawsPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-xl flex-col gap-5">
-      <div>
-        <h1 className="text-[28px] leading-tight font-semibold">{t("memberTitle")}</h1>
-        <p className="text-muted-foreground">{t("memberIntro")}</p>
-      </div>
+      <PageHeader tone="violet" icon={Trophy} title={t("memberTitle")} intro={t("memberIntro")} />
       {bonusDraws.map((d) => {
         const won = d.winners.some((w) => w.mine);
         return (

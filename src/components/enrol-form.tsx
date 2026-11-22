@@ -58,7 +58,7 @@ export function EnrolForm({ batches, mode = "agent" }: { batches: BatchOption[];
 
   if (step === "done") {
     return (
-      <div className="flex flex-col gap-4 rounded-xl border p-4" role="status">
+      <div className="flex flex-col gap-4 rounded-[28px] bg-card p-5" role="status">
         <p>{t(`${ns}.done`)}</p>
         <p className="text-2xl font-semibold tracking-wide">{token}</p>
         <Button

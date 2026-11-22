@@ -1,3 +1,4 @@
+import { Layers } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { ActionForm } from "@/components/action-form";
@@ -6,6 +7,7 @@ import { getBatch } from "@/server/catalog";
 import { requirePageUser } from "@/server/session";
 import { adminRoles } from "@/shared/auth";
 import { batchLabel, batchStatuses } from "@/shared/catalog";
+import { PageHeader } from "@/components/ui-bits";
 import { updateBatchAction } from "../../actions";
 
 export default async function BatchPage({ params }: PageProps<"/admin/batches/[id]">) {
@@ -20,9 +22,7 @@ export default async function BatchPage({ params }: PageProps<"/admin/batches/[i
       <Link href="/admin/batches" className="-my-2 inline-flex min-h-11 items-center self-start text-[15px] hover:underline">
         ← {tc("back")}
       </Link>
-      <h1 className="text-xl font-semibold">
-        {batchLabel(b.scheme.code, b.number)} · {b.scheme.nameEn}
-      </h1>
+      <PageHeader tone="violet" icon={Layers} title={batchLabel(b.scheme.code, b.number)} intro={b.scheme.nameEn} />
       {!open && <p className="text-sm text-muted-foreground">{t("locked")}</p>}
 
       <ActionForm action={updateBatchAction.bind(null, b.id)} submitLabel={tc("save")}>

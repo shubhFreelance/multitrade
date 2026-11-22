@@ -1,3 +1,4 @@
+import { Trophy } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ActionForm } from "@/components/action-form";
 import { BonusDrawAdmin } from "@/components/bonus-draw-admin";
@@ -7,6 +8,7 @@ import { listDrawBatches } from "@/server/draws";
 import { requirePageUser } from "@/server/session";
 import { adminRoles } from "@/shared/auth";
 import { todayInIndia } from "@/shared/tracker";
+import { PageHeader } from "@/components/ui-bits";
 import { runDrawAction } from "../actions";
 
 export default async function DrawsPage() {
@@ -17,9 +19,7 @@ export default async function DrawsPage() {
 
   return (
     <div className="flex flex-col gap-5">
-      <div>
-        <h1 className="text-xl font-semibold">{t("adminTitle")}</h1>
-      </div>
+      <PageHeader tone="violet" icon={Trophy} title={t("adminTitle")} />
       <BonusDrawAdmin prizes={bonus} />
       <div>
         <h2 className="text-lg font-semibold">{t("monthlyTitle")}</h2>

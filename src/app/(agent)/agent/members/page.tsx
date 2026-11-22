@@ -1,3 +1,4 @@
+import { Users } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ActionForm } from "@/components/action-form";
 import { Figures, MemberRow, PeriodTabs } from "@/components/network";
@@ -5,6 +6,7 @@ import { formatMonthYear } from "@/lib/dates";
 import { formatPaise } from "@/lib/money";
 import { getMyNetwork } from "@/server/network";
 import { requirePageUser } from "@/server/session";
+import { PageHeader, SectionTitle } from "@/components/ui-bits";
 import { recordCashAction } from "../actions";
 
 export default async function AgentMembers({ searchParams }: PageProps<"/agent/members">) {
@@ -22,7 +24,7 @@ export default async function AgentMembers({ searchParams }: PageProps<"/agent/m
           action={recordCashAction.bind(null, e.summary.next.id!)}
           submitLabel={t("recordCash", { amount: formatPaise(e.summary.next.amount), month: formatMonthYear(e.summary.next.dueDate, locale) })}
           confirm={t("confirmCash", { amount: formatPaise(e.summary.next.amount), name: e.member.name, month: formatMonthYear(e.summary.next.dueDate, locale) })}
-          buttonClassName="h-11 w-full bg-card text-base text-primary ring-1 ring-primary hover:bg-mist"
+          buttonClassName="h-12 w-full text-base font-semibold"
         />
       )}
     </MemberRow>
@@ -30,7 +32,7 @@ export default async function AgentMembers({ searchParams }: PageProps<"/agent/m
 
   return (
     <div className="mx-auto flex w-full max-w-xl flex-col gap-5">
-      <h1 className="text-[28px] leading-tight font-semibold">{t("title")}</h1>
+      <PageHeader tone="blue" icon={Users} title={t("title")} />
       <PeriodTabs current={net.period} base="/agent/members" />
       <Figures
         items={[
@@ -46,17 +48,17 @@ export default async function AgentMembers({ searchParams }: PageProps<"/agent/m
         <>
           {dueNow.length > 0 && (
             <section aria-labelledby="due-now">
-              <h2 id="due-now" className="border-b-2 border-due pb-1 text-lg font-semibold">
+              <SectionTitle id="due-now" tint="coral">
                 {t("dueNow", { count: dueNow.length })}
-              </h2>
+              </SectionTitle>
               <ul className="mt-3 flex flex-col gap-3">{dueNow.map(row)}</ul>
             </section>
           )}
           {upToDate.length > 0 && (
             <section aria-labelledby="up-to-date">
-              <h2 id="up-to-date" className="border-b-2 border-paid pb-1 text-lg font-semibold">
+              <SectionTitle id="up-to-date" tint="sunrise">
                 {t("upToDate", { count: upToDate.length })}
-              </h2>
+              </SectionTitle>
               <ul className="mt-3 flex flex-col gap-3">{upToDate.map(row)}</ul>
             </section>
           )}

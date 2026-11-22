@@ -1,3 +1,4 @@
+import { Megaphone } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ActionForm } from "@/components/action-form";
 import { Field } from "@/components/field";
@@ -5,6 +6,7 @@ import { formatDay } from "@/lib/dates";
 import { formatPaise, paiseToRupees } from "@/lib/money";
 import { campaignOverview } from "@/server/campaign";
 import { requirePageUser } from "@/server/session";
+import { PageHeader } from "@/components/ui-bits";
 import { awardCampaignAction, updateCampaignAction } from "../actions";
 
 export default async function CampaignPage() {
@@ -16,10 +18,7 @@ export default async function CampaignPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-xl font-semibold">{t("adminTitle")}</h1>
-        <p className="text-muted-foreground">{t("adminIntro")}</p>
-      </div>
+      <PageHeader tone="sunrise" icon={Megaphone} title={t("adminTitle")} intro={t("adminIntro")} />
 
       {c && (
         <section aria-labelledby="standings" className="flex flex-col gap-3">
