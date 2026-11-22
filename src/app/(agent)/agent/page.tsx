@@ -1,10 +1,10 @@
 import { getTranslations } from "next-intl/server";
 import { getMyAgentProfile } from "@/server/agents";
-import { getCurrentUser } from "@/server/session";
+import { requirePageUser } from "@/server/session";
 
 export default async function Page() {
   const t = await getTranslations("agent");
-  const profile = await getMyAgentProfile(await getCurrentUser());
+  const profile = await getMyAgentProfile(await requirePageUser(["AGENT"]));
 
   return (
     <div className="flex flex-col gap-4">

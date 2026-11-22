@@ -10,16 +10,23 @@ export type FormState = { error?: string; ok?: boolean };
 export function ActionForm({
   action,
   submitLabel,
+  confirm,
   children,
 }: {
   action: (prev: FormState, fd: FormData) => Promise<FormState>;
   submitLabel: string;
+  /** If set, asks this question first and only submits on OK. For actions that are hard to undo. */
+  confirm?: string;
   children?: React.ReactNode;
 }) {
   const t = useTranslations();
   const [state, formAction, pending] = useActionState(action, {});
   return (
-    <form action={formAction} className="flex flex-col gap-3">
+    <form
+      action={formAction}
+      onSubmit={confirm ? (e) => !window.confirm(confirm) && e.preventDefault() : undefined}
+      className="flex flex-col gap-3"
+    >
       {children}
       {state.error && (
         <p role="alert" className="text-sm text-destructive">

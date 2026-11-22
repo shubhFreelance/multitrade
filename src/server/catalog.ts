@@ -1,6 +1,6 @@
 // Admin management of schemes, batches and products. Every function checks the caller is an admin.
 import { db } from "@/lib/db";
-import type { SessionUser } from "@/shared/auth";
+import { adminRoles, type SessionUser } from "@/shared/auth";
 import {
   batchCreateInput,
   batchStatuses,
@@ -13,7 +13,6 @@ import { audit } from "./audit";
 import { requireRole } from "./auth";
 import { AppError } from "./errors";
 
-const ADMINS = ["ADMIN", "SUPER_ADMIN"] as const;
 
 /** "2026-12" → 2026-12-01 (UTC, stored as a date) */
 const monthStart = (month: string) => new Date(`${month}-01T00:00:00Z`);
@@ -21,12 +20,12 @@ const monthStart = (month: string) => new Date(`${month}-01T00:00:00Z`);
 // ---- Schemes (the three codes are fixed; admins edit their details) ----
 
 export async function listSchemes(user: SessionUser | null) {
-  requireRole(user, ADMINS);
+  requireRole(user, adminRoles);
   return db.scheme.findMany({ orderBy: { code: "asc" } });
 }
 
 export async function updateScheme(user: SessionUser | null, id: string, input: unknown) {
-  const actor = requireRole(user, ADMINS);
+  const actor = requireRole(user, adminRoles);
   const data = schemeUpdateInput.parse(input);
   return db.$transaction(async (tx) => {
     const scheme = await tx.scheme.update({ where: { id }, data });
@@ -38,17 +37,17 @@ export async function updateScheme(user: SessionUser | null, id: string, input: 
 // ---- Batches ----
 
 export async function listBatches(user: SessionUser | null) {
-  requireRole(user, ADMINS);
+  requireRole(user, adminRoles);
   return db.batch.findMany({ include: { scheme: true }, orderBy: [{ scheme: { code: "asc" } }, { number: "asc" }] });
 }
 
 export async function getBatch(user: SessionUser | null, id: string) {
-  requireRole(user, ADMINS);
+  requireRole(user, adminRoles);
   return db.batch.findUniqueOrThrow({ where: { id }, include: { scheme: true } });
 }
 
 export async function createBatch(user: SessionUser | null, input: unknown) {
-  const actor = requireRole(user, ADMINS);
+  const actor = requireRole(user, adminRoles);
   const { schemeId, startMonth, size, winnersPerDraw } = batchCreateInput.parse(input);
   return db.$transaction(async (tx) => {
     await tx.scheme.findUniqueOrThrow({ where: { id: schemeId } });
@@ -63,7 +62,7 @@ export async function createBatch(user: SessionUser | null, input: unknown) {
 }
 
 export async function updateBatch(user: SessionUser | null, id: string, input: unknown) {
-  const actor = requireRole(user, ADMINS);
+  const actor = requireRole(user, adminRoles);
   const { startMonth, status, ...rest } = batchUpdateInput.parse(input);
   return db.$transaction(async (tx) => {
     const batch = await tx.batch.findUniqueOrThrow({ where: { id } });
@@ -87,17 +86,17 @@ export async function updateBatch(user: SessionUser | null, id: string, input: u
 // ---- Products ----
 
 export async function listProducts(user: SessionUser | null) {
-  requireRole(user, ADMINS);
+  requireRole(user, adminRoles);
   return db.product.findMany({ orderBy: [{ active: "desc" }, { name: "asc" }] });
 }
 
 export async function getProduct(user: SessionUser | null, id: string) {
-  requireRole(user, ADMINS);
+  requireRole(user, adminRoles);
   return db.product.findUniqueOrThrow({ where: { id } });
 }
 
 export async function createProduct(user: SessionUser | null, input: unknown) {
-  const actor = requireRole(user, ADMINS);
+  const actor = requireRole(user, adminRoles);
   const data = productCreateInput.parse(input);
   return db.$transaction(async (tx) => {
     const product = await tx.product.create({ data });
@@ -107,7 +106,7 @@ export async function createProduct(user: SessionUser | null, input: unknown) {
 }
 
 export async function updateProduct(user: SessionUser | null, id: string, input: unknown) {
-  const actor = requireRole(user, ADMINS);
+  const actor = requireRole(user, adminRoles);
   const data = productUpdateInput.parse(input);
   return db.$transaction(async (tx) => {
     const product = await tx.product.update({ where: { id }, data });

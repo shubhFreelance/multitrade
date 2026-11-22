@@ -3,7 +3,8 @@ import { ActionForm } from "@/components/action-form";
 import { Field } from "@/components/field";
 import { formatPaise, paiseToRupees } from "@/lib/money";
 import { listSchemes } from "@/server/catalog";
-import { getCurrentUser } from "@/server/session";
+import { requirePageUser } from "@/server/session";
+import { adminRoles } from "@/shared/auth";
 import { updateSchemeAction } from "../actions";
 
 type Rule = { type: "TIER" } | { type: "FLAT"; amount: number } | { type: "PERCENT"; bps: number };
@@ -11,7 +12,7 @@ type Rule = { type: "TIER" } | { type: "FLAT"; amount: number } | { type: "PERCE
 export default async function SchemesPage() {
   const t = await getTranslations("admin.schemes");
   const tc = await getTranslations("common");
-  const schemes = await listSchemes(await getCurrentUser());
+  const schemes = await listSchemes(await requirePageUser(adminRoles));
 
   return (
     <div className="flex flex-col gap-6">

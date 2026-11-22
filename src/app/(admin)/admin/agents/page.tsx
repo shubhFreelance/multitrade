@@ -1,12 +1,13 @@
 import { getTranslations } from "next-intl/server";
 import { ActionForm } from "@/components/action-form";
 import { listAgents } from "@/server/agents";
-import { getCurrentUser } from "@/server/session";
+import { requirePageUser } from "@/server/session";
+import { adminRoles } from "@/shared/auth";
 import { approveAgentAction, setAgentStatusAction } from "../actions";
 
 export default async function AgentsPage() {
   const t = await getTranslations("admin.agents");
-  const agents = await listAgents(await getCurrentUser());
+  const agents = await listAgents(await requirePageUser(adminRoles));
 
   return (
     <div className="flex flex-col gap-6">
@@ -33,7 +34,11 @@ export default async function AgentsPage() {
                 {suspended ? (
                   <ActionForm action={setAgentStatusAction.bind(null, a.id, "ACTIVE")} submitLabel={t("reactivate")} />
                 ) : (
-                  <ActionForm action={setAgentStatusAction.bind(null, a.id, "SUSPENDED")} submitLabel={t("suspend")} />
+                  <ActionForm
+                    action={setAgentStatusAction.bind(null, a.id, "SUSPENDED")}
+                    submitLabel={t("suspend")}
+                    confirm={t("confirmSuspend", { name: a.name })}
+                  />
                 )}
               </div>
             </li>

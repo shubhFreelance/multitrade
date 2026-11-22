@@ -11,6 +11,7 @@ export const verifyOtpInput = z.object({
 });
 
 export const roles = ["MEMBER", "AGENT", "ADMIN", "SUPER_ADMIN"] as const;
+export const adminRoles = ["ADMIN", "SUPER_ADMIN"] as const;
 export type Role = (typeof roles)[number];
 
 export type SessionUser = {

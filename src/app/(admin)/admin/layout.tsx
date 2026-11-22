@@ -2,9 +2,10 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { AppHeader } from "@/components/app-header";
 import { requirePageUser } from "@/server/session";
+import { adminRoles } from "@/shared/auth";
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
-  const user = await requirePageUser(["ADMIN", "SUPER_ADMIN"]);
+  const user = await requirePageUser(adminRoles);
   const t = await getTranslations("admin.nav");
   const links = [
     ["/admin", t("home")],

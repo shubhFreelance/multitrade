@@ -1,15 +1,14 @@
 // Admin management of agents (Panchayat Leaders).
 import { db } from "@/lib/db";
 import { agentUpdateInput } from "@/shared/agents";
-import type { SessionUser } from "@/shared/auth";
+import { adminRoles, type SessionUser } from "@/shared/auth";
 import { audit } from "./audit";
 import { requireRole } from "./auth";
 
-const ADMINS = ["ADMIN", "SUPER_ADMIN"] as const;
 
 /** Agents awaiting approval first, then by name. */
 export async function listAgents(user: SessionUser | null) {
-  requireRole(user, ADMINS);
+  requireRole(user, adminRoles);
   return db.user.findMany({
     where: { role: "AGENT" },
     select: { id: true, phone: true, name: true, status: true, createdAt: true, agentProfile: { select: { panchayat: true, approved: true } } },
@@ -18,7 +17,7 @@ export async function listAgents(user: SessionUser | null) {
 }
 
 export async function updateAgent(user: SessionUser | null, agentId: string, input: unknown) {
-  const actor = requireRole(user, ADMINS);
+  const actor = requireRole(user, adminRoles);
   const { approved, status } = agentUpdateInput.parse(input);
   return db.$transaction(async (tx) => {
     // Only agents can be changed here; any other id is NOT_FOUND.

@@ -2,14 +2,15 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { ActionForm } from "@/components/action-form";
 import { getProduct } from "@/server/catalog";
-import { getCurrentUser } from "@/server/session";
+import { requirePageUser } from "@/server/session";
+import { adminRoles } from "@/shared/auth";
 import { updateProductAction } from "../../actions";
 import { ProductFields } from "../product-fields";
 
 export default async function ProductPage({ params }: PageProps<"/admin/products/[id]">) {
   const t = await getTranslations("admin.products");
   const tc = await getTranslations("common");
-  const product = await getProduct(await getCurrentUser(), (await params).id);
+  const product = await getProduct(await requirePageUser(adminRoles), (await params).id);
 
   return (
     <div className="flex flex-col gap-4">

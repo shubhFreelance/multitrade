@@ -3,13 +3,14 @@ import { getTranslations } from "next-intl/server";
 import { ActionForm } from "@/components/action-form";
 import { Field, SelectField } from "@/components/field";
 import { listBatches, listSchemes } from "@/server/catalog";
-import { getCurrentUser } from "@/server/session";
+import { requirePageUser } from "@/server/session";
+import { adminRoles } from "@/shared/auth";
 import { batchLabel } from "@/shared/catalog";
 import { createBatchAction } from "../actions";
 
 export default async function BatchesPage() {
   const t = await getTranslations("admin.batches");
-  const user = await getCurrentUser();
+  const user = await requirePageUser(adminRoles);
   const [batches, schemes] = await Promise.all([listBatches(user), listSchemes(user)]);
 
   return (

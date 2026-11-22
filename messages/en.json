@@ -96,7 +96,8 @@
       "suspended": "Suspended",
       "approve": "Approve",
       "suspend": "Suspend",
-      "reactivate": "Reactivate"
+      "reactivate": "Reactivate",
+      "confirmSuspend": "Suspend {name}? They will be logged out on every device right away."
     }
   },
   "common": {

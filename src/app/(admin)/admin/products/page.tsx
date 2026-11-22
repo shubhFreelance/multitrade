@@ -3,14 +3,15 @@ import { getTranslations } from "next-intl/server";
 import { ActionForm } from "@/components/action-form";
 import { formatPaise } from "@/lib/money";
 import { listProducts } from "@/server/catalog";
-import { getCurrentUser } from "@/server/session";
+import { requirePageUser } from "@/server/session";
+import { adminRoles } from "@/shared/auth";
 import { createProductAction } from "../actions";
 import { ProductFields } from "./product-fields";
 
 export default async function ProductsPage() {
   const t = await getTranslations("admin.products");
   const ts = await getTranslations("schemes");
-  const products = await listProducts(await getCurrentUser());
+  const products = await listProducts(await requirePageUser(adminRoles));
 
   return (
     <div className="flex flex-col gap-6">

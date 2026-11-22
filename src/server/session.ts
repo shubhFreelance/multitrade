@@ -1,5 +1,6 @@
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { cache } from "react";
 import { homeFor, type LoginResult, type Role, type SessionUser } from "@/shared/auth";
 import { getUserByToken } from "./auth";
 
@@ -12,10 +13,11 @@ export async function getRequestToken(): Promise<string | undefined> {
   return (await cookies()).get(SESSION_COOKIE)?.value;
 }
 
-export async function getCurrentUser(): Promise<SessionUser | null> {
+// cache(): a layout and its page render at the same time; they share one session lookup per request.
+export const getCurrentUser = cache(async (): Promise<SessionUser | null> => {
   const token = await getRequestToken();
   return token ? getUserByToken(token) : null;
-}
+});
 
 /** For pages: the signed-in user, or a redirect to /login (or to their own home if the role doesn't match). */
 export async function requirePageUser(allowed: readonly Role[]): Promise<SessionUser> {
