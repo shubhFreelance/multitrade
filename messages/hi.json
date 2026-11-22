@@ -67,7 +67,7 @@
       "draws": "ड्रॉ के नतीजे",
       "join": "योजना से जुड़ें",
       "account": "मेरी जानकारी",
-      "messages": "{count, plural, =0 {संदेश} other {संदेश (#)}}"
+      "messages": "संदेश"
     },
     "status": {
       "ACTIVE": "किस्तें जारी",

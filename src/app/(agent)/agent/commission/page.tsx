@@ -18,7 +18,7 @@ export default async function CommissionPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-xl flex-col gap-6">
-      <Link href="/agent" className="text-sm hover:underline">
+      <Link href="/agent" className="-my-2 inline-flex min-h-11 items-center self-start text-[15px] hover:underline">
         ← {tc("back")}
       </Link>
       <h1 className="text-[28px] leading-tight font-semibold">{t("title")}</h1>

@@ -74,7 +74,7 @@ export async function EnrolmentCard({ e, canPay }: { e: EnrolmentView; canPay: b
                 <span className="flex items-baseline gap-3">
                   <span className="tabular-nums">{formatPaise(m.amount)}</span>
                   {m.receiptId ? (
-                    <Link href={`/member/receipts/${m.receiptId}`} className={`w-24 text-right underline underline-offset-4 ${stateText[m.state]}`}>
+                    <Link href={`/member/receipts/${m.receiptId}`} className={`inline-flex min-h-11 w-24 items-center justify-end underline underline-offset-4 ${stateText[m.state]}`}>
                       {t("receipt")}
                     </Link>
                   ) : (

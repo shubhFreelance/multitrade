@@ -45,7 +45,7 @@ export default async function JoinPage() {
       )}
       <p className="text-muted-foreground">
         {t("join.haveAccount")}{" "}
-        <Link href="/login" className="font-medium text-foreground underline underline-offset-4">
+        <Link href="/login" className="inline-flex min-h-11 items-center font-medium text-foreground underline underline-offset-4">
           {t("join.login")}
         </Link>
       </p>

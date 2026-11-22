@@ -16,7 +16,7 @@ export default async function EnrolPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-4">
-      <Link href="/agent" className="text-sm hover:underline">
+      <Link href="/agent" className="-my-2 inline-flex min-h-11 items-center self-start text-[15px] hover:underline">
         ← {tc("back")}
       </Link>
       <h1 className="text-xl font-semibold">{t("enrol.title")}</h1>

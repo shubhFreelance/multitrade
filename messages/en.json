@@ -67,7 +67,7 @@
       "draws": "Draw results",
       "join": "Join a scheme",
       "account": "My details",
-      "messages": "{count, plural, =0 {Messages} other {Messages (#)}}"
+      "messages": "Messages"
     },
     "status": {
       "ACTIVE": "paying",

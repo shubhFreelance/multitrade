@@ -14,7 +14,7 @@ export default async function AdminMemberPage({ params }: PageProps<"/admin/netw
   );
   return (
     <div className="mx-auto flex w-full max-w-xl flex-col gap-5">
-      <Link href={e.agentId ? `/admin/network/${e.agentId}` : "/admin/network"} className="text-sm hover:underline">
+      <Link href={e.agentId ? `/admin/network/${e.agentId}` : "/admin/network"} className="-my-2 inline-flex min-h-11 items-center self-start text-[15px] hover:underline">
         ← {tc("back")}
       </Link>
       <p className="text-muted-foreground">{e.agent ? t("enrolledBy", { name: e.agent.name, phone: e.agent.phone }) : t("direct")}</p>

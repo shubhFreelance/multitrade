@@ -17,7 +17,7 @@ export default async function BatchPage({ params }: PageProps<"/admin/batches/[i
 
   return (
     <div className="flex flex-col gap-4">
-      <Link href="/admin/batches" className="text-sm hover:underline">
+      <Link href="/admin/batches" className="-my-2 inline-flex min-h-11 items-center self-start text-[15px] hover:underline">
         ← {tc("back")}
       </Link>
       <h1 className="text-xl font-semibold">

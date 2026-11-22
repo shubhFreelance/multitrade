@@ -74,6 +74,8 @@ A full pass, start to finish:
 
 18. **Admin dashboard:** the admin home lists what needs doing (cash to verify, products to allocate or deliver, draws ready, agents waiting, installments due and overdue) with links, and member counts. The super admin also sees money collected and unpaid commission, and can download CSV exports of enrolments, agents, payments and commission.
 
+Every page was checked at phone width (390px) in Hindi and English: no sideways scrolling, every label translated, and buttons at least 44px tall. Hindi is the default language; the switch is in the header.
+
 Things worth checking: paying a later month before an earlier one is refused; a paid month can't be paid again; paying all 12 marks the scheme Matured; Hindi and English both read correctly.
 
 Set `PAYMENT_PROVIDER` to nothing to switch online payment off (the Pay button disappears). The test checkout never runs unless it is set to `test`, so keep it unset in production.

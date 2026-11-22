@@ -17,13 +17,13 @@ export default async function AgentNetworkPage({ params, searchParams }: PagePro
 
   return (
     <div className="flex flex-col gap-5">
-      <Link href={`/admin/network?period=${net.period}`} className="text-sm hover:underline">
+      <Link href={`/admin/network?period=${net.period}`} className="-my-2 inline-flex min-h-11 items-center self-start text-[15px] hover:underline">
         ← {tc("back")}
       </Link>
       <div>
         <h1 className="text-xl font-semibold">{net.agent.name}</h1>
         <p className="text-muted-foreground">{t("agentLine", { panchayat: net.agent.panchayat, phone: net.agent.phone })}</p>
-        <a href={`/api/v1/admin/agents/${net.agent.id}/statement`} download className="mt-1 inline-block font-medium text-primary underline underline-offset-4">
+        <a href={`/api/v1/admin/agents/${net.agent.id}/statement`} download className="mt-1 inline-flex min-h-11 items-center font-medium text-primary underline underline-offset-4">
           {t("downloadStatement")}
         </a>
       </div>

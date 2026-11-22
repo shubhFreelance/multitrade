@@ -15,7 +15,7 @@ export async function AppHeader({ user }: { user: SessionUser }) {
       <div className="flex gap-2">
         <LanguageSwitch />
         <form action={logoutAction}>
-          <Button type="submit" variant="ghost">{t("logout")}</Button>
+          <Button type="submit" variant="ghost" className="h-11 px-4">{t("logout")}</Button>
         </form>
       </div>
     </header>

@@ -20,7 +20,7 @@ export default async function AgentMemberPage({ params }: PageProps<"/agent/memb
 
   return (
     <div className="mx-auto flex w-full max-w-xl flex-col gap-5">
-      <Link href="/agent/members" className="text-sm hover:underline">
+      <Link href="/agent/members" className="-my-2 inline-flex min-h-11 items-center self-start text-[15px] hover:underline">
         ← {tc("back")}
       </Link>
       <MemberDetail e={e}>

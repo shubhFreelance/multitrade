@@ -18,7 +18,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
             ["/member", t("schemes")],
             ["/member/join", t("join")],
             ["/member/draws", t("draws")],
-            ["/member/messages", t("messages", { count: unread })],
+            ["/member/messages", t("messages"), unread],
             ["/member/account", t("account")],
           ]}
         />

@@ -14,7 +14,7 @@ export default async function ProductPage({ params }: PageProps<"/admin/products
 
   return (
     <div className="flex flex-col gap-4">
-      <Link href="/admin/products" className="text-sm hover:underline">
+      <Link href="/admin/products" className="-my-2 inline-flex min-h-11 items-center self-start text-[15px] hover:underline">
         ← {tc("back")}
       </Link>
       <h1 className="text-xl font-semibold">{product.name}</h1>

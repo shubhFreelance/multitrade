@@ -20,7 +20,7 @@ export default async function LoginPage() {
       <LoginForm />
       <p className="text-muted-foreground">
         {t("join.newHere")}{" "}
-        <Link href="/join" className="font-medium text-foreground underline underline-offset-4">
+        <Link href="/join" className="inline-flex min-h-11 items-center font-medium text-foreground underline underline-offset-4">
           {t("join.title")}
         </Link>
       </p>

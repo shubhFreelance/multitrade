@@ -13,6 +13,7 @@ export function LanguageSwitch() {
   return (
     <Button
       variant="outline"
+      className="h-11 px-4"
       onClick={async () => {
         await setLocaleAction(locale === "hi" ? "en" : "hi");
         router.refresh();
