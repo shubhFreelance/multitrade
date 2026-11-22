@@ -23,7 +23,7 @@ export async function PeriodTabs({ current, base }: { current: Period; base: str
           key={p}
           href={`${base}${base.includes("?") ? "&" : "?"}period=${p}`}
           aria-current={p === current ? "page" : undefined}
-          className="flex min-h-11 flex-1 items-center justify-center rounded-full px-4 text-[15px] font-medium text-muted-foreground aria-[current=page]:bg-primary aria-[current=page]:text-primary-foreground sm:flex-none"
+          className="flex min-h-11 flex-1 items-center justify-center rounded-full px-4 text-[15px] font-medium whitespace-nowrap text-muted-foreground aria-[current=page]:bg-primary aria-[current=page]:text-primary-foreground sm:flex-none"
         >
           {t(p)}
         </Link>

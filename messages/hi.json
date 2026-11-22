@@ -133,7 +133,23 @@
       "call": "कॉल करें",
       "callName": "{name} को कॉल करें",
       "recordCash": "{month} का {amount} नकद दर्ज करें",
-      "confirmCash": "क्या आपको {name} से {month} के {amount} नकद मिले? कार्यालय इसकी जाँच करेगा।"
+      "confirmCash": "क्या आपको {name} से {month} के {amount} नकद मिले? कार्यालय इसकी जाँच करेगा।",
+      "recordCashShort": "{amount} नकद दर्ज करें",
+      "list": {
+        "layoutLabel": "ऐसे दिखाएँ",
+        "cards": "कार्ड",
+        "list": "सूची",
+        "member": "सदस्य",
+        "scheme": "योजना",
+        "paid": "जमा",
+        "status": "स्थिति",
+        "actions": "काम",
+        "overdue": "{amount} बकाया",
+        "due": "{amount} देय",
+        "pending": "नकद की जाँच बाकी",
+        "upToDate": "समय पर",
+        "inAll": "कुल {amount}"
+      }
     },
     "commission": {
       "title": "मेरा कमीशन",

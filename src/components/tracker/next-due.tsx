@@ -9,7 +9,7 @@ export async function NextDue({ summary }: { summary: TrackerSummary }) {
   const locale = await getLocale();
   const { next, dueNowCount, dueNowTotal, pendingCount, pendingTotal } = summary;
 
-  const pending = pendingCount > 0 && <p className="font-medium text-primary">{t("pendingCash", { amount: formatPaise(pendingTotal), count: pendingCount })}</p>;
+  const pending = pendingCount > 0 && <p className="font-medium text-paid">{t("pendingCash", { amount: formatPaise(pendingTotal), count: pendingCount })}</p>;
 
   let line;
   if (!next) {

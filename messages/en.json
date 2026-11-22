@@ -133,7 +133,23 @@
       "call": "Call",
       "callName": "Call {name}",
       "recordCash": "Record cash {amount} for {month}",
-      "confirmCash": "Did you receive {amount} cash from {name} for {month}? The office will verify it."
+      "confirmCash": "Did you receive {amount} cash from {name} for {month}? The office will verify it.",
+      "recordCashShort": "Record cash {amount}",
+      "list": {
+        "layoutLabel": "Show as",
+        "cards": "Cards",
+        "list": "List",
+        "member": "Member",
+        "scheme": "Scheme",
+        "paid": "Paid",
+        "status": "Status",
+        "actions": "Actions",
+        "overdue": "{amount} overdue",
+        "due": "{amount} due",
+        "pending": "Cash being checked",
+        "upToDate": "Up to date",
+        "inAll": "{amount} in all"
+      }
     },
     "commission": {
       "title": "My commission",
