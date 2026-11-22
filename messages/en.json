@@ -40,12 +40,21 @@
     "CASH_PENDING": "Cash for this month is already with the office for checking.",
     "CASH_NOT_PENDING": "This cash entry was already verified or rejected.",
     "PERIOD_NOT_OVER": "Invoices can only be created for a month that has ended.",
-    "INVOICE_NOT_ISSUED": "Only an unpaid invoice can be changed."
+    "INVOICE_NOT_ISSUED": "Only an unpaid invoice can be changed.",
+    "DRAW_ALREADY_RUN": "This month's draw has already been run.",
+    "DRAW_OUT_OF_ORDER": "Run the earlier months' draws first.",
+    "DRAW_NOT_OPEN": "This draw can't be run yet.",
+    "NO_ELIGIBLE": "No member is eligible for this draw yet."
   },
   "member": {
     "title": "My schemes",
     "greeting": "Namaste, {name}",
-    "empty": "You have no schemes yet. Your Panchayat Leader can enrol you."
+    "empty": "You have no schemes yet. Your Panchayat Leader can enrol you.",
+    "nav": {
+      "label": "Sections",
+      "schemes": "My schemes",
+      "draws": "Draw results"
+    }
   },
   "agent": {
     "title": "Agent dashboard",
@@ -117,7 +126,8 @@
       "products": "Products",
       "agents": "Agents",
       "cash": "Cash",
-      "invoices": "Invoices"
+      "invoices": "Invoices",
+      "draws": "Draws"
     },
     "schemes": {
       "title": "Schemes",
@@ -242,7 +252,9 @@
     "yourAgent": "Your Panchayat Leader:",
     "pay": "Pay {amount} for {month}",
     "receipt": "Invoice",
-    "pendingCash": "{amount} cash handed over, waiting for the office to check it."
+    "pendingCash": "{amount} cash handed over, waiting for the office to check it.",
+    "won": "You won the month {month} draw. Your remaining months are waived.",
+    "seeDraw": "See the draw"
   },
   "pay": {
     "testTitle": "Test payment",
@@ -327,5 +339,22 @@
     "prizes": "{scooters, plural, one {# scooter} other {# scooters}} and {chains, plural, one {# gold chain} other {# gold chains}} for members who have paid enough months.",
     "progress": "{paid} of {needed} paid. {remaining, plural, one {# more month} other {# more months}} to unlock.",
     "unlocked": "You're in the bonus draw. Keep paying on time to stay in."
+  },
+  "draws": {
+    "adminTitle": "Monthly draws",
+    "adminIntro": "Each draw picks winners at random from members with no overdue month. Winners stop paying; their later months are waived.",
+    "batchLine": "{members, plural, one {# member} other {# members}}, {winners} winners a draw",
+    "run": "Run the month {month} draw",
+    "confirmRun": "Run the month {month} draw for {batch} now? This can't be undone.",
+    "opensOn": "The month {month} draw opens on {day}.",
+    "noWinnersSet": "Set winners per draw on the batch to run draws.",
+    "allDone": "All monthly draws are done. Everyone still paying gets the product after the last month.",
+    "monthDraw": "Month {month} draw",
+    "ranOn": "{day}, {eligible} members in the draw",
+    "seed": "Seed (lets anyone re-check the result):",
+    "memberTitle": "Draw results",
+    "memberIntro": "Winners for each month in your batches. A winner stops paying and gets the product early.",
+    "none": "No draws yet in your batches. Results appear here after each month's draw.",
+    "youWon": "You won this draw."
   }
 }

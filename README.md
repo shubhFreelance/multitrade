@@ -54,6 +54,8 @@ A full pass, start to finish:
 
 8. **Bonus draw:** a member's dashboard ends with a bonus card. It stays locked until one enrolment has 6 confirmed payments; cash waiting for the office doesn't count.
 
+9. **Draws:** as an admin, open **Draws** and tap **Run the month 1 draw** on a batch whose first month has started (the seeded batches start in December; create a batch with an earlier start month to test now). Winners see a green "You won" note on their scheme card and the result under **Draw results**.
+
 Things worth checking: paying a later month before an earlier one is refused; a paid month can't be paid again; paying all 12 marks the scheme Matured; Hindi and English both read correctly.
 
 Set `PAYMENT_PROVIDER` to nothing to switch online payment off (the Pay button disappears). The test checkout never runs unless it is set to `test`, so keep it unset in production.

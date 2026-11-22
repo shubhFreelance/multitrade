@@ -35,6 +35,14 @@ export async function EnrolmentCard({ e, canPay }: { e: EnrolmentView; canPay: b
       </header>
 
       <div className="flex flex-col gap-4 px-4 pt-4 pb-3">
+        {e.wonMonth !== null && (
+          <p className="rounded-xl bg-paid px-3 py-2.5 font-semibold text-white">
+            {t("won", { month: e.wonMonth })}{" "}
+            <Link href="/member/draws" className="font-normal underline underline-offset-4">
+              {t("seeDraw")}
+            </Link>
+          </p>
+        )}
         <Beads slots={s.slots} />
         <div className="flex flex-col gap-0.5">
           <p>

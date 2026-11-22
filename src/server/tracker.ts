@@ -10,6 +10,7 @@ const include = {
   installments: { include: { payments: { where: { status: { in: ["SUCCESS", "PENDING"] } }, select: { id: true, status: true } } } },
   member: { select: { name: true, phone: true } },
   agent: { select: { name: true, phone: true } },
+  drawWins: { select: { draw: { select: { monthNo: true } } } },
 } satisfies Prisma.EnrolmentInclude;
 
 type Row = Prisma.EnrolmentGetPayload<{ include: typeof include }>;
@@ -18,6 +19,7 @@ export type EnrolmentView = {
   id: string;
   tokenNumber: string;
   status: string;
+  wonMonth: number | null; // monthly draw this enrolment won
   scheme: { code: string; nameEn: string; nameHi: string };
   member: { name: string; phone: string };
   agent: { name: string; phone: string };
@@ -28,6 +30,7 @@ const toView = (e: Row, today: string): EnrolmentView => ({
   id: e.id,
   tokenNumber: e.tokenNumber,
   status: e.status,
+  wonMonth: e.drawWins[0]?.draw.monthNo ?? null,
   scheme: { code: e.batch.scheme.code, nameEn: e.batch.scheme.nameEn, nameHi: e.batch.scheme.nameHi },
   member: e.member,
   agent: e.agent,

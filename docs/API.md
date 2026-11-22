@@ -31,6 +31,7 @@ REST endpoints under `/api/v1`, shared by the web app and the future mobile app.
 | POST | `/api/v1/agent/enrolments` | approved agent | `{ phone, batchId, code, name?, village?, address?, nominee? }` (name, village, address required for a new phone) | `{ id, tokenNumber, installments }` (201) |
 
 | GET | `/api/v1/me/enrolments` | member | (none) | the member's own enrolments, newest first: `EnrolmentView[]` |
+| GET | `/api/v1/me/draws` | member | (none) | monthly draw results for the member's batches, newest first: `{ batch, scheme, monthNo, createdAt, seed, eligibleCount, winners: [{ token, mine }] }[]` |
 | GET | `/api/v1/me/bonus` | member | (none) | `{ unlocked, paid, needed, remaining, rewards: { scooters, goldChains } }`; worked out from PAID installments (pending cash, waived months and defaulted enrolments don't count) |
 | GET | `/api/v1/agent/enrolments` | agent | (none) | enrolments this agent made, those owing money first: `EnrolmentView[]` |
 
@@ -50,6 +51,8 @@ REST endpoints under `/api/v1`, shared by the web app and the future mobile app.
 | GET | `/api/v1/agent/invoices` | agent | (none) | the agent's commission invoices (not cancelled), newest first |
 | GET | `/api/v1/agent-invoices/:id/pdf` | that agent, super admin | (none) | agent commission invoice PDF |
 | GET | `/api/v1/admin/invoices?q=` | super admin | `q` searches member invoices | `{ agentInvoices, uninvoicedTotal, uninvoicedCount, awaitingRate, memberInvoices }` |
+| GET | `/api/v1/admin/draws` | admin | (none) | every batch with its draws, `nextMonth`, `opensOn` and `canRun` |
+| POST | `/api/v1/admin/draws` | admin | `{ batchId, monthNo }` (must be the next month not drawn yet) | `{ id, monthNo, seed, eligibleCount, winners }` (201). Eligible: ACTIVE enrolments with no overdue month. Winners become `WON` and their unpaid months after `monthNo` are `WAIVED`. Winners are `pickWinners(seed, sorted eligible tokens, winnersPerDraw)` in `src/server/draws.ts`, so anyone with the seed and list can re-check them. |
 | POST | `/api/v1/admin/agent-invoices` | super admin | `{ period: "YYYY-MM" }` (a month that has ended) | the invoices created (201): one per agent with unbilled commission up to the end of that month |
 | POST | `/api/v1/admin/agent-invoices/:id/paid` | super admin | `{ utr }` | the invoice, now `PAID`; its commission lines become `PAID` |
 | POST | `/api/v1/admin/agent-invoices/:id/cancel` | super admin | (none) | the invoice, now `CANCELLED`; its lines go back for the next invoice. Paid invoices can't be cancelled. |
@@ -90,6 +93,10 @@ Batch rules: `status` only moves forward (`OPEN` → `RUNNING` → `CLOSED`). On
 | `AMOUNT_MISMATCH` | 400 | Gateway amount differs from the order |
 | `CASH_PENDING` | 409 | Cash for this month is waiting for verification |
 | `CASH_NOT_PENDING` | 409 | Cash entry already verified or rejected |
+| `DRAW_ALREADY_RUN` | 409 | That month's draw for the batch was already run |
+| `DRAW_OUT_OF_ORDER` | 409 | An earlier month's draw hasn't been run |
+| `DRAW_NOT_OPEN` | 409 | The month hasn't started, or it is the last month (no draw) |
+| `NO_ELIGIBLE` | 409 | Nobody in the batch can win right now |
 | `PERIOD_NOT_OVER` | 409 | Agent invoices asked for the current or a future month |
 | `INVOICE_NOT_ISSUED` | 409 | Paying or cancelling an invoice that is already paid or cancelled |
 | `UNAUTHENTICATED` | 401 | No valid session |

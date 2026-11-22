@@ -14,6 +14,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
     ["/admin/products", t("products")],
     ["/admin/agents", t("agents")],
     ["/admin/cash", t("cash")],
+    ["/admin/draws", t("draws")],
     ...(user.role === "SUPER_ADMIN" ? [["/admin/invoices", t("invoices")]] : []),
   ];
   return (

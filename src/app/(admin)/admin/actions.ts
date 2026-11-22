@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { rupeesToPaise } from "@/lib/money";
 import { updateAgent } from "@/server/agents";
 import { rejectCash, verifyCash } from "@/server/payments";
+import { runMonthlyDraw } from "@/server/draws";
 import { cancelAgentInvoice, createAgentInvoices, markAgentInvoicePaid } from "@/server/invoices";
 import { createBatch, createProduct, updateBatch, updateProduct, updateScheme } from "@/server/catalog";
 import { AppError, toAppError } from "@/server/errors";
@@ -81,3 +82,5 @@ export const createAgentInvoicesAction = async (_: FormState, fd: FormData) =>
 export const markAgentInvoicePaidAction = async (id: string, _: FormState, fd: FormData) =>
   run((u) => markAgentInvoicePaid(u, id, { utr: str(fd, "utr") }));
 export const cancelAgentInvoiceAction = async (id: string) => run((u) => cancelAgentInvoice(u, id));
+
+export const runDrawAction = async (batchId: string, monthNo: number) => run((u) => runMonthlyDraw(u, { batchId, monthNo }));
