@@ -1,5 +1,7 @@
 import { getTranslations } from "next-intl/server";
+import { BonusCard } from "@/components/bonus-card";
 import { EnrolmentCard } from "@/components/tracker/enrolment-card";
+import { getMyBonus } from "@/server/bonus";
 import { canPayOnline } from "@/server/payments";
 import { requirePageUser } from "@/server/session";
 import { listMyEnrolments } from "@/server/tracker";
@@ -7,7 +9,7 @@ import { listMyEnrolments } from "@/server/tracker";
 export default async function MemberHome() {
   const t = await getTranslations("member");
   const user = await requirePageUser(["MEMBER"]);
-  const enrolments = await listMyEnrolments(user);
+  const [enrolments, bonus] = await Promise.all([listMyEnrolments(user), getMyBonus(user)]);
 
   return (
     <div className="mx-auto flex w-full max-w-xl flex-col gap-5">
@@ -18,7 +20,12 @@ export default async function MemberHome() {
       {enrolments.length === 0 ? (
         <p className="rounded-2xl bg-card p-4 ring-1 ring-border">{t("empty")}</p>
       ) : (
-        enrolments.map((e) => <EnrolmentCard key={e.id} e={e} canPay={canPayOnline()} />)
+        <>
+          {enrolments.map((e) => (
+            <EnrolmentCard key={e.id} e={e} canPay={canPayOnline()} />
+          ))}
+          <BonusCard b={bonus} />
+        </>
       )}
     </div>
   );

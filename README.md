@@ -52,6 +52,8 @@ A full pass, start to finish:
    `docker compose exec db psql -U saksham -c "update \"Commission\" set \"createdAt\" = now() - interval '1 month';"`
    Then **Mark paid** with a UTR, and download the PDF as the super admin or as the agent.
 
+8. **Bonus draw:** a member's dashboard ends with a bonus card. It stays locked until one enrolment has 6 confirmed payments; cash waiting for the office doesn't count.
+
 Things worth checking: paying a later month before an earlier one is refused; a paid month can't be paid again; paying all 12 marks the scheme Matured; Hindi and English both read correctly.
 
 Set `PAYMENT_PROVIDER` to nothing to switch online payment off (the Pay button disappears). The test checkout never runs unless it is set to `test`, so keep it unset in production.

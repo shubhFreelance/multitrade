@@ -320,5 +320,12 @@
     "paidOnDate": "Paid to agent on",
     "utr": "Bank transfer reference (UTR)",
     "footer": "Computer-generated document. No signature needed."
+  },
+  "bonus": {
+    "lockedTitle": "Bonus draw: locked",
+    "unlockedTitle": "Bonus draw: unlocked",
+    "prizes": "{scooters, plural, one {# scooter} other {# scooters}} and {chains, plural, one {# gold chain} other {# gold chains}} for members who have paid enough months.",
+    "progress": "{paid} of {needed} paid. {remaining, plural, one {# more month} other {# more months}} to unlock.",
+    "unlocked": "You're in the bonus draw. Keep paying on time to stay in."
   }
 }

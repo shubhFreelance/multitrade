@@ -31,6 +31,7 @@ REST endpoints under `/api/v1`, shared by the web app and the future mobile app.
 | POST | `/api/v1/agent/enrolments` | approved agent | `{ phone, batchId, code, name?, village?, address?, nominee? }` (name, village, address required for a new phone) | `{ id, tokenNumber, installments }` (201) |
 
 | GET | `/api/v1/me/enrolments` | member | (none) | the member's own enrolments, newest first: `EnrolmentView[]` |
+| GET | `/api/v1/me/bonus` | member | (none) | `{ unlocked, paid, needed, remaining, rewards: { scooters, goldChains } }`; worked out from PAID installments (pending cash, waived months and defaulted enrolments don't count) |
 | GET | `/api/v1/agent/enrolments` | agent | (none) | enrolments this agent made, those owing money first: `EnrolmentView[]` |
 
 `EnrolmentView`: `{ id, tokenNumber, status, scheme: { code, nameEn, nameHi }, member: { name, phone }, agent: { name, phone }, summary }`. `summary` is computed with `summarize()` from `src/shared/tracker.ts` using today's date in India: `{ slots: [{ monthNo, dueDate, amount, status, state }], total, paidCount, paidTotal, next, dueNowCount, dueNowTotal }`, where `state` is `PAID`, `WAIVED`, `OVERDUE`, `DUE_NOW` (due date reached, not paid) or `UPCOMING`.
