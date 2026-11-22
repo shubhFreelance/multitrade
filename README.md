@@ -66,6 +66,8 @@ A full pass, start to finish:
 
 14. **Fulfilment:** as an admin, open **Fulfilment**. Enter today's gold rate, then for each member who answered: pick the Upahar product, allocate the Manpasand product they chose, or enter the gold weight and making charges. If the price is above the plan value, record the difference with a receipt number or UTR, then **Mark delivered**. The member sees the price and what is left to pay on their card.
 
+15. **Bonus draw:** as an admin, open **Draws**. The bonus draw section shows how many members have unlocked each prize; run each prize's draw once. Winners see it on their bonus card and under **Draw results**; mark each prize **handed over** when given.
+
 Things worth checking: paying a later month before an earlier one is refused; a paid month can't be paid again; paying all 12 marks the scheme Matured; Hindi and English both read correctly.
 
 Set `PAYMENT_PROVIDER` to nothing to switch online payment off (the Pay button disappears). The test checkout never runs unless it is set to `test`, so keep it unset in production.

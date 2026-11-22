@@ -155,8 +155,8 @@ export async function listMyDraws(user: SessionUser | null) {
   });
   return draws.map((d) => ({
     id: d.id,
-    batch: batchLabel(d.batch.scheme.code, d.batch.number),
-    scheme: { nameEn: d.batch.scheme.nameEn, nameHi: d.batch.scheme.nameHi },
+    batch: batchLabel(d.batch!.scheme.code, d.batch!.number), // monthly draws always have a batch
+    scheme: { nameEn: d.batch!.scheme.nameEn, nameHi: d.batch!.scheme.nameHi },
     monthNo: d.monthNo,
     createdAt: d.createdAt,
     seed: d.seed,

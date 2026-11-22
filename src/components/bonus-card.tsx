@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import type { PrizeStatus } from "@/shared/bonus";
 
 /** The bonus draw: one row per prize, a chain of paid months ending in a lock that opens at the target. */
-export async function BonusCard({ prizes }: { prizes: PrizeStatus[] }) {
+export async function BonusCard({ prizes }: { prizes: (PrizeStatus & { won?: boolean })[] }) {
   const t = await getTranslations("bonus");
   if (prizes.length === 0) return null;
 
@@ -28,7 +28,7 @@ export async function BonusCard({ prizes }: { prizes: PrizeStatus[] }) {
                 </span>
               </div>
               <p className={p.unlocked ? "font-medium text-paid" : ""}>
-                {p.unlocked ? t("unlocked") : t("progress", { paid: p.paid, needed: p.needed, remaining: p.remaining })}
+                {p.won ? t(`won.${p.prize}`) : p.unlocked ? t("unlocked") : t("progress", { paid: p.paid, needed: p.needed, remaining: p.remaining })}
               </p>
             </li>
           );

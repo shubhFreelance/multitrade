@@ -10,7 +10,7 @@ const include = {
   installments: { include: { payments: { where: { status: { in: ["SUCCESS", "PENDING"] } }, select: { id: true, status: true } } } },
   member: { select: { name: true, phone: true } },
   agent: { select: { name: true, phone: true } },
-  drawWins: { select: { draw: { select: { monthNo: true } } } },
+  drawWins: { where: { draw: { type: "MONTHLY" } }, select: { draw: { select: { monthNo: true } } } }, // bonus prizes are not a monthly win
 } satisfies Prisma.EnrolmentInclude;
 
 type Row = Prisma.EnrolmentGetPayload<{ include: typeof include }>;

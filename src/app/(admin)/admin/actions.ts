@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { rupeesToPaise } from "@/lib/money";
 import { updateAgent } from "@/server/agents";
 import { rejectCash, verifyCash } from "@/server/payments";
+import { markPrizeHandedOver, runBonusDraw } from "@/server/bonus";
 import { runMonthlyDraw } from "@/server/draws";
 import { allocate, markDelivered, recordDifferencePaid, setGoldRate } from "@/server/fulfilment";
 import { gramsToMg } from "@/shared/fulfilment";
@@ -105,3 +106,6 @@ export const allocateAction = async (id: string, _: FormState, fd: FormData) =>
 export const differencePaidAction = async (id: string, _: FormState, fd: FormData) => run((u) => recordDifferencePaid(u, id, { ref: str(fd, "ref") }));
 
 export const deliveredAction = async (id: string) => run((u) => markDelivered(u, id));
+
+export const runBonusDrawAction = async (prize: string) => run((u) => runBonusDraw(u, prize));
+export const prizeHandedOverAction = async (winnerId: string) => run((u) => markPrizeHandedOver(u, winnerId));

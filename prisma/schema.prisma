@@ -324,12 +324,18 @@ enum DrawType {
 }
 
 // One draw per batch, type and month; the unique key blocks running it twice.
+enum BonusPrize {
+  SCOOTER
+  GOLD_CHAIN
+}
+
 model Draw {
   id        String       @id @default(cuid())
-  batchId   String
-  batch     Batch        @relation(fields: [batchId], references: [id])
+  batchId   String? // monthly draws only; the bonus draw is across all batches
+  batch     Batch?       @relation(fields: [batchId], references: [id])
   type      DrawType     @default(MONTHLY)
-  monthNo   Int
+  monthNo   Int // 0 for bonus draws
+  prize     BonusPrize? // bonus draws only; one draw per prize
   seed      String // hex; with the eligible list, anyone can re-derive the winners
   eligible  Json // token numbers that could win, sorted
   runById   String
@@ -338,15 +344,17 @@ model Draw {
   winners   DrawWinner[]
 
   @@unique([batchId, type, monthNo])
+  @@unique([type, prize])
 }
 
 model DrawWinner {
-  id          String    @id @default(cuid())
-  drawId      String
-  draw        Draw      @relation(fields: [drawId], references: [id])
-  enrolmentId String
-  enrolment   Enrolment @relation(fields: [enrolmentId], references: [id])
-  position    Int // 1-based order of picking
+  id           String    @id @default(cuid())
+  drawId       String
+  draw         Draw      @relation(fields: [drawId], references: [id])
+  enrolmentId  String
+  enrolment    Enrolment @relation(fields: [enrolmentId], references: [id])
+  position     Int // 1-based order of picking
+  handedOverAt DateTime? // bonus prizes: when the office gave the scooter or chain
 
   @@unique([drawId, enrolmentId])
   @@index([enrolmentId])
@@ -394,6 +402,8 @@ enum NotificationType {
   DUE_TODAY
   OVERDUE
   DEFAULTED
+  BONUS_SCOOTER
+  BONUS_GOLD_CHAIN
 }
 
 // In-app messages; text is rendered in the reader's language from `type`. Also sent by SMS when `sms` is set.

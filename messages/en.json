@@ -418,10 +418,14 @@
     "SCOOTER": "{count, plural, one {# scooter} other {# scooters}}",
     "GOLD_CHAIN": "{count, plural, one {# gold chain} other {# gold chains}}",
     "progress": "{paid} of {needed} paid. {remaining, plural, one {# more month} other {# more months}} to unlock.",
-    "unlocked": "Unlocked: you are in this draw. Keep paying on time to stay in."
+    "unlocked": "Unlocked: you are in this draw. Keep paying on time to stay in.",
+    "won": {
+      "SCOOTER": "You won a scooter in the bonus draw! The office will call you.",
+      "GOLD_CHAIN": "You won the gold chain in the bonus draw! The office will call you."
+    }
   },
   "draws": {
-    "adminTitle": "Monthly draws",
+    "adminTitle": "Draws",
     "adminIntro": "Each draw picks winners at random from members with no overdue month. Winners stop paying; their later months are waived.",
     "batchLine": "{members, plural, one {# member} other {# members}}, {winners} winners a draw",
     "run": "Run the month {month} draw",
@@ -430,12 +434,13 @@
     "noWinnersSet": "Set winners per draw on the batch to run draws.",
     "allDone": "All monthly draws are done. Everyone still paying gets the product after the last month.",
     "monthDraw": "Month {month} draw",
-    "ranOn": "{day}, {eligible} members in the draw",
+    "ranOn": "{day}, {eligible, plural, one {# member} other {# members}} in the draw",
     "seed": "Seed (lets anyone re-check the result):",
     "memberTitle": "Draw results",
     "memberIntro": "Winners for each month in your batches. A winner stops paying and gets the product early.",
     "none": "No draws yet in your batches. Results appear here after each month's draw.",
-    "youWon": "You won this draw."
+    "youWon": "You won this draw.",
+    "monthlyTitle": "Monthly draws"
   },
   "join": {
     "title": "Join a scheme",
@@ -555,6 +560,26 @@
     "DUE_SOON": "{amount} for {month} ({token}) is due soon.",
     "DUE_TODAY": "{amount} for {month} ({token}) is due now.",
     "OVERDUE": "{amount} for {month} ({token}) is overdue. Members with an overdue month can't win the monthly draw.",
-    "DEFAULTED": "{token} missed months in a row and is out of the draws. Pay what is owed to take part again."
+    "DEFAULTED": "{token} missed months in a row and is out of the draws. Pay what is owed to take part again.",
+    "BONUS_SCOOTER": "{token} won a scooter in the bonus draw. The office will call you about handing it over.",
+    "BONUS_GOLD_CHAIN": "{token} won the gold chain in the bonus draw. The office will call you about handing it over."
+  },
+  "bonusDraw": {
+    "adminTitle": "Bonus draw",
+    "adminIntro": "One draw per prize among members who have unlocked it with confirmed payments in one scheme. Defaulted schemes don't count, and nobody can win both prizes.",
+    "unlockAt": "Unlocks at {months} paid months. {eligible, plural, one {# member} other {# members}} can win it now.",
+    "run": "Run this bonus draw",
+    "confirmRun": "Run the bonus draw for {prize} among {eligible} members now? It can only be run once.",
+    "nobodyYet": "Nobody has unlocked this yet.",
+    "ranOn": "Drawn {day} among {eligible, plural, one {# member} other {# members}}.",
+    "handOver": "Mark handed over",
+    "confirmHandOver": "Has {name} received the prize?",
+    "handedOverOn": "Handed over {day}.",
+    "seed": "Seed (lets anyone re-check the result):",
+    "memberHeading": "Bonus draw: {prize}",
+    "youWon": {
+      "SCOOTER": "You won a scooter! The office will call you.",
+      "GOLD_CHAIN": "You won the gold chain! The office will call you."
+    }
   }
 }

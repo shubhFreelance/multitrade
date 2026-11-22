@@ -32,6 +32,8 @@ const smsText: Record<"en" | "hi", Record<NotificationType, (c: SmsContext) => s
     DUE_TODAY: (c) => `Saksham Multitrade: ${c.amount} for ${c.month} (${c.token}) is due now. Pay in the app or give cash to your Panchayat Leader.`,
     OVERDUE: (c) => `Saksham Multitrade: ${c.amount} for ${c.month} (${c.token}) is overdue. Members with an overdue month can't win the monthly draw. Please pay soon.`,
     DEFAULTED: (c) => `Saksham Multitrade: ${c.token} has missed months in a row and is out of the draws. Pay what is owed to take part again.`,
+    BONUS_SCOOTER: (c) => `Saksham Multitrade: congratulations, ${c.token} won a scooter in the bonus draw! The office will call you about handing it over.`,
+    BONUS_GOLD_CHAIN: (c) => `Saksham Multitrade: congratulations, ${c.token} won the gold chain in the bonus draw! The office will call you about handing it over.`,
   },
   hi: {
     MATURED: (c) => `सक्षम मल्टीट्रेड: ${c.scheme} (${c.token}) की सारी किस्तें जमा हो गईं। अपना सामान लेने के लिए ऐप खोलें।`,
@@ -40,6 +42,8 @@ const smsText: Record<"en" | "hi", Record<NotificationType, (c: SmsContext) => s
     DUE_TODAY: (c) => `सक्षम मल्टीट्रेड: ${c.month} की किस्त ${c.amount} (${c.token}) अब देय है। ऐप से भरें या अपने पंचायत लीडर को नकद दें।`,
     OVERDUE: (c) => `सक्षम मल्टीट्रेड: ${c.month} की किस्त ${c.amount} (${c.token}) बकाया है। बकाया किस्त वाले सदस्य मासिक ड्रॉ नहीं जीत सकते। कृपया जल्द भरें।`,
     DEFAULTED: (c) => `सक्षम मल्टीट्रेड: ${c.token} की लगातार किस्तें छूट गई हैं, इसलिए यह ड्रॉ से बाहर है। फिर से शामिल होने के लिए बकाया भरें।`,
+    BONUS_SCOOTER: (c) => `सक्षम मल्टीट्रेड: बधाई हो, ${c.token} ने बोनस ड्रॉ में स्कूटर जीता! इसे देने के लिए दफ़्तर आपको कॉल करेगा।`,
+    BONUS_GOLD_CHAIN: (c) => `सक्षम मल्टीट्रेड: बधाई हो, ${c.token} ने बोनस ड्रॉ में सोने की चेन जीती! इसे देने के लिए दफ़्तर आपको कॉल करेगा।`,
   },
 };
 

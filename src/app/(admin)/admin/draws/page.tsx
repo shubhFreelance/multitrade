@@ -1,6 +1,8 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { ActionForm } from "@/components/action-form";
+import { BonusDrawAdmin } from "@/components/bonus-draw-admin";
 import { formatDay } from "@/lib/dates";
+import { bonusOverview } from "@/server/bonus";
 import { listDrawBatches } from "@/server/draws";
 import { requirePageUser } from "@/server/session";
 import { adminRoles } from "@/shared/auth";
@@ -10,12 +12,17 @@ import { runDrawAction } from "../actions";
 export default async function DrawsPage() {
   const t = await getTranslations("draws");
   const locale = await getLocale();
-  const batches = await listDrawBatches(await requirePageUser(adminRoles));
+  const user = await requirePageUser(adminRoles);
+  const [batches, bonus] = await Promise.all([listDrawBatches(user), bonusOverview(user)]);
 
   return (
     <div className="flex flex-col gap-5">
       <div>
         <h1 className="text-xl font-semibold">{t("adminTitle")}</h1>
+      </div>
+      <BonusDrawAdmin prizes={bonus} />
+      <div>
+        <h2 className="text-lg font-semibold">{t("monthlyTitle")}</h2>
         <p className="text-muted-foreground">{t("adminIntro")}</p>
       </div>
       {batches.map((b) => (
