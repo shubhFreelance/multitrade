@@ -2,11 +2,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 /** Label + input, for plain server-rendered forms. */
-export function Field({ label, name, ...props }: { label: string; name: string } & React.ComponentProps<"input">) {
+export function Field({ label, name, id = name, ...props }: { label: string; name: string } & React.ComponentProps<"input">) {
   return (
     <div className="flex flex-col gap-1.5">
-      <Label htmlFor={name}>{label}</Label>
-      <Input id={name} name={name} className="h-11" {...props} />
+      <Label htmlFor={id}>{label}</Label>
+      <Input id={id} name={name} className="h-11" {...props} />
     </div>
   );
 }

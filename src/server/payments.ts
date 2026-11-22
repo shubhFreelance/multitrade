@@ -8,6 +8,7 @@ import { commissionFor } from "@/shared/commission";
 import { audit } from "./audit";
 import { requireRole } from "./auth";
 import { AppError } from "./errors";
+import { nextMemberInvoiceNo } from "./invoices";
 
 type Tx = Prisma.TransactionClient;
 export type PaymentProvider = "TEST" | "CASHFREE";
@@ -52,9 +53,15 @@ async function settleSuccess(tx: Tx, paymentId: string, data: Prisma.PaymentUpda
     include: { enrolment: { include: { batch: { include: { scheme: true } } } } },
   });
   const alreadyPaid = inst.status === "PAID" || inst.status === "WAIVED";
+  const paidAt = new Date();
   const settled = await tx.payment.update({
     where: { id: p.id },
-    data: { ...data, status: alreadyPaid ? "DUPLICATE" : "SUCCESS", paidAt: new Date() },
+    data: {
+      ...data,
+      status: alreadyPaid ? "DUPLICATE" : "SUCCESS",
+      paidAt,
+      invoiceNo: alreadyPaid ? null : await nextMemberInvoiceNo(tx, paidAt),
+    },
   });
   if (alreadyPaid) return settled;
 

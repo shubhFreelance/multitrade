@@ -14,3 +14,13 @@ export async function handle(fn: () => Promise<Response>): Promise<Response> {
 
 /** Request body as JSON, or null if it isn't valid JSON (zod then rejects it). */
 export const readJson = (req: Request): Promise<unknown> => req.json().catch(() => null);
+
+/** A PDF download. */
+export const pdfResponse = (bytes: Uint8Array, name: string) =>
+  new Response(Buffer.from(bytes), {
+    headers: {
+      "content-type": "application/pdf",
+      "content-disposition": `attachment; filename="${name.replaceAll("/", "-")}.pdf"`,
+      "cache-control": "private, no-store",
+    },
+  });

@@ -34,12 +34,14 @@ model User {
   memberProfile MemberProfile?
   auditLogs     AuditLog[]
 
-  enrolments      Enrolment[]  @relation("MemberEnrolments")
-  agentEnrolments Enrolment[]  @relation("AgentEnrolments")
-  payments        Payment[]    @relation("MemberPayments")
-  cashCollected   Payment[]    @relation("CollectedPayments")
-  cashVerified    Payment[]    @relation("VerifiedPayments")
-  commissions     Commission[] @relation("AgentCommissions")
+  enrolments      Enrolment[]    @relation("MemberEnrolments")
+  agentEnrolments Enrolment[]    @relation("AgentEnrolments")
+  payments        Payment[]      @relation("MemberPayments")
+  cashCollected   Payment[]      @relation("CollectedPayments")
+  cashVerified    Payment[]      @relation("VerifiedPayments")
+  commissions     Commission[]   @relation("AgentCommissions")
+  agentInvoices   AgentInvoice[] @relation("AgentInvoices")
+  invoicesCreated AgentInvoice[] @relation("InvoicesCreated")
 }
 
 model AgentProfile {
@@ -238,6 +240,7 @@ model Payment {
   verifiedBy       User?         @relation("VerifiedPayments", fields: [verifiedById], references: [id])
   verifiedAt       DateTime?
   commission       Commission?
+  invoiceNo        String?       @unique // member invoice number, set when the payment is counted
 
   @@index([installmentId])
   @@index([memberId])
@@ -265,7 +268,44 @@ model Commission {
   amount      Int // paise
   ruleMissing Boolean          @default(false) // ₹0 because the scheme's rule can't be worked out yet (Upahar tiers)
   status      CommissionStatus @default(EARNED)
+  invoiceId   String?
+  invoice     AgentInvoice?    @relation(fields: [invoiceId], references: [id])
   createdAt   DateTime         @default(now())
+
+  @@index([agentId])
+}
+
+// Gapless running numbers per series, e.g. "M/2026-27" for member invoices in that financial year.
+model InvoiceCounter {
+  series String @id
+  last   Int    @default(0)
+}
+
+enum AgentInvoiceStatus {
+  ISSUED
+  PAID
+  CANCELLED // its commission lines go back to the pool for the next invoice
+}
+
+// A monthly commission invoice for one agent, created by the super admin.
+model AgentInvoice {
+  id          String             @id @default(cuid())
+  number      String             @unique // SMC/2026-27/0001
+  agentId     String
+  agent       User               @relation("AgentInvoices", fields: [agentId], references: [id])
+  period      String // "2026-11": covers commission earned up to the end of this month not yet invoiced
+  gross       Int // paise
+  tdsBps      Int // TDS rate used, in basis points
+  tds         Int
+  net         Int
+  status      AgentInvoiceStatus @default(ISSUED)
+  createdById String
+  createdBy   User               @relation("InvoicesCreated", fields: [createdById], references: [id])
+  createdAt   DateTime           @default(now())
+  paidAt      DateTime?
+  utr         String? // bank transfer reference
+  cancelledAt DateTime?
+  commissions Commission[]
 
   @@index([agentId])
 }

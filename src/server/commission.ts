@@ -24,8 +24,8 @@ export async function listMyCommission(user: SessionUser | null) {
   const sum = (status: string) => lines.filter((l) => l.status === status).reduce((t, l) => t + l.amount, 0);
   return {
     lines,
-    earned: sum("EARNED"), // not paid out yet
-    paid: sum("PAID"),
+    earned: sum("EARNED"), // not paid out yet, before TDS
+    paid: sum("PAID"), // commission settled by paid invoices, before TDS
     awaitingRate: lines.filter((l) => l.ruleMissing).length, // Upahar payments waiting for the tier table
   };
 }

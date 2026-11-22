@@ -44,8 +44,13 @@ A full pass, start to finish:
 
 1. Log in as agent **9800000001** and tap **Enrol a member**. Use a new number (any 10 digits starting 6–9), pick a batch, and send the code. The code is in the `npm run dev` terminal. Fill in the details and enrol.
 2. Log out and log in as that new member. **My schemes** shows the 12 months and a **Pay** button for the oldest unpaid month.
-3. Tap **Pay**. On the test checkout, try **Make this payment fail (test)** first: the month stays unpaid and you can **Try again**. Then pay successfully: you get a receipt, and the month turns green with a **Receipt** link under **Month by month**.
+3. Tap **Pay**. On the test checkout, try **Make this payment fail (test)** first: the month stays unpaid and you can **Try again**. Then pay successfully: you get an invoice, and the month turns green with an **Invoice** link under **Month by month**.
 4. Log back in as the agent. **My members** shows the member's progress.
+5. **Cash:** as the agent, open **My members** and tap **Record cash** on a member. The member sees the month as "cash handed over, waiting for the office to check it". Log in as the super admin (**9999999999**), open **Cash** and **Verify** it (or **Reject**: the month goes back to unpaid).
+6. **Invoices:** every confirmed payment has an invoice with a **Download invoice (PDF)** button. Agents see their earnings and invoices under **My commission**.
+7. **Agent invoices:** as the super admin, open **Invoices**, pick a month that has ended and tap **Create invoices**. Commission earned this month goes on next month's invoice, so to test straight away move commission into last month:
+   `docker compose exec db psql -U saksham -c "update \"Commission\" set \"createdAt\" = now() - interval '1 month';"`
+   Then **Mark paid** with a UTR, and download the PDF as the super admin or as the agent.
 
 Things worth checking: paying a later month before an earlier one is refused; a paid month can't be paid again; paying all 12 marks the scheme Matured; Hindi and English both read correctly.
 

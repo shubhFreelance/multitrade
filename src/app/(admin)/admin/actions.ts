@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { rupeesToPaise } from "@/lib/money";
 import { updateAgent } from "@/server/agents";
 import { rejectCash, verifyCash } from "@/server/payments";
+import { cancelAgentInvoice, createAgentInvoices, markAgentInvoicePaid } from "@/server/invoices";
 import { createBatch, createProduct, updateBatch, updateProduct, updateScheme } from "@/server/catalog";
 import { AppError, toAppError } from "@/server/errors";
 import { getCurrentUser } from "@/server/session";
@@ -74,3 +75,9 @@ export const setAgentStatusAction = async (id: string, status: "ACTIVE" | "SUSPE
 
 export const verifyCashAction = async (id: string) => run((u) => verifyCash(u, id));
 export const rejectCashAction = async (id: string) => run((u) => rejectCash(u, id));
+
+export const createAgentInvoicesAction = async (_: FormState, fd: FormData) =>
+  run((u) => createAgentInvoices(u, { period: str(fd, "period") }));
+export const markAgentInvoicePaidAction = async (id: string, _: FormState, fd: FormData) =>
+  run((u) => markAgentInvoicePaid(u, id, { utr: str(fd, "utr") }));
+export const cancelAgentInvoiceAction = async (id: string) => run((u) => cancelAgentInvoice(u, id));

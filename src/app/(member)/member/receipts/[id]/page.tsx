@@ -50,6 +50,7 @@ export default async function Receipt({ params }: PageProps<"/member/receipts/[i
   }
 
   const rows: [string, string][] = [
+    [t("invoiceNo"), p.invoiceNo ?? ""],
     [t("member"), p.member.name],
     [t("token"), e.tokenNumber],
     [t("scheme"), scheme],
@@ -78,7 +79,7 @@ export default async function Receipt({ params }: PageProps<"/member/receipts/[i
             {rows.map(([k, v]) => (
               <div key={k} className="contents">
                 <dt className="text-muted-foreground">{k}</dt>
-                <dd className="text-right font-medium break-all">{v}</dd>
+                <dd className="text-right font-medium break-words">{v}</dd>
               </div>
             ))}
           </dl>
@@ -89,6 +90,15 @@ export default async function Receipt({ params }: PageProps<"/member/receipts/[i
           </footer>
         </div>
       </article>
+      {p.invoiceNo && (
+        <a
+          href={`/api/v1/payments/${p.id}/invoice`}
+          download
+          className="flex h-14 items-center justify-center rounded-lg bg-primary text-lg font-semibold text-primary-foreground hover:bg-primary/90"
+        >
+          {t("download")}
+        </a>
+      )}
       {back}
     </div>
   );

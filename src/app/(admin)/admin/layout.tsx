@@ -14,13 +14,14 @@ export default async function Layout({ children }: { children: React.ReactNode }
     ["/admin/products", t("products")],
     ["/admin/agents", t("agents")],
     ["/admin/cash", t("cash")],
+    ...(user.role === "SUPER_ADMIN" ? [["/admin/invoices", t("invoices")]] : []),
   ];
   return (
     <>
       <AppHeader user={user} />
-      <nav className="flex gap-1 overflow-x-auto border-b px-2">
+      <nav className="flex flex-wrap gap-x-1 border-b px-2">
         {links.map(([href, label]) => (
-          <Link key={href} href={href} className="px-3 py-3 text-sm font-medium whitespace-nowrap hover:underline">
+          <Link key={href} href={href} className="px-3 py-2.5 text-[15px] font-medium whitespace-nowrap hover:underline">
             {label}
           </Link>
         ))}

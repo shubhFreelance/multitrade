@@ -38,7 +38,9 @@
     "PAY_OLDEST_FIRST": "Pay the oldest unpaid month first.",
     "AMOUNT_MISMATCH": "The amount paid did not match. The office will check this payment.",
     "CASH_PENDING": "Cash for this month is already with the office for checking.",
-    "CASH_NOT_PENDING": "This cash entry was already verified or rejected."
+    "CASH_NOT_PENDING": "This cash entry was already verified or rejected.",
+    "PERIOD_NOT_OVER": "Invoices can only be created for a month that has ended.",
+    "INVOICE_NOT_ISSUED": "Only an unpaid invoice can be changed."
   },
   "member": {
     "title": "My schemes",
@@ -83,8 +85,8 @@
     "commission": {
       "title": "My commission",
       "cardHint": "What you earned on each paid installment, and your invoices.",
-      "earned": "Earned, not yet paid",
-      "paid": "Paid to you",
+      "earned": "Earned, not yet paid (before TDS)",
+      "paid": "Paid to you (after TDS)",
       "awaitingRate": "{count, plural, one {# Upahar payment is} other {# Upahar payments are}} waiting for the company's commission rate. These show ₹0 for now and will be updated.",
       "lines": "Commission by payment",
       "empty": "No commission yet. It appears here when a member's installment is confirmed paid.",
@@ -94,7 +96,16 @@
         "EARNED": "Earned",
         "PAID": "Paid",
         "REVERSED": "Reversed"
-      }
+      },
+      "invoices": "My invoices",
+      "noInvoices": "No invoices yet. The office creates one each month for the commission you earned.",
+      "invoiceLine": "{number}: {net} after TDS of {tds}.",
+      "invoiceStatus": {
+        "ISSUED": "Payment due",
+        "PAID": "Paid",
+        "CANCELLED": "Cancelled"
+      },
+      "pdf": "PDF"
     }
   },
   "admin": {
@@ -105,7 +116,8 @@
       "batches": "Batches",
       "products": "Products",
       "agents": "Agents",
-      "cash": "Cash"
+      "cash": "Cash",
+      "invoices": "Invoices"
     },
     "schemes": {
       "title": "Schemes",
@@ -169,6 +181,35 @@
       "verify": "Verify",
       "reject": "Reject",
       "confirmReject": "Reject {amount} from {name}? The month will show as unpaid again."
+    },
+    "invoices": {
+      "title": "Invoices",
+      "agentTitle": "Agent commission invoices",
+      "uninvoiced": "{amount} of commission is not on an invoice yet ({count} lines).",
+      "awaitingRate": "{count, plural, one {# Upahar payment has} other {# Upahar payments have}} no commission yet: the tier table is missing. They are left off invoices until it arrives.",
+      "period": "Month",
+      "create": "Create invoices",
+      "createHint": "Creates one invoice per agent for all commission earned up to the end of this month and not yet invoiced. TDS is deducted at the rate in settings.",
+      "confirmCreate": "Create commission invoices for every agent with unbilled commission?",
+      "noAgentInvoices": "No agent invoices yet.",
+      "amounts": "{number}. Commission {gross}, TDS {tds}, net {net}.",
+      "paidWith": "Paid on {day}, UTR {utr}.",
+      "status": {
+        "ISSUED": "Payment due",
+        "PAID": "Paid",
+        "CANCELLED": "Cancelled"
+      },
+      "download": "Download PDF",
+      "utr": "Bank transfer reference (UTR)",
+      "markPaid": "Mark paid",
+      "cancel": "Cancel invoice",
+      "confirmCancel": "Cancel invoice {number}? Its commission goes back to be billed on the next invoice.",
+      "memberTitle": "Member invoices",
+      "search": "Find an invoice",
+      "searchHint": "Invoice number, token, phone or name",
+      "find": "Find",
+      "noMemberInvoices": "No member invoices found.",
+      "pdf": "PDF"
     }
   },
   "common": {
@@ -200,8 +241,8 @@
     "monthByMonth": "Month by month",
     "yourAgent": "Your Panchayat Leader:",
     "pay": "Pay {amount} for {month}",
-    "receipt": "Receipt",
-    "pendingCash": "{amount} cash given to your Panchayat Leader, being checked by the office."
+    "receipt": "Invoice",
+    "pendingCash": "{amount} cash handed over, waiting for the office to check it."
   },
   "pay": {
     "testTitle": "Test payment",
@@ -214,7 +255,7 @@
     "cancel": "Cancel and go back"
   },
   "receipt": {
-    "title": "Payment receipt",
+    "title": "Invoice",
     "paid": "Paid",
     "member": "Member",
     "token": "Token number",
@@ -227,7 +268,7 @@
     "methodTest": "Test payment",
     "orderId": "Order number",
     "paymentId": "Payment reference",
-    "testNote": "Test receipt. Not valid as proof of payment.",
+    "testNote": "Test invoice. Not valid as proof of payment.",
     "back": "Back to my schemes",
     "titleFAILED": "Payment failed",
     "failed": "No money was taken. You can try again.",
@@ -239,6 +280,45 @@
     "duplicate": "This month was already paid before this payment arrived. The office will refund this extra payment.",
     "methodCash": "Cash, collected by {agent}",
     "titlePENDING": "Cash being checked",
-    "pending": "The cash was given to your Panchayat Leader. It counts as paid once the office verifies it."
+    "pending": "The cash was given to your Panchayat Leader. It counts as paid once the office verifies it.",
+    "invoiceNo": "Invoice number",
+    "download": "Download invoice (PDF)"
+  },
+  "invoicePdf": {
+    "memberTitle": "Invoice",
+    "agentTitle": "Commission invoice",
+    "date": "Date: {day}",
+    "period": "For: {month}",
+    "paid": "PAID",
+    "unpaid": "PAYMENT DUE",
+    "cancelled": "CANCELLED",
+    "billedTo": "Billed to",
+    "phone": "Mobile",
+    "token": "Token number",
+    "scheme": "Scheme",
+    "description": "Description",
+    "amount": "Amount",
+    "installmentLine": "Installment {n} of {total}, {month}",
+    "total": "Total paid",
+    "paidBy": "Paid by",
+    "cash": "Cash, collected by {agent}",
+    "online": "Online",
+    "testPayment": "Test payment",
+    "orderId": "Order number",
+    "reference": "Payment reference",
+    "testNote": "Test invoice from the QA environment. No real money was paid. Not valid as proof of payment.",
+    "agent": "Agent",
+    "panchayat": "Panchayat",
+    "pan": "PAN",
+    "paidOn": "Paid on",
+    "member": "Member",
+    "month": "Month",
+    "commission": "Commission",
+    "gross": "Commission earned",
+    "tds": "TDS ({percent}%)",
+    "net": "Net payable",
+    "paidOnDate": "Paid to agent on",
+    "utr": "Bank transfer reference (UTR)",
+    "footer": "Computer-generated document. No signature needed."
   }
 }

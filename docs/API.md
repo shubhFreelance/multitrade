@@ -45,6 +45,15 @@ REST endpoints under `/api/v1`, shared by the web app and the future mobile app.
 | POST | `/api/v1/admin/cash/:id/reject` | admin | (none) | the `Payment`, now `FAILED`; the month is unpaid again |
 
 | GET | `/api/v1/agent/commission` | agent | (none) | `{ lines, earned, paid, awaitingRate }` (paise). One line per confirmed payment on a member this agent enrolled. |
+| GET | `/api/v1/payments/:id/invoice` | the member who paid, the enrolling agent, admins | (none) | member invoice PDF (`application/pdf`), for counted payments only |
+| GET | `/api/v1/agent/invoices` | agent | (none) | the agent's commission invoices (not cancelled), newest first |
+| GET | `/api/v1/agent-invoices/:id/pdf` | that agent, super admin | (none) | agent commission invoice PDF |
+| GET | `/api/v1/admin/invoices?q=` | super admin | `q` searches member invoices | `{ agentInvoices, uninvoicedTotal, uninvoicedCount, awaitingRate, memberInvoices }` |
+| POST | `/api/v1/admin/agent-invoices` | super admin | `{ period: "YYYY-MM" }` (a month that has ended) | the invoices created (201): one per agent with unbilled commission up to the end of that month |
+| POST | `/api/v1/admin/agent-invoices/:id/paid` | super admin | `{ utr }` | the invoice, now `PAID`; its commission lines become `PAID` |
+| POST | `/api/v1/admin/agent-invoices/:id/cancel` | super admin | (none) | the invoice, now `CANCELLED`; its lines go back for the next invoice. Paid invoices can't be cancelled. |
+
+Invoices: every counted member payment gets a gapless number per Indian financial year (`SM/2026-27/000123`), assigned in the same transaction. Agent invoices are numbered `SMC/2026-27/0001`. TDS uses the `tdsBps` setting (default 200 = 2%), rounded to the paisa. PDFs follow the viewer's language (Hindi or English).
 
 Commission: created in the same transaction that counts a payment, for the enrolling agent. Manpasand ₹50 flat, Gold 1% (rounded down to the paisa), Upahar ₹0 with `ruleMissing: true` until the tier table arrives. Reversal on refund comes with refunds (not built yet).
 
@@ -80,5 +89,7 @@ Batch rules: `status` only moves forward (`OPEN` → `RUNNING` → `CLOSED`). On
 | `AMOUNT_MISMATCH` | 400 | Gateway amount differs from the order |
 | `CASH_PENDING` | 409 | Cash for this month is waiting for verification |
 | `CASH_NOT_PENDING` | 409 | Cash entry already verified or rejected |
+| `PERIOD_NOT_OVER` | 409 | Agent invoices asked for the current or a future month |
+| `INVOICE_NOT_ISSUED` | 409 | Paying or cancelling an invoice that is already paid or cancelled |
 | `UNAUTHENTICATED` | 401 | No valid session |
 | `FORBIDDEN` | 403 | Signed in, wrong role |
