@@ -35,7 +35,9 @@
     "MEMBER_DETAILS_REQUIRED": "Enter the member name, village and address."
   },
   "member": {
-    "title": "My schemes"
+    "title": "My schemes",
+    "greeting": "Namaste, {name}",
+    "empty": "You have no schemes yet. Your Panchayat Leader can enrol you."
   },
   "agent": {
     "title": "Agent dashboard",
@@ -45,7 +47,7 @@
       "noBatches": "No batch is open for enrolment right now.",
       "phone": "Member mobile number",
       "batch": "Scheme and batch",
-      "batchOption": "{label} · {scheme} · {amount} × {months} months · from {start} · {seats} seats left",
+      "batchOption": "{label}, {scheme}: {amount} a month for {months} months from {start}, {seats} seats left",
       "sendCode": "Send code to member",
       "newMember": "New member. A code was sent to {phone}. Fill in their details and ask them for the code.",
       "existingMember": "Existing member. A code was sent to {phone}. Ask them for the code.",
@@ -58,6 +60,17 @@
       "back": "Change number or batch",
       "done": "Member enrolled. Their token number is:",
       "another": "Enrol another member"
+    },
+    "greeting": "Namaste, {name}",
+    "summaryOwing": "{members, plural, one {# member} other {# members}}. {owing} owe {amount} now.",
+    "summaryClear": "{members, plural, =0 {No members yet. Enrol your first member below.} one {# member, up to date.} other {# members, all up to date.}}",
+    "members": {
+      "title": "My members",
+      "empty": "You haven't enrolled anyone yet.",
+      "dueNow": "To collect now: {count}",
+      "upToDate": "Up to date: {count}",
+      "call": "Call",
+      "callName": "Call {name}"
     }
   },
   "admin": {
@@ -133,5 +146,23 @@
     "UPAHAR": "Upahar",
     "MANPASAND": "Manpasand",
     "GOLD": "Gold"
+  },
+  "tracker": {
+    "state": {
+      "PAID": "Paid",
+      "DUE_NOW": "Due now",
+      "OVERDUE": "Overdue",
+      "UPCOMING": "Upcoming",
+      "WAIVED": "Waived"
+    },
+    "token": "Token number",
+    "paidOf": "{paid} of {total} installments paid.",
+    "paidSoFar": "{amount} paid so far.",
+    "settled": "All installments are settled.",
+    "overdue": "{amount} owed for {count, plural, one {# month} other {# months}}, {overdue} of them overdue.",
+    "dueNow": "{count, plural, one {{amount} due now, since {day}.} other {{amount} due now for # months, since {day}.}}",
+    "upcoming": "Next installment: {amount} on {day}.",
+    "monthByMonth": "Month by month",
+    "yourAgent": "Your Panchayat Leader:"
   }
 }

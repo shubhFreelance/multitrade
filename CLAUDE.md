@@ -25,7 +25,7 @@ For every feature in Section 10:
 1. Build the feature (code + its tests if it touches money, draws or access control).
 2. Run `npm run lint`, `npm run typecheck`, `npm test`. Fix anything failing.
 3. Update `docs/OPEN_QUESTIONS.md` and `README.md` only if something changed.
-4. Commit with a clear message (`feat: member installment payment via Razorpay`) and **push**.
+4. Commit with a clear message (`feat: member installment payment via Cashfree`) and **push**.
 5. Reply with a 3–5 line summary: what was built, how to try it, anything I need to decide. Then continue with the next feature unless I say stop.
 
 Rules:
@@ -107,7 +107,7 @@ All numbers below are **defaults stored in config per scheme/batch**, not hard-c
 - **Tailwind CSS + shadcn/ui.**
 - **Zod** for all input validation.
 - **Vitest** for tests.
-- **Razorpay** for online payments (test mode in dev).
+- **Cashfree Payments** for online payments (sandbox in dev). Cashfree replaced Razorpay at the client's request (Nov 2026).
 - **SMS OTP** via MSG91 (or similar) behind one small function; in dev, log the OTP to the console.
 - **i18n:** `next-intl`, Hindi + English; no hard-coded UI text.
 - **Scheduled jobs** (reminders, overdue marking): a simple cron route/script — no job queue.
@@ -142,7 +142,7 @@ docs/            ← API.md, OPEN_QUESTIONS.md
 
 - **Money in paise as integers.** Never floats. Format only in the UI.
 - **Balances are calculated from payment/commission records**, not stored as editable numbers.
-- **Money changes run in a DB transaction**, and payment webhooks are **idempotent** (same Razorpay payment ID never counts twice).
+- **Money changes run in a DB transaction**, and payment webhooks are **idempotent** (same Cashfree payment ID never counts twice; webhook signatures are verified).
 - **Access control on the server for every endpoint:** members see only their own data; agents only their own members; only admins verify cash or run draws.
 - **Agent cash collection:** agent records it → status `PENDING` → admin verifies → only then it counts as paid (for totals, commission and bonus unlock).
 - **Audit log:** one simple table recording who did what and when for admin actions, cash verification, draws, payouts and manual edits.
@@ -162,7 +162,7 @@ docs/            ← API.md, OPEN_QUESTIONS.md
 `Batch` (scheme_id, start_month, size, winners_per_draw, status) ·
 `Enrolment` (member_id, batch_id, agent_id, token_number, status) ·
 `Installment` (enrolment_id, month_no, due_date, amount, status: DUE | PAID | OVERDUE | WAIVED) ·
-`Payment` (installment_id, method: ONLINE | CASH, amount, razorpay_payment_id, status, verified_by) ·
+`Payment` (installment_id, method: ONLINE | CASH, amount, cf_order_id, cf_payment_id, status, verified_by) ·
 `Commission` (agent_id, payment_id, amount, type: INSTALLMENT | BONUS, status: EARNED | REVERSED | PAID, payout_id) ·
 `Payout` (agent_id, total, tds, utr, paid_at) ·
 `Draw` (batch_id, type: MONTHLY | BONUS, month_no, seed, eligible_list JSON, status) · `DrawWinner` ·
@@ -199,7 +199,7 @@ No e2e test suite for now.
 **4. Admin: agents** — list, approve/suspend. → push
 **5. Agent: enrol a member** — form, member confirms via their own OTP, token number assigned, 12 installments generated. → push
 **6. Member: My Schemes + tracker** — enrolment cards, paid X/12, total paid, next due, month-by-month timeline. → push
-**7. Online payment** — Razorpay order + webhook, installment marked paid, receipt page. → push
+**7. Online payment** — Cashfree order + webhook (and a status check when the member returns), installment marked paid, receipt page. → push
 **8. Agent cash collection + admin verification.** → push
 **9. Commission** — created on confirmed payment, reversed on refund; agent commission page. → push
 **10. Bonus Rewards lock/unlock** — locked card with progress on member dashboard. → push

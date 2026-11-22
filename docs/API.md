@@ -30,6 +30,11 @@ REST endpoints under `/api/v1`, shared by the web app and the future mobile app.
 | POST | `/api/v1/agent/enrolments/code` | approved agent | `{ phone, batchId }` | `{ existingMember }`. Texts the member a code that approves joining that batch. |
 | POST | `/api/v1/agent/enrolments` | approved agent | `{ phone, batchId, code, name?, village?, address?, nominee? }` (name, village, address required for a new phone) | `{ id, tokenNumber, installments }` (201) |
 
+| GET | `/api/v1/me/enrolments` | member | (none) | the member's own enrolments, newest first: `EnrolmentView[]` |
+| GET | `/api/v1/agent/enrolments` | agent | (none) | enrolments this agent made, those owing money first: `EnrolmentView[]` |
+
+`EnrolmentView`: `{ id, tokenNumber, status, scheme: { code, nameEn, nameHi }, member: { name, phone }, agent: { name, phone }, summary }`. `summary` is computed with `summarize()` from `src/shared/tracker.ts` using today's date in India: `{ slots: [{ monthNo, dueDate, amount, status, state }], total, paidCount, paidTotal, next, dueNowCount, dueNowTotal }`, where `state` is `PAID`, `WAIVED`, `OVERDUE`, `DUE_NOW` (due date reached, not paid) or `UPCOMING`.
+
 Enrolment: the code is sent to the member's phone and only works for the batch it was sent for. On success the member is created if new, the next token number is assigned (`UPH-B01-0001`), and one installment per month of the tenure is created, due on the 1st of each month from the batch's start month.
 
 "admin" means role `ADMIN` or `SUPER_ADMIN`. Money fields (`installmentAmount`, `price`) are integer paise. Every admin change is written to the audit log.

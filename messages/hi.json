@@ -35,7 +35,9 @@
     "MEMBER_DETAILS_REQUIRED": "सदस्य का नाम, गाँव और पता भरें।"
   },
   "member": {
-    "title": "मेरी योजनाएँ"
+    "title": "मेरी योजनाएँ",
+    "greeting": "नमस्ते, {name}",
+    "empty": "अभी आपकी कोई योजना नहीं है। आपके पंचायत लीडर आपका नामांकन कर सकते हैं।"
   },
   "agent": {
     "title": "एजेंट डैशबोर्ड",
@@ -45,7 +47,7 @@
       "noBatches": "अभी कोई बैच नामांकन के लिए खुला नहीं है।",
       "phone": "सदस्य का मोबाइल नंबर",
       "batch": "योजना और बैच",
-      "batchOption": "{label} · {scheme} · {amount} × {months} महीने · {start} से · {seats} सीट बाकी",
+      "batchOption": "{label}, {scheme}: {months} महीने तक हर महीने {amount}, {start} से, {seats} सीट बाकी",
       "sendCode": "सदस्य को कोड भेजें",
       "newMember": "नया सदस्य। {phone} पर कोड भेजा गया। उनकी जानकारी भरें और उनसे कोड पूछें।",
       "existingMember": "पुराने सदस्य। {phone} पर कोड भेजा गया। उनसे कोड पूछें।",
@@ -58,6 +60,17 @@
       "back": "नंबर या बैच बदलें",
       "done": "सदस्य का नामांकन हो गया। उनका टोकन नंबर है:",
       "another": "एक और सदस्य जोड़ें"
+    },
+    "greeting": "नमस्ते, {name}",
+    "summaryOwing": "{members} सदस्य। {owing} पर अभी {amount} बाकी।",
+    "summaryClear": "{members, plural, =0 {अभी कोई सदस्य नहीं। नीचे से पहला सदस्य जोड़ें।} other {{members} सदस्य, सबकी किस्तें समय पर।}}",
+    "members": {
+      "title": "मेरे सदस्य",
+      "empty": "आपने अभी किसी का नामांकन नहीं किया है।",
+      "dueNow": "अभी वसूली: {count}",
+      "upToDate": "समय पर: {count}",
+      "call": "कॉल करें",
+      "callName": "{name} को कॉल करें"
     }
   },
   "admin": {
@@ -133,5 +146,23 @@
     "UPAHAR": "उपहार",
     "MANPASAND": "मनपसंद",
     "GOLD": "गोल्ड"
+  },
+  "tracker": {
+    "state": {
+      "PAID": "जमा",
+      "DUE_NOW": "अभी देय",
+      "OVERDUE": "बकाया",
+      "UPCOMING": "आगे",
+      "WAIVED": "माफ़"
+    },
+    "token": "टोकन नंबर",
+    "paidOf": "{total} में से {paid} किस्तें जमा।",
+    "paidSoFar": "अब तक {amount} जमा।",
+    "settled": "सारी किस्तें पूरी हो गईं।",
+    "overdue": "{count} महीनों का {amount} बाकी, जिनमें {overdue} महीने बकाया हैं।",
+    "dueNow": "{count, plural, one {{amount} अभी देय, {day} से।} other {{count} महीनों का {amount} अभी देय, {day} से।}}",
+    "upcoming": "अगली किस्त: {day} को {amount}।",
+    "monthByMonth": "महीने के हिसाब से",
+    "yourAgent": "आपके पंचायत लीडर:"
   }
 }
