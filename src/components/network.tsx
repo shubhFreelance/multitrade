@@ -17,13 +17,13 @@ import { todayInIndia } from "@/shared/tracker";
 export async function PeriodTabs({ current, base }: { current: Period; base: string }) {
   const t = await getTranslations("network.period");
   return (
-    <nav aria-label={t("label")} className="flex gap-1 self-stretch rounded-full bg-card p-1 sm:self-start">
+    <nav aria-label={t("label")} className="flex gap-0.5 self-stretch rounded-full bg-card p-1 sm:self-end">
       {periods.map((p) => (
         <Link
           key={p}
           href={`${base}${base.includes("?") ? "&" : "?"}period=${p}`}
           aria-current={p === current ? "page" : undefined}
-          className="flex min-h-11 flex-1 items-center justify-center rounded-full px-4 text-[15px] font-medium whitespace-nowrap text-muted-foreground aria-[current=page]:bg-primary aria-[current=page]:text-primary-foreground sm:flex-none"
+          className="flex min-h-10 flex-1 items-center justify-center rounded-full px-3.5 text-[14px] font-medium whitespace-nowrap text-muted-foreground hover:text-foreground aria-[current=page]:bg-primary aria-[current=page]:text-primary-foreground sm:flex-none"
         >
           {t(p)}
         </Link>

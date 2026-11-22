@@ -536,7 +536,25 @@
     "memberIntro": "Winners for each month in your batches. A winner stops paying and gets the product early.",
     "none": "No draws yet in your batches. Results appear here after each month's draw.",
     "youWon": "You won this draw.",
-    "monthlyTitle": "Monthly draws"
+    "monthlyTitle": "Monthly draws",
+    "pageIntro": "Monthly draws for each batch, and the one-off bonus draw for the scooters and the gold chain.",
+    "stats": {
+      "batches": "Batches",
+      "drawsRun": "Monthly draws run",
+      "ready": "Ready to run now",
+      "winners": "Winners so far"
+    },
+    "filters": {
+      "scheme": "Scheme",
+      "state": "Draw status",
+      "allSchemes": "All schemes",
+      "all": "All",
+      "ready": "Ready to run",
+      "later": "Opens later",
+      "done": "Finished"
+    },
+    "progress": "{done} of {total} draws done",
+    "noneMatch": "No batch matches these filters."
   },
   "join": {
     "title": "Join a scheme",

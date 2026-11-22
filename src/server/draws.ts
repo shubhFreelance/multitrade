@@ -63,6 +63,7 @@ export async function listDrawBatches(user: SessionUser | null) {
       scheme: { code: b.scheme.code, nameEn: b.scheme.nameEn, nameHi: b.scheme.nameHi },
       members: b._count.enrolments,
       winnersPerDraw: b.winnersPerDraw,
+      totalDraws: Math.max(0, b.scheme.tenureMonths - 1),
       nextMonth: last ? null : nextMonth,
       opensOn: last ? null : opensOn,
       canRun: !last && opensOn <= today && b.winnersPerDraw > 0,

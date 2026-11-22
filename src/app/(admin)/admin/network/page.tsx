@@ -12,7 +12,7 @@ import { formatPaise } from "@/lib/money";
 import { membersOverview, networkOverview } from "@/server/network";
 import { requirePageUser } from "@/server/session";
 import { adminRoles } from "@/shared/auth";
-import { agentFilterInput, agentFilters, memberSources, type Period } from "@/shared/network";
+import { agentFilterInput, agentFilters, memberSourceInput, memberSources, periodInput, type Period } from "@/shared/network";
 import { todayInIndia } from "@/shared/tracker";
 
 type Series = { keys: string[]; counts: number[]; totals: number[] };
@@ -31,7 +31,7 @@ function chartText(series: Series, period: Period, locale: string, value: (i: nu
 /** A pill tab row: big ones for Agents / Members, small ones for filters. */
 function Tabs({ items, label, size = "lg" }: { items: { href: string; text: React.ReactNode; current: boolean }[]; label: string; size?: "lg" | "sm" }) {
   return (
-    <nav aria-label={label} className={`flex flex-wrap gap-1.5 ${size === "lg" ? "self-stretch rounded-full bg-card p-1.5 sm:self-start" : ""}`}>
+    <nav aria-label={label} className={`flex flex-wrap gap-1.5 ${size === "lg" ? "self-stretch rounded-full bg-card p-1.5 sm:self-start" : "sm:justify-end"}`}>
       {items.map((it) => (
         <Link
           key={it.href}
@@ -40,7 +40,7 @@ function Tabs({ items, label, size = "lg" }: { items: { href: string; text: Reac
           className={`flex items-center justify-center gap-2 rounded-full font-semibold transition-colors ${
             size === "lg"
               ? "min-h-12 flex-1 px-6 text-[17px] text-muted-foreground aria-[current=page]:bg-primary aria-[current=page]:text-primary-foreground sm:flex-none"
-              : "min-h-10 bg-card px-4 text-[15px] text-muted-foreground hover:text-foreground aria-[current=page]:bg-primary aria-[current=page]:text-primary-foreground"
+              : "min-h-10 bg-card px-3.5 text-[14px] text-muted-foreground hover:text-foreground aria-[current=page]:bg-primary aria-[current=page]:text-primary-foreground"
           }`}
         >
           {it.text}
@@ -61,6 +61,7 @@ export default async function NetworkPage({ searchParams }: PageProps<"/admin/ne
   return (
     <div className="flex flex-col gap-5 lg:gap-6">
       <PageHeader tone="blue" icon={Boxes} title={t("adminTitle")} intro={t("adminIntro")} />
+      <div className="flex flex-wrap items-center justify-between gap-3">
       <Tabs
         label={t("viewLabel")}
         items={[
@@ -68,6 +69,11 @@ export default async function NetworkPage({ searchParams }: PageProps<"/admin/ne
           { href: `/admin/network?view=members${period ? `&period=${period}` : ""}`, text: <><UserRound aria-hidden className="size-5" />{t("view.members")}</>, current: view === "members" },
         ]}
       />
+        <PeriodTabs
+          current={periodInput.parse(period)}
+          base={view === "agents" ? `/admin/network?view=agents&status=${agentFilterInput.parse(sp.status)}` : `/admin/network?view=members&source=${memberSourceInput.parse(sp.source)}`}
+        />
+      </div>
       {view === "agents" ? <AgentsView period={period} status={sp.status} locale={locale} /> : <MembersView period={period} source={sp.source} locale={locale} user={user} />}
     </div>
   );
@@ -88,7 +94,6 @@ async function AgentsView({ period, status, locale }: { period?: string; status:
 
   return (
     <>
-      <PeriodTabs current={o.period} base={`/admin/network?view=agents&status=${filter}`} />
 
       {/* Four cards: three figures and a wide performance chart. */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:gap-4 xl:grid-cols-5">
@@ -181,7 +186,6 @@ async function MembersView({ period, source, locale, user }: { period?: string; 
 
   return (
     <>
-      <PeriodTabs current={m.period} base={`/admin/network?view=members&source=${m.source}`} />
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:gap-4 xl:grid-cols-5">
         <Glass tone="violet" className="flex min-h-44 flex-col justify-end p-5">

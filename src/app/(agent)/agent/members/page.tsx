@@ -146,7 +146,7 @@ export default async function AgentMembers({ searchParams }: PageProps<"/agent/m
   return (
     <div className="flex flex-col gap-5 lg:gap-6">
       <PageHeader tone="blue" icon={Users} title={t("title")} />
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-end gap-2">
         <PeriodTabs current={net.period} base={`/agent/members?layout=${layout}`} />
         <nav aria-label={t("list.layoutLabel")} className="flex gap-1 rounded-full bg-card p-1">
           {(
@@ -159,7 +159,7 @@ export default async function AgentMembers({ searchParams }: PageProps<"/agent/m
               key={l}
               href={`/agent/members?layout=${l}&period=${net.period}`}
               aria-current={l === layout ? "page" : undefined}
-              className="flex min-h-11 items-center gap-2 rounded-full px-4 text-[15px] font-medium text-muted-foreground aria-[current=page]:bg-primary aria-[current=page]:text-primary-foreground"
+              className="flex min-h-10 items-center gap-1.5 rounded-full px-3.5 text-[14px] font-medium text-muted-foreground hover:text-foreground aria-[current=page]:bg-primary aria-[current=page]:text-primary-foreground"
             >
               <Icon aria-hidden className="size-4" />
               {t(`list.${l}`)}

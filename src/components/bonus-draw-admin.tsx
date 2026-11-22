@@ -1,6 +1,7 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { prizeHandedOverAction, runBonusDrawAction } from "@/app/(admin)/admin/actions";
 import { ActionForm } from "@/components/action-form";
+import { SectionTitle } from "@/components/ui-bits";
 import { formatDay } from "@/lib/dates";
 import type { bonusOverview } from "@/server/bonus";
 import { todayInIndia } from "@/shared/tracker";
@@ -11,26 +12,26 @@ export async function BonusDrawAdmin({ prizes }: { prizes: Awaited<ReturnType<ty
   const tb = await getTranslations("bonus");
   const locale = await getLocale();
   return (
-    <section aria-labelledby="bonus-draws" className="flex flex-col gap-3">
+    <section aria-labelledby="bonus-draws" className="flex flex-col gap-4">
       <div>
-        <h2 id="bonus-draws" className="text-lg font-semibold">
+        <SectionTitle id="bonus-draws" tint="pink">
           {t("adminTitle")}
-        </h2>
-        <p className="text-muted-foreground">{t("adminIntro")}</p>
+        </SectionTitle>
+        <p className="mt-1 max-w-3xl px-1 text-[15px] text-muted-foreground">{t("adminIntro")}</p>
       </div>
       <div className="grid items-start gap-4 lg:grid-cols-2 lg:gap-6">
       {prizes.map((p) => (
         <article key={p.prize} className="flex flex-col gap-3 overflow-hidden rounded-[28px] bg-card p-5">
           {/* Scooters pink, the gold chain sunrise: the same colours members see. */}
-          <div className={`${p.prize === "SCOOTER" ? "glass-pink" : "glass-sunrise"} -mx-5 -mt-5 mb-1 px-5 pt-6 pb-5 text-white`}>
-            <h3 className="text-[24px] leading-tight font-semibold tracking-tight">{tb(p.prize, { count: p.count })}</h3>
-            <p className="mt-1 text-white/90">{t("unlockAt", { months: p.needed, eligible: p.eligibleNow })}</p>
+          <div className={`${p.prize === "SCOOTER" ? "glass-pink" : "glass-sunrise"} -mx-5 -mt-5 mb-1 px-5 py-4 text-white`}>
+            <h3 className="text-[18px] leading-tight font-semibold">{tb(p.prize, { count: p.count })}</h3>
+            <p className="text-[14px] text-white/90">{t("unlockAt", { months: p.needed, eligible: p.eligibleNow })}</p>
           </div>
           {!p.draw ? (
             p.eligibleNow > 0 && p.count > 0 ? (
               <ActionForm action={runBonusDrawAction.bind(null, p.prize)} submitLabel={t("run")} confirm={t("confirmRun", { prize: tb(p.prize, { count: p.count }), eligible: p.eligibleNow })} />
             ) : (
-              <p className="text-muted-foreground">{t("nobodyYet")}</p>
+              <p className="text-[15px] text-muted-foreground">{t("nobodyYet")}</p>
             )
           ) : (
             <>
