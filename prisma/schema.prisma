@@ -34,11 +34,12 @@ model User {
   memberProfile MemberProfile?
   auditLogs     AuditLog[]
 
-  enrolments      Enrolment[] @relation("MemberEnrolments")
-  agentEnrolments Enrolment[] @relation("AgentEnrolments")
-  payments        Payment[]   @relation("MemberPayments")
-  cashCollected   Payment[]   @relation("CollectedPayments")
-  cashVerified    Payment[]   @relation("VerifiedPayments")
+  enrolments      Enrolment[]  @relation("MemberEnrolments")
+  agentEnrolments Enrolment[]  @relation("AgentEnrolments")
+  payments        Payment[]    @relation("MemberPayments")
+  cashCollected   Payment[]    @relation("CollectedPayments")
+  cashVerified    Payment[]    @relation("VerifiedPayments")
+  commissions     Commission[] @relation("AgentCommissions")
 }
 
 model AgentProfile {
@@ -236,7 +237,35 @@ model Payment {
   verifiedById     String? // admin who verified the cash
   verifiedBy       User?         @relation("VerifiedPayments", fields: [verifiedById], references: [id])
   verifiedAt       DateTime?
+  commission       Commission?
 
   @@index([installmentId])
   @@index([memberId])
+}
+
+enum CommissionType {
+  INSTALLMENT
+  BONUS
+}
+
+enum CommissionStatus {
+  EARNED
+  REVERSED
+  PAID
+}
+
+// Commission the enrolling agent earns when an installment is confirmed paid.
+model Commission {
+  id          String           @id @default(cuid())
+  agentId     String
+  agent       User             @relation("AgentCommissions", fields: [agentId], references: [id])
+  paymentId   String?          @unique // one commission per payment
+  payment     Payment?         @relation(fields: [paymentId], references: [id])
+  type        CommissionType   @default(INSTALLMENT)
+  amount      Int // paise
+  ruleMissing Boolean          @default(false) // ₹0 because the scheme's rule can't be worked out yet (Upahar tiers)
+  status      CommissionStatus @default(EARNED)
+  createdAt   DateTime         @default(now())
+
+  @@index([agentId])
 }

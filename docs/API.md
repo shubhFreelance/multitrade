@@ -44,6 +44,10 @@ REST endpoints under `/api/v1`, shared by the web app and the future mobile app.
 | POST | `/api/v1/admin/cash/:id/verify` | admin | (none) | the `Payment`, now `SUCCESS` (or `DUPLICATE` if the month was already paid) |
 | POST | `/api/v1/admin/cash/:id/reject` | admin | (none) | the `Payment`, now `FAILED`; the month is unpaid again |
 
+| GET | `/api/v1/agent/commission` | agent | (none) | `{ lines, earned, paid, awaitingRate }` (paise). One line per confirmed payment on a member this agent enrolled. |
+
+Commission: created in the same transaction that counts a payment, for the enrolling agent. Manpasand ₹50 flat, Gold 1% (rounded down to the paisa), Upahar ₹0 with `ruleMissing: true` until the tier table arrives. Reversal on refund comes with refunds (not built yet).
+
 Payments: `PAYMENT_PROVIDER` in the environment picks the provider (`test` now; `cashfree` once wired; unset = off). Every provider settles orders through one function, `confirmPayment`. It is safe to call repeatedly (webhook retries count once), refuses a wrong amount, and marks money for an already-paid month as `DUPLICATE` for refund. Paying the last unpaid month sets the enrolment to `MATURED`.
 
 Enrolment: the code is sent to the member's phone and only works for the batch it was sent for. On success the member is created if new, the next token number is assigned (`UPH-B01-0001`), and one installment per month of the tenure is created, due on the 1st of each month from the batch's start month.

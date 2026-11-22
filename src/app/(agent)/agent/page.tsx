@@ -38,6 +38,10 @@ export default async function AgentHome() {
             : t("summaryClear", { members: people(enrolments) })}
         </span>
       </Link>
+      <Link href="/agent/commission" className="flex flex-col gap-1 rounded-2xl bg-card p-4 ring-1 ring-border hover:ring-primary">
+        <span className="text-lg font-semibold">{t("commission.title")}</span>
+        <span className="text-muted-foreground">{t("commission.cardHint")}</span>
+      </Link>
       <Link href="/agent/enrol" className="flex min-h-14 items-center justify-center rounded-xl bg-primary px-6 text-lg font-semibold text-primary-foreground hover:bg-primary/90">
         {t("enrol.title")}
       </Link>

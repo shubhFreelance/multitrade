@@ -4,6 +4,7 @@ import type { SessionUser } from "@/shared/auth";
 import { failsWith, makeUser, resetDb } from "../../test/db";
 import { confirmPayment, getPayment, listPendingCash, recordCash, rejectCash, simulateTestPayment, startPayment, verifyCash } from "./payments";
 import { listMyEnrolments } from "./tracker";
+import { listMyCommission } from "./commission";
 
 let member: SessionUser, other: SessionUser, agent: SessionUser;
 let enrolmentId: string;
@@ -179,6 +180,56 @@ describe("cash collected by the agent", () => {
     const cash = await recordCash(agent, months[0].id); // an unfinished online order doesn't block cash
     await failsWith(confirmPayment(cash.orderId, { status: "SUCCESS", gatewayPaymentId: "X", amount: cash.amount }), "NOT_FOUND");
     expect(await status(0)).toBe("DUE");
+  });
+});
+
+describe("commission", () => {
+  const setRule = (commissionRule: object) => db.scheme.updateMany({ data: { commissionRule } });
+  const lines = () => db.commission.findMany();
+
+  it("the enrolling agent earns commission when a payment is confirmed: ₹50 flat (Manpasand)", async () => {
+    await setRule({ type: "FLAT", amount: 50_00 });
+    const p = await pay(0);
+    expect(await lines()).toEqual([expect.objectContaining({ agentId: agent.id, paymentId: p.id, amount: 50_00, ruleMissing: false, status: "EARNED" })]);
+  });
+
+  it("1% of the installment (Gold)", async () => {
+    await setRule({ type: "PERCENT", bps: 100 });
+    await pay(0);
+    expect((await lines())[0].amount).toBe(20_00);
+  });
+
+  it("Upahar: ₹0 and flagged until the tier table arrives", async () => {
+    await setRule({ type: "TIER", tiers: [] });
+    await pay(0);
+    expect((await lines())[0]).toMatchObject({ amount: 0, ruleMissing: true });
+  });
+
+  it("nothing for failed, unfinished or duplicate payments, or for cash until it is verified", async () => {
+    await setRule({ type: "FLAT", amount: 50_00 });
+    const failed = await startPayment(member, months[0].id);
+    await simulateTestPayment(member, failed.paymentId, "FAILED");
+    await startPayment(member, months[0].id); // left unfinished
+    const cash = await recordCash(agent, months[0].id);
+    expect(await lines()).toHaveLength(0);
+
+    await verifyCash(await makeUser("ADMIN", "9000000001"), cash.id);
+    expect(await lines()).toHaveLength(1);
+
+    const a = await startPayment(member, months[1].id);
+    const b = await startPayment(member, months[1].id);
+    await confirmPayment(a.orderId, { status: "SUCCESS", gatewayPaymentId: "CF-A", amount: 2_000_00 });
+    await confirmPayment(b.orderId, { status: "SUCCESS", gatewayPaymentId: "CF-B", amount: 2_000_00 }); // duplicate
+    await confirmPayment(a.orderId, { status: "SUCCESS", gatewayPaymentId: "CF-A", amount: 2_000_00 }); // webhook retry
+    expect(await lines()).toHaveLength(2);
+  });
+
+  it("an agent sees only their own commission", async () => {
+    await setRule({ type: "FLAT", amount: 50_00 });
+    await pay(0);
+    expect((await listMyCommission(agent)).earned).toBe(50_00);
+    expect((await listMyCommission(await makeUser("AGENT", "9800000002"))).lines).toHaveLength(0);
+    await failsWith(listMyCommission(member), "FORBIDDEN");
   });
 });
 

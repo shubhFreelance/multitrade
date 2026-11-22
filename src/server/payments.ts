@@ -4,6 +4,7 @@ import { randomBytes } from "node:crypto";
 import type { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
 import { adminRoles, type SessionUser } from "@/shared/auth";
+import { commissionFor } from "@/shared/commission";
 import { audit } from "./audit";
 import { requireRole } from "./auth";
 import { AppError } from "./errors";
@@ -38,14 +39,18 @@ async function checkPayable(client: Tx, installmentId: string, enrolmentId: stri
 }
 
 /**
- * Counts a received payment: the installment becomes PAID and the enrolment MATURED after its last month.
+ * Counts a received payment: the installment becomes PAID, the enrolling agent earns commission,
+ * and the enrolment becomes MATURED after its last month.
  * Money for a month that is already paid is kept as DUPLICATE for the office to refund.
  * The caller must hold the payment row lock inside `tx`.
  */
 async function settleSuccess(tx: Tx, paymentId: string, data: Prisma.PaymentUpdateInput) {
   const p = await tx.payment.findUniqueOrThrow({ where: { id: paymentId } });
   await tx.$queryRaw`select id from "Installment" where id = ${p.installmentId} for update`;
-  const inst = await tx.installment.findUniqueOrThrow({ where: { id: p.installmentId }, include: { enrolment: true } });
+  const inst = await tx.installment.findUniqueOrThrow({
+    where: { id: p.installmentId },
+    include: { enrolment: { include: { batch: { include: { scheme: true } } } } },
+  });
   const alreadyPaid = inst.status === "PAID" || inst.status === "WAIVED";
   const settled = await tx.payment.update({
     where: { id: p.id },
@@ -54,6 +59,8 @@ async function settleSuccess(tx: Tx, paymentId: string, data: Prisma.PaymentUpda
   if (alreadyPaid) return settled;
 
   await tx.installment.update({ where: { id: inst.id }, data: { status: "PAID" } });
+  const { amount, ruleMissing } = commissionFor(inst.enrolment.batch.scheme.commissionRule, p.amount);
+  await tx.commission.create({ data: { agentId: inst.enrolment.agentId, paymentId: p.id, amount, ruleMissing } });
   const unpaid = await tx.installment.count({ where: { enrolmentId: inst.enrolmentId, status: { in: ["DUE", "OVERDUE"] } } });
   if (unpaid === 0 && inst.enrolment.status === "ACTIVE") {
     await tx.enrolment.update({ where: { id: inst.enrolmentId }, data: { status: "MATURED" } });

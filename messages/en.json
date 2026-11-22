@@ -79,6 +79,22 @@
       "callName": "Call {name}",
       "recordCash": "Record cash {amount} for {month}",
       "confirmCash": "Did you receive {amount} cash from {name} for {month}? The office will verify it."
+    },
+    "commission": {
+      "title": "My commission",
+      "cardHint": "What you earned on each paid installment, and your invoices.",
+      "earned": "Earned, not yet paid",
+      "paid": "Paid to you",
+      "awaitingRate": "{count, plural, one {# Upahar payment is} other {# Upahar payments are}} waiting for the company's commission rate. These show ₹0 for now and will be updated.",
+      "lines": "Commission by payment",
+      "empty": "No commission yet. It appears here when a member's installment is confirmed paid.",
+      "line": "{token}, {month}. Paid {day}.",
+      "rateMissing": "Rate pending",
+      "status": {
+        "EARNED": "Earned",
+        "PAID": "Paid",
+        "REVERSED": "Reversed"
+      }
     }
   },
   "admin": {
