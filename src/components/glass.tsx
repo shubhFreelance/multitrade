@@ -37,3 +37,7 @@ export function Glass({
 
 /** Scheme → card colour, used for scheme headers everywhere. */
 export const schemeTone: Record<string, GlassTone> = { UPAHAR: "pink", MANPASAND: "blue", GOLD: "sunrise" };
+
+/** The six colours in a fixed order. Lists step through them, so neighbouring items (e.g. draws) never share a colour. */
+export const toneCycle: GlassTone[] = ["violet", "blue", "coral", "sunrise", "pink", "peach"];
+export const toneAt = (i: number) => toneCycle[((i % toneCycle.length) + toneCycle.length) % toneCycle.length];
