@@ -48,7 +48,12 @@
     "ALREADY_CONFIRMED": "आप यह पहले ही कर चुके हैं।",
     "ADDRESS_REQUIRED": "पहुँचाने का पता लिखें।",
     "PRODUCT_UNAVAILABLE": "ऐसा सामान चुनें जो उपलब्ध हो।",
-    "CRON_DISABLED": "रोज़ की जाँच बंद है।"
+    "CRON_DISABLED": "रोज़ की जाँच बंद है।",
+    "WRONG_STEP": "यह अभी उस चरण पर नहीं है।",
+    "OUT_OF_STOCK": "यह सामान स्टॉक में नहीं है।",
+    "NO_GOLD_RATE": "पहले आज का सोने का भाव डालें।",
+    "NOTHING_DUE": "और कुछ नहीं भरना।",
+    "DIFFERENCE_UNPAID": "सदस्य को अभी बाकी रकम भरनी है।"
   },
   "member": {
     "title": "मेरी योजनाएँ",
@@ -148,7 +153,8 @@
       "cash": "नकद",
       "invoices": "इनवॉइस",
       "draws": "ड्रॉ",
-      "network": "एजेंट और सदस्य"
+      "network": "एजेंट और सदस्य",
+      "fulfilment": "डिलीवरी"
     },
     "schemes": {
       "title": "योजनाएँ",
@@ -246,6 +252,52 @@
       "title": "रोज़ की जाँच",
       "intro": "यह हर सुबह अपने आप चलती है: नियत तारीख के 10 दिन बाद किस्त को बकाया मानती है, लगातार 2 किस्तें छोड़ने वालों को डिफ़ॉल्ट करती है, और जल्द देय, अब देय और बकाया के SMS भेजती है। कोई दिन छूट गया हो या जाँचना हो तो अभी चलाएँ।",
       "run": "रोज़ की जाँच अभी चलाएँ"
+    },
+    "fulfilment": {
+      "title": "डिलीवरी",
+      "intro": "जिन सदस्यों की योजना पूरी हुई या जिन्होंने ड्रॉ जीता। उनका जवाब आने पर सामान तय करें (या सोने की कीमत लगाएँ), बाकी रकम लें, फिर सामान दें।",
+      "goldRate": "सोने का भाव",
+      "todayRate": "आज: {rate} प्रति ग्राम ({purity})।",
+      "noRateToday": "आज का भाव अभी नहीं डाला गया। इसके बिना सोने की कीमत नहीं लग सकती।",
+      "ratePerGram": "प्रति ग्राम भाव (₹)",
+      "saveRate": "आज का भाव सेव करें",
+      "correctRate": "आज का भाव सुधारें",
+      "group": {
+        "CONFIRMED": "सामान तय करना है: {count}",
+        "ALLOCATED": "देना है: {count}",
+        "PENDING": "सदस्य के जवाब का इंतज़ार: {count}",
+        "DELIVERED": "दे दिया: {count}"
+      },
+      "none": "यहाँ कुछ नहीं।",
+      "reason": {
+        "MATURED": "सारी किस्तें जमा",
+        "WON": "ड्रॉ जीता"
+      },
+      "agent": "एजेंट {name}",
+      "deliverTo": "पता: {address}",
+      "product": "चुना: {name}, {price}",
+      "worth": "योजना की कीमत {value}।",
+      "chooseUpahar": "देने के लिए उपहार",
+      "productOption": "{name}, {price} ({stock} स्टॉक में)",
+      "allocate": "यह सामान तय करें",
+      "allocateChosen": "चुना हुआ सामान तय करें",
+      "weight": "वज़न (ग्राम)",
+      "makingRupees": "बनवाई (₹)",
+      "usesRate": "आज के भाव {rate} प्रति ग्राम पर, साथ में बनवाई और {pct}% GST।",
+      "priceGold": "सोने की कीमत लगाएँ",
+      "needRate": "इसकी कीमत लगाने के लिए ऊपर आज का भाव डालें।",
+      "goldLine": "सोना {weight} ग्राम, {rate}/ग्राम",
+      "making": "बनवाई",
+      "gst": "GST {pct}%",
+      "price": "कीमत",
+      "planValue": "योजना की कीमत",
+      "difference": "सदस्य भरेगा",
+      "ref": "रसीद नंबर या UTR",
+      "recordDifference": "{amount} मिले, दर्ज करें",
+      "differencePaid": "बाकी रकम मिली ({ref}), {day}।",
+      "deliver": "दे दिया, दर्ज करें",
+      "confirmDeliver": "क्या {name} ({token}) को सामान मिल गया?",
+      "deliveredOn": "{day} को दिया।"
     }
   },
   "common": {
@@ -486,7 +538,13 @@
     "confirmedProduct": "आपने {product} चुना। पहुँचाने का पता: {address}",
     "confirmedGold": "आपकी सोने की ख़रीद बुक हो गई है।",
     "differenceDue": "सामान मिलते समय {amount} और भरने होंगे।",
-    "officeWillCall": "डिलीवरी के लिए दफ़्तर आपको कॉल करेगा।"
+    "officeWillCall": "डिलीवरी के लिए दफ़्तर आपको कॉल करेगा।",
+    "todayGoldRate": "आज सोने का भाव: {rate} प्रति ग्राम ({purity})।",
+    "goldPriced": "सोना {weight} ग्राम, {rate}/ग्राम, बनवाई {making}, GST {gst}।",
+    "finalPrice": "कीमत {price}; आपकी योजना से {value}।",
+    "payBeforeDelivery": "सामान मिलने से पहले दफ़्तर में {amount} भरें।",
+    "differenceReceived": "बाकी रकम मिल गई है।",
+    "nothingToPay": "और कुछ नहीं भरना।"
   },
   "messages": {
     "title": "संदेश",

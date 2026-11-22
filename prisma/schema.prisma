@@ -359,23 +359,30 @@ enum FulfilmentReason {
 
 enum FulfilmentStatus {
   PENDING // waiting for the member: confirm address (Upahar), choose product (Manpasand), book purchase (Gold)
-  CONFIRMED // member has acted; the office takes it from here (Feature 14)
+  CONFIRMED // member has acted; the office takes it from here
+  ALLOCATED // office fixed the product and price; any difference is due before delivery
   DELIVERED
 }
 
 // What a member gets when an enrolment matures or wins a draw. Created by the same transaction that matures it or runs the draw.
 model Fulfilment {
-  id          String           @id @default(cuid())
-  enrolmentId String           @unique
-  enrolment   Enrolment        @relation(fields: [enrolmentId], references: [id])
-  reason      FulfilmentReason
-  status      FulfilmentStatus @default(PENDING)
-  address     String? // delivery address the member confirmed (Upahar, Manpasand)
-  productId   String? // Manpasand: the product the member chose
-  product     Product?         @relation(fields: [productId], references: [id])
-  confirmedAt DateTime?
-  deliveredAt DateTime?
-  createdAt   DateTime         @default(now())
+  id               String           @id @default(cuid())
+  enrolmentId      String           @unique
+  enrolment        Enrolment        @relation(fields: [enrolmentId], references: [id])
+  reason           FulfilmentReason
+  status           FulfilmentStatus @default(PENDING)
+  address          String? // delivery address the member confirmed (Upahar, Manpasand)
+  productId        String? // Manpasand: the product the member chose
+  product          Product?         @relation(fields: [productId], references: [id])
+  confirmedAt      DateTime?
+  price            Int? // paise, set on allocation
+  priceDetails     Json? // how the price was made: Gold { ratePerGram, weightMg, gold, making, gst, gstBps }
+  differenceDue    Int? // paise the member pays on top of the plan value (0 if covered)
+  differenceRef    String? // receipt or UTR for the difference
+  differencePaidAt DateTime?
+  allocatedAt      DateTime?
+  deliveredAt      DateTime?
+  createdAt        DateTime         @default(now())
 
   @@index([status])
 }
@@ -406,4 +413,16 @@ model Notification {
   @@unique([installmentId, type])
   @@index([userId, createdAt])
   @@index([sms, smsSentAt])
+}
+
+// The daily gold rate the admin enters; Gold fulfilments are priced with the rate of the day they are allocated.
+model GoldRate {
+  id          String   @id @default(cuid())
+  day         DateTime @db.Date
+  purity      String   @default("22K")
+  ratePerGram Int // paise
+  enteredById String
+  createdAt   DateTime @default(now())
+
+  @@unique([day, purity])
 }

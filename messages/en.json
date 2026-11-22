@@ -48,7 +48,12 @@
     "ALREADY_CONFIRMED": "You have already done this.",
     "ADDRESS_REQUIRED": "Enter the delivery address.",
     "PRODUCT_UNAVAILABLE": "Choose a product that is available.",
-    "CRON_DISABLED": "The daily job is switched off."
+    "CRON_DISABLED": "The daily job is switched off.",
+    "WRONG_STEP": "This isn't at that step.",
+    "OUT_OF_STOCK": "This product is out of stock.",
+    "NO_GOLD_RATE": "Enter today's gold rate first.",
+    "NOTHING_DUE": "Nothing more to pay.",
+    "DIFFERENCE_UNPAID": "The member still has to pay the difference."
   },
   "member": {
     "title": "My schemes",
@@ -148,7 +153,8 @@
       "cash": "Cash",
       "invoices": "Invoices",
       "draws": "Draws",
-      "network": "Agents and members"
+      "network": "Agents and members",
+      "fulfilment": "Fulfilment"
     },
     "schemes": {
       "title": "Schemes",
@@ -246,6 +252,52 @@
       "title": "Daily check",
       "intro": "Runs every morning by itself: marks months overdue 10 days after the due date, marks members who missed 2 months in a row as defaulted, and sends due-soon, due-now and overdue SMS. Run it now if it missed a day, or to test.",
       "run": "Run the daily check now"
+    },
+    "fulfilment": {
+      "title": "Fulfilment",
+      "intro": "Members whose plan matured or who won a draw. Once they answer, allocate the product (or price the gold), collect any difference, then deliver.",
+      "goldRate": "Gold rate",
+      "todayRate": "Today: {rate} per gram ({purity}).",
+      "noRateToday": "Today's rate is not entered yet. Gold can't be priced until it is.",
+      "ratePerGram": "Rate per gram (₹)",
+      "saveRate": "Save today's rate",
+      "correctRate": "Correct today's rate",
+      "group": {
+        "CONFIRMED": "To allocate: {count}",
+        "ALLOCATED": "To deliver: {count}",
+        "PENDING": "Waiting for the member: {count}",
+        "DELIVERED": "Delivered: {count}"
+      },
+      "none": "Nothing here.",
+      "reason": {
+        "MATURED": "all months paid",
+        "WON": "won a draw"
+      },
+      "agent": "Agent {name}",
+      "deliverTo": "Deliver to: {address}",
+      "product": "Chose: {name}, {price}",
+      "worth": "Plan worth {value}.",
+      "chooseUpahar": "Upahar product to give",
+      "productOption": "{name}, {price} ({stock} in stock)",
+      "allocate": "Allocate this product",
+      "allocateChosen": "Allocate the chosen product",
+      "weight": "Weight (grams)",
+      "makingRupees": "Making charges (₹)",
+      "usesRate": "Priced at today's rate of {rate} per gram, plus making charges, plus {pct}% GST.",
+      "priceGold": "Price the gold",
+      "needRate": "Enter today's gold rate above to price this.",
+      "goldLine": "Gold {weight} g at {rate}/g",
+      "making": "Making charges",
+      "gst": "GST {pct}%",
+      "price": "Price",
+      "planValue": "Plan value",
+      "difference": "Member pays",
+      "ref": "Receipt number or UTR",
+      "recordDifference": "Record {amount} received",
+      "differencePaid": "Difference received ({ref}) on {day}.",
+      "deliver": "Mark delivered",
+      "confirmDeliver": "Has {name} ({token}) received the product?",
+      "deliveredOn": "Delivered on {day}."
     }
   },
   "common": {
@@ -486,7 +538,13 @@
     "confirmedProduct": "You chose {product}. Delivery to: {address}",
     "confirmedGold": "Your gold purchase is booked.",
     "differenceDue": "{amount} more to pay at delivery.",
-    "officeWillCall": "The office will call you about delivery."
+    "officeWillCall": "The office will call you about delivery.",
+    "todayGoldRate": "Today's gold rate: {rate} per gram ({purity}).",
+    "goldPriced": "Gold {weight} g at {rate}/g, making charges {making}, GST {gst}.",
+    "finalPrice": "Price {price}; your plan covers {value}.",
+    "payBeforeDelivery": "Pay {amount} to the office before delivery.",
+    "differenceReceived": "Your payment of the difference is received.",
+    "nothingToPay": "Nothing more to pay."
   },
   "messages": {
     "title": "Messages",

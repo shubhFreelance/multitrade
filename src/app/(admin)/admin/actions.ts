@@ -5,6 +5,8 @@ import { rupeesToPaise } from "@/lib/money";
 import { updateAgent } from "@/server/agents";
 import { rejectCash, verifyCash } from "@/server/payments";
 import { runMonthlyDraw } from "@/server/draws";
+import { allocate, markDelivered, recordDifferencePaid, setGoldRate } from "@/server/fulfilment";
+import { gramsToMg } from "@/shared/fulfilment";
 import { runDailyAsAdmin } from "@/server/reminders";
 import { cancelAgentInvoice, createAgentInvoices, markAgentInvoicePaid } from "@/server/invoices";
 import { createBatch, createProduct, updateBatch, updateProduct, updateScheme } from "@/server/catalog";
@@ -87,3 +89,19 @@ export const cancelAgentInvoiceAction = async (id: string) => run((u) => cancelA
 export const runDrawAction = async (batchId: string, monthNo: number) => run((u) => runMonthlyDraw(u, { batchId, monthNo }));
 
 export const runDailyAction = async () => run((u) => runDailyAsAdmin(u));
+
+// ---- Fulfilment ----
+
+export const setGoldRateAction = async (_: FormState, fd: FormData) => run((u) => setGoldRate(u, { ratePerGram: rupees(fd, "rate") }));
+
+export const allocateAction = async (id: string, _: FormState, fd: FormData) =>
+  run((u) => {
+    const grams = str(fd, "weight");
+    const weightMg = grams === undefined ? undefined : gramsToMg(grams);
+    if (weightMg === null) throw new AppError("VALIDATION", "Enter the weight in grams, e.g. 10.250");
+    return allocate(u, id, { productId: str(fd, "productId"), weightMg, making: rupees(fd, "making") });
+  });
+
+export const differencePaidAction = async (id: string, _: FormState, fd: FormData) => run((u) => recordDifferencePaid(u, id, { ref: str(fd, "ref") }));
+
+export const deliveredAction = async (id: string) => run((u) => markDelivered(u, id));

@@ -64,6 +64,8 @@ A full pass, start to finish:
 
 13. **Reminders and overdue:** as the super admin, tap **Run the daily check now** on the admin home. It sends due-soon and due-now SMS (in the terminal), marks months overdue 10 days after the due date and marks members with 2 overdue months in a row as defaulted (out of the draws until they catch up). Members see the messages under **Messages**.
 
+14. **Fulfilment:** as an admin, open **Fulfilment**. Enter today's gold rate, then for each member who answered: pick the Upahar product, allocate the Manpasand product they chose, or enter the gold weight and making charges. If the price is above the plan value, record the difference with a receipt number or UTR, then **Mark delivered**. The member sees the price and what is left to pay on their card.
+
 Things worth checking: paying a later month before an earlier one is refused; a paid month can't be paid again; paying all 12 marks the scheme Matured; Hindi and English both read correctly.
 
 Set `PAYMENT_PROVIDER` to nothing to switch online payment off (the Pay button disappears). The test checkout never runs unless it is set to `test`, so keep it unset in production.

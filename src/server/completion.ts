@@ -6,8 +6,10 @@ import { db } from "@/lib/db";
 import { formatPaise } from "@/lib/money";
 import type { SessionUser } from "@/shared/auth";
 import { confirmFulfilmentInput } from "@/shared/completion";
+import type { GoldPrice } from "@/shared/fulfilment";
 import { requireRole } from "./auth";
 import { AppError } from "./errors";
+import { todaysGoldRate } from "./fulfilment";
 import { sendSms } from "./sms";
 
 type Tx = Prisma.TransactionClient;
@@ -90,12 +92,13 @@ export async function listMyCompletions(user: SessionUser | null) {
   const member = requireRole(user, ["MEMBER"]);
   const [rows, profile] = await Promise.all([
     db.fulfilment.findMany({
-      where: { enrolment: { memberId: member.id }, status: { in: ["PENDING", "CONFIRMED"] } },
+      where: { enrolment: { memberId: member.id }, status: { in: ["PENDING", "CONFIRMED", "ALLOCATED"] } },
       include: { product: true, enrolment: { include: { batch: { include: { scheme: true } }, installments: { select: { amount: true } } } } },
       orderBy: { createdAt: "asc" },
     }),
     db.memberProfile.findUnique({ where: { userId: member.id } }),
   ]);
+  const goldRate = rows.some((r) => r.enrolment.batch.scheme.code === "GOLD") ? await todaysGoldRate() : null;
   const needsProducts = rows.some((r) => r.status === "PENDING" && r.enrolment.batch.scheme.code === "MANPASAND");
   const products = needsProducts
     ? await db.product.findMany({ where: { active: true, stock: { gt: 0 }, schemes: { has: "MANPASAND" } }, orderBy: { price: "asc" } })
@@ -112,6 +115,12 @@ export async function listMyCompletions(user: SessionUser | null) {
       value,
       address: f.address ?? (profile ? `${profile.address}, ${profile.village}` : ""),
       product: f.product && { name: f.product.name, nameHi: f.product.nameHi, price: f.product.price, difference: Math.max(0, f.product.price - value) },
+      // Set once the office allocates: the final price and what is left to pay on top of the plan value.
+      price: f.price,
+      priceDetails: f.priceDetails as GoldPrice | null,
+      differenceDue: f.differenceDue,
+      differencePaid: f.differencePaidAt !== null,
+      goldRate: f.enrolment.batch.scheme.code === "GOLD" && goldRate ? { ratePerGram: goldRate.ratePerGram, purity: goldRate.purity } : null,
       products:
         f.status === "PENDING" && f.enrolment.batch.scheme.code === "MANPASAND"
           ? products.map((p) => ({ id: p.id, name: p.name, nameHi: p.nameHi, price: p.price, difference: Math.max(0, p.price - value) }))

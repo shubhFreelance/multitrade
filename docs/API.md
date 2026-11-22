@@ -65,11 +65,18 @@ REST endpoints under `/api/v1`, shared by the web app and the future mobile app.
 | GET | `/api/v1/admin/network/:agentId?period=` | super admin | `period` as above | `{ agent, ...same as /agent/network }` |
 | POST | `/api/v1/cron/daily` | the scheduler, with `Authorization: Bearer <CRON_SECRET>` | (none) | `{ today, overdue, defaulted, dueSoon, dueToday }`. Marks months `OVERDUE` more than `overdueAfterDays` (10) after the due date unless cash is waiting; marks enrolments `DEFAULTED` after `defaultAfterMissedInARow` (2) overdue months in a row; queues due-soon (`reminderDaysBefore`, 3), due-now, overdue and defaulted messages, and sends their SMS. Safe to run twice. 503 `CRON_DISABLED` if `CRON_SECRET` is unset. |
 | POST | `/api/v1/admin/daily` | super admin | (none) | same as the cron, run by hand |
+| GET | `/api/v1/admin/fulfilment` | admin | (none) | `{ items, upaharProducts, goldRate, recentRates, gstBps }`: every open completion plus the last 50 delivered, each with `value` (plan value in paise) |
+| POST | `/api/v1/admin/gold-rates` | admin | `{ ratePerGram, day? }` (paise; day defaults to today, India) | the rate; entering it again for the same day corrects it |
+| POST | `/api/v1/admin/fulfilment/:id/allocate` | admin | Upahar `{ productId }`, Manpasand `{}`, Gold `{ weightMg, making }` | the fulfilment, now `ALLOCATED`, with `price`, `priceDetails` and `differenceDue`. Needs the member's answer first; takes one unit of stock; Gold needs today's rate. |
+| POST | `/api/v1/admin/fulfilment/:id/difference-paid` | admin | `{ ref }` (receipt number or UTR) | the fulfilment with `differencePaidAt` |
+| POST | `/api/v1/admin/fulfilment/:id/delivered` | admin | (none) | the fulfilment, now `DELIVERED`; refused while a difference is unpaid |
 | GET | `/api/v1/admin/draws` | admin | (none) | every batch with its draws, `nextMonth`, `opensOn` and `canRun` |
 | POST | `/api/v1/admin/draws` | admin | `{ batchId, monthNo }` (must be the next month not drawn yet) | `{ id, monthNo, seed, eligibleCount, winners }` (201). Eligible: ACTIVE enrolments with no overdue month. Winners become `WON` and their unpaid months after `monthNo` are `WAIVED`. Winners are `pickWinners(seed, sorted eligible tokens, winnersPerDraw)` in `src/server/draws.ts`, so anyone with the seed and list can re-check them. |
 | POST | `/api/v1/admin/agent-invoices` | super admin | `{ period: "YYYY-MM" }` (a month that has ended) | the invoices created (201): one per agent with unbilled commission up to the end of that month |
 | POST | `/api/v1/admin/agent-invoices/:id/paid` | super admin | `{ utr }` | the invoice, now `PAID`; its commission lines become `PAID` |
 | POST | `/api/v1/admin/agent-invoices/:id/cancel` | super admin | (none) | the invoice, now `CANCELLED`; its lines go back for the next invoice. Paid invoices can't be cancelled. |
+
+Gold price: `goldPrice()` in `src/shared/fulfilment.ts`: rate per gram × weight (rounded to the paisa) + making charges + GST (`goldGstBps`, default 300 = 3%) on both, rounded once. Difference = price − plan value, never below 0.
 
 Invoices: every counted member payment gets a gapless number per Indian financial year (`SM/2026-27/000123`), assigned in the same transaction. Agent invoices are numbered `SMC/2026-27/0001`. TDS uses the `tdsBps` setting (default 200 = 2%), rounded to the paisa. PDFs follow the viewer's language (Hindi or English).
 
@@ -113,6 +120,11 @@ Batch rules: `status` only moves forward (`OPEN` → `RUNNING` → `CLOSED`). On
 | `NO_ELIGIBLE` | 409 | Nobody in the batch can win right now |
 | `ALREADY_CONFIRMED` | 409 | The member already answered this completion |
 | `ADDRESS_REQUIRED` | 400 | Upahar or Manpasand without a delivery address |
+| `WRONG_STEP` | 409 | Fulfilment isn't at that step (e.g. allocating before the member answered) |
+| `OUT_OF_STOCK` | 409 | Product has no stock left |
+| `NO_GOLD_RATE` | 409 | Pricing gold before today's rate is entered |
+| `NOTHING_DUE` | 409 | Recording a difference when nothing is owed |
+| `DIFFERENCE_UNPAID` | 409 | Delivering before the difference is received |
 | `PRODUCT_UNAVAILABLE` | 409 | Manpasand product missing, inactive, out of stock or not a Manpasand product |
 | `PERIOD_NOT_OVER` | 409 | Agent invoices asked for the current or a future month |
 | `INVOICE_NOT_ISSUED` | 409 | Paying or cancelling an invoice that is already paid or cancelled |
