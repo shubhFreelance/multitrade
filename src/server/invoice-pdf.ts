@@ -86,8 +86,8 @@ export async function agentInvoicePdf(inv: Awaited<ReturnType<typeof getAgentInv
         rows: inv.commissions.map((c) => {
           const p = c.payment;
           return [
-            p?.paidAt ? day(p.paidAt, locale) : "",
-            p?.member.name ?? "",
+            day(p?.paidAt ?? c.createdAt, locale),
+            c.type === "BONUS" ? t("recruitmentBonus") : (p?.member.name ?? ""),
             p?.installment.enrolment.tokenNumber ?? "",
             p ? formatMonthYear(p.installment.dueDate.toISOString().slice(0, 10), locale) : "",
             formatPaise(c.amount),

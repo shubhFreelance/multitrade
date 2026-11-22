@@ -53,7 +53,9 @@
     "OUT_OF_STOCK": "This product is out of stock.",
     "NO_GOLD_RATE": "Enter today's gold rate first.",
     "NOTHING_DUE": "Nothing more to pay.",
-    "DIFFERENCE_UNPAID": "The member still has to pay the difference."
+    "DIFFERENCE_UNPAID": "The member still has to pay the difference.",
+    "CAMPAIGN_AWARDED": "Bonuses for this campaign were already awarded, so it can't be changed.",
+    "CAMPAIGN_NOT_OVER": "Bonuses can be awarded once the campaign has ended."
   },
   "member": {
     "title": "My schemes",
@@ -132,7 +134,9 @@
         "PAID": "Paid",
         "CANCELLED": "Cancelled"
       },
-      "pdf": "PDF"
+      "pdf": "PDF",
+      "bonusLine": "Recruitment bonus",
+      "bonusCampaign": "Campaign {campaign}."
     },
     "nav": {
       "label": "Sections",
@@ -154,7 +158,8 @@
       "invoices": "Invoices",
       "draws": "Draws",
       "network": "Agents and members",
-      "fulfilment": "Fulfilment"
+      "fulfilment": "Fulfilment",
+      "campaign": "Campaign"
     },
     "schemes": {
       "title": "Schemes",
@@ -410,7 +415,8 @@
     "net": "Net payable",
     "paidOnDate": "Paid to agent on",
     "utr": "Bank transfer reference (UTR)",
-    "footer": "Computer-generated document. No signature needed."
+    "footer": "Computer-generated document. No signature needed.",
+    "recruitmentBonus": "Recruitment bonus"
   },
   "bonus": {
     "title": "Bonus draw",
@@ -581,5 +587,34 @@
       "SCOOTER": "You won a scooter! The office will call you.",
       "GOLD_CHAIN": "You won the gold chain! The office will call you."
     }
+  },
+  "campaign": {
+    "title": "Recruitment campaign",
+    "window": "{start} to {end}. An enrolment counts once its first {n, plural, one {installment is} other {# installments are}} paid.",
+    "countLine": "{count, plural, one {# enrolment counts} other {# enrolments count}} so far.",
+    "reached": "Bonus reached: {amount}.",
+    "toNext": "{more} more for {amount}.",
+    "notStarted": "Starts on {start}.",
+    "endedReached": "The campaign has ended. Your bonus of {amount} will be added to your commission by the office.",
+    "endedNone": "The campaign has ended without reaching a bonus.",
+    "awarded": "Bonus of {amount} added to your commission.",
+    "adminTitle": "Recruitment campaign",
+    "adminIntro": "Agents get a one-off bonus for the highest tier they reach. An enrolment counts if it was made in the campaign and its first months were paid by the last day. Members who joined on their own count for nobody.",
+    "standings": "Standings, {start} to {end}",
+    "agentCount": "{count, plural, one {# enrolment} other {# enrolments}}",
+    "awardedShort": "{amount} awarded",
+    "award": "Award {count, plural, one {# bonus} other {# bonuses}}",
+    "confirmAward": "Add the campaign bonus to {count, plural, one {# agent's} other {# agents'}} commission now? Each agent is awarded once.",
+    "nothingToAward": "Every bonus earned in this campaign is awarded.",
+    "awardAfter": "Bonuses can be awarded after {end}.",
+    "settings": "Campaign settings",
+    "start": "Starts",
+    "end": "Ends (last day)",
+    "countsAfter": "Counts after this many paid installments",
+    "tiers": "Tiers (the agent gets the highest one reached)",
+    "tierCount": "Enrolments",
+    "tierBonus": "Bonus (₹)",
+    "settingsHint": "Leave rows empty to use fewer tiers. Changing the dates starts a new campaign.",
+    "save": "Save campaign"
   }
 }

@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { CampaignCard } from "@/components/campaign-card";
 import { formatPaise } from "@/lib/money";
 import { getMyAgentProfile } from "@/server/agents";
+import { getMyCampaign } from "@/server/campaign";
 import { requirePageUser } from "@/server/session";
 import { listAgentEnrolments } from "@/server/tracker";
 
@@ -21,7 +23,7 @@ export default async function AgentHome() {
     );
   }
 
-  const enrolments = await listAgentEnrolments(user);
+  const [enrolments, campaign] = await Promise.all([listAgentEnrolments(user), getMyCampaign(user)]);
   const owing = enrolments.filter((e) => e.summary.dueNowCount > 0);
   const owed = owing.reduce((sum, e) => sum + e.summary.dueNowTotal, 0);
   // A member can hold several enrolments; count people, not enrolments.
@@ -38,6 +40,7 @@ export default async function AgentHome() {
             : t("summaryClear", { members: people(enrolments) })}
         </span>
       </Link>
+      {campaign && <CampaignCard c={campaign} />}
       <Link href="/agent/commission" className="flex flex-col gap-1 rounded-2xl bg-card p-4 ring-1 ring-border hover:ring-primary">
         <span className="text-lg font-semibold">{t("commission.title")}</span>
         <span className="text-muted-foreground">{t("commission.cardHint")}</span>

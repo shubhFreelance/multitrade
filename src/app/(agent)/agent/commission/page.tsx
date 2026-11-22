@@ -74,8 +74,9 @@ export default async function CommissionPage() {
               return (
                 <li key={l.id} className="flex items-baseline justify-between gap-3 py-3">
                   <div className="min-w-0">
-                    <p className="truncate font-medium">{p?.member.name}</p>
+                    <p className="truncate font-medium">{l.type === "BONUS" ? t("bonusLine") : p?.member.name}</p>
                     <p className="text-[15px] text-muted-foreground">
+                      {l.type === "BONUS" && l.campaign && t("bonusCampaign", { campaign: l.campaign.replace("/", " – ") })}
                       {p &&
                         t("line", {
                           token: p.installment.enrolment.tokenNumber,

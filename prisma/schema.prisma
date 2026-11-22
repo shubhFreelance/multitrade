@@ -278,8 +278,10 @@ model Commission {
   status      CommissionStatus @default(EARNED)
   invoiceId   String?
   invoice     AgentInvoice?    @relation(fields: [invoiceId], references: [id])
+  campaign    String? // BONUS lines: the recruitment campaign ("2026-11-17/2026-12-31"); one award per agent per campaign
   createdAt   DateTime         @default(now())
 
+  @@unique([agentId, campaign])
   @@index([agentId])
 }
 

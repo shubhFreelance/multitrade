@@ -5,6 +5,7 @@ import { rupeesToPaise } from "@/lib/money";
 import { updateAgent } from "@/server/agents";
 import { rejectCash, verifyCash } from "@/server/payments";
 import { markPrizeHandedOver, runBonusDraw } from "@/server/bonus";
+import { awardCampaignBonuses, updateCampaign } from "@/server/campaign";
 import { runMonthlyDraw } from "@/server/draws";
 import { allocate, markDelivered, recordDifferencePaid, setGoldRate } from "@/server/fulfilment";
 import { gramsToMg } from "@/shared/fulfilment";
@@ -109,3 +110,16 @@ export const deliveredAction = async (id: string) => run((u) => markDelivered(u,
 
 export const runBonusDrawAction = async (prize: string) => run((u) => runBonusDraw(u, prize));
 export const prizeHandedOverAction = async (winnerId: string) => run((u) => markPrizeHandedOver(u, winnerId));
+
+// ---- Recruitment campaign ----
+
+export const updateCampaignAction = async (_: FormState, fd: FormData) =>
+  run((u) => {
+    // Up to 5 tier rows; empty rows are left out.
+    const tiers = [0, 1, 2, 3, 4]
+      .map((i) => ({ enrolments: num(fd, `tierCount${i}`), bonus: rupees(fd, `tierBonus${i}`) }))
+      .filter((t) => t.enrolments !== undefined || t.bonus !== undefined);
+    return updateCampaign(u, { start: str(fd, "start"), end: str(fd, "end"), countsAfterPaidInstallments: num(fd, "countsAfter"), tiers });
+  });
+
+export const awardCampaignAction = async () => run((u) => awardCampaignBonuses(u));

@@ -68,6 +68,8 @@ A full pass, start to finish:
 
 15. **Bonus draw:** as an admin, open **Draws**. The bonus draw section shows how many members have unlocked each prize; run each prize's draw once. Winners see it on their bonus card and under **Draw results**; mark each prize **handed over** when given.
 
+16. **Recruitment campaign:** agents see the campaign progress bar on their home page. As the super admin, **Campaign** shows each agent's count and lets you edit the dates and tiers; after the end date, **Award** adds each agent's bonus to their commission (it then goes on their next invoice).
+
 Things worth checking: paying a later month before an earlier one is refused; a paid month can't be paid again; paying all 12 marks the scheme Matured; Hindi and English both read correctly.
 
 Set `PAYMENT_PROVIDER` to nothing to switch online payment off (the Pay button disappears). The test checkout never runs unless it is set to `test`, so keep it unset in production.

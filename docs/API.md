@@ -59,6 +59,7 @@ REST endpoints under `/api/v1`, shared by the web app and the future mobile app.
 | GET | `/api/v1/payments/:id/invoice` | the member who paid, the enrolling agent, admins | (none) | member invoice PDF (`application/pdf`), for counted payments only |
 | GET | `/api/v1/agent/network?period=` | agent | `period`: `week` (from Monday), `month` (default) or `all`, India time | `{ period, from, totals: { people, enrolments, joined, commission }, members: (EnrolmentView & { commission: { period, total } })[] }` |
 | GET | `/api/v1/agent/network/:id` (an enrolment) | that agent, super admin | (none) | `EnrolmentView` plus `commission`: the commission lines from that member |
+| GET | `/api/v1/agent/campaign` | agent | (none) | `{ campaign, started, ended, awarded, count, reached, next, toNext }` or `null` if there is no campaign |
 | GET | `/api/v1/agent/invoices` | agent | (none) | the agent's commission invoices (not cancelled), newest first |
 | GET | `/api/v1/agent-invoices/:id/pdf` | that agent, super admin | (none) | agent commission invoice PDF |
 | GET | `/api/v1/admin/invoices?q=` | super admin | `q` searches member invoices | `{ agentInvoices, uninvoicedTotal, uninvoicedCount, awaitingRate, memberInvoices }` |
@@ -74,6 +75,9 @@ REST endpoints under `/api/v1`, shared by the web app and the future mobile app.
 | GET | `/api/v1/admin/bonus-draws` | admin | (none) | per prize (`SCOOTER`, `GOLD_CHAIN`): `{ prize, count, needed, eligibleNow, draw: { id, createdAt, seed, eligibleCount, winners: [{ id, token, name, phone, handedOverAt }] } | null }` |
 | POST | `/api/v1/admin/bonus-draws` | admin | `{ prize }` | `{ id, prize, seed, eligibleCount, winners }` (201). Once per prize. Eligible: members who unlocked the prize (paid months in one scheme, defaulted schemes left out) and haven't won a bonus prize; each entered once with the token of their most-paid scheme. Winners get a message and SMS; no installments change. |
 | POST | `/api/v1/admin/bonus-draws/winners/:id/handed-over` | admin | (none) | `{ id }`; records that the office gave the prize |
+| GET | `/api/v1/admin/campaign` | super admin | (none) | `{ campaign, ended, agents: { id, name, panchayat, count, reached, next, toNext, awarded }[] }` |
+| PUT | `/api/v1/admin/campaign` | super admin | `{ start, end, countsAfterPaidInstallments, tiers: [{ enrolments, bonus }] }` (dates `YYYY-MM-DD`, bonus in paise, tiers rising) | the campaign. Refused (`CAMPAIGN_AWARDED`) once its bonuses were awarded. |
+| POST | `/api/v1/admin/campaign/award` | super admin | (none) | the bonus commission lines created (201): one per agent, the highest tier reached. Only after the end date (`CAMPAIGN_NOT_OVER`); safe to repeat. They go on the next agent invoice like other commission. |
 | GET | `/api/v1/admin/draws` | admin | (none) | every batch with its draws, `nextMonth`, `opensOn` and `canRun` |
 | POST | `/api/v1/admin/draws` | admin | `{ batchId, monthNo }` (must be the next month not drawn yet) | `{ id, monthNo, seed, eligibleCount, winners }` (201). Eligible: ACTIVE enrolments with no overdue month. Winners become `WON` and their unpaid months after `monthNo` are `WAIVED`. Winners are `pickWinners(seed, sorted eligible tokens, winnersPerDraw)` in `src/server/draws.ts`, so anyone with the seed and list can re-check them. |
 | POST | `/api/v1/admin/agent-invoices` | super admin | `{ period: "YYYY-MM" }` (a month that has ended) | the invoices created (201): one per agent with unbilled commission up to the end of that month |

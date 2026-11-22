@@ -10,7 +10,7 @@ Each item has the default the app uses until the client answers. Defaults live i
 | 4 | Manpasand | What happens if the chosen product costs **less** than the amount paid? | Not decided. Needs an answer before Feature 14 (Fulfilment). |
 | 5 | Bonus unlock | Is "6 paid installments" counted in **one enrolment** or **across all enrolments**? | One enrolment. Scooters unlock at 6 paid months, the gold chain at 12 (client, Nov 2026). |
 | 6 | Agent levels | Single-level commission only, or upline/downline? | Single-level: only the enrolling agent earns. |
-| 7 | Recruitment bonus | When does an enrolment count towards the campaign, and does the agent get only the highest tier? | Counts after its 1st installment is paid. Agent gets the highest tier reached, not the sum. |
+| 7 | Recruitment bonus | When does an enrolment count towards the campaign, and does the agent get only the highest tier? | Counts if the enrolment was made in the campaign window and its 1st installment was paid by the last day. Agent gets the highest tier reached, not the sum, as commission on their next invoice (TDS applies). |
 | 8 | TDS | TDS % on agent commission (Section 194H)? Confirm with the CA. | Config value, set per CA advice. |
 | 9 | Gold | Which gold purity is used for the Gold Plan, and how are making charges set? | GST 3%. Purity and making charges are entered by admin. |
 | 10 | Login | Can people sign themselves up (members or agent applicants), or does every account start from an agent/admin? | Only numbers already in the system can log in. Members are created at enrolment (Feature 5). |
