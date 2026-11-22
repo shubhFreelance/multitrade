@@ -52,9 +52,13 @@ REST endpoints under `/api/v1`, shared by the web app and the future mobile app.
 
 | GET | `/api/v1/agent/commission` | agent | (none) | `{ lines, earned, paid, awaitingRate }` (paise). One line per confirmed payment on a member this agent enrolled. |
 | GET | `/api/v1/payments/:id/invoice` | the member who paid, the enrolling agent, admins | (none) | member invoice PDF (`application/pdf`), for counted payments only |
+| GET | `/api/v1/agent/network?period=` | agent | `period`: `week` (from Monday), `month` (default) or `all`, India time | `{ period, from, totals: { people, enrolments, joined, commission }, members: (EnrolmentView & { commission: { period, total } })[] }` |
+| GET | `/api/v1/agent/network/:id` (an enrolment) | that agent, super admin | (none) | `EnrolmentView` plus `commission`: the commission lines from that member |
 | GET | `/api/v1/agent/invoices` | agent | (none) | the agent's commission invoices (not cancelled), newest first |
 | GET | `/api/v1/agent-invoices/:id/pdf` | that agent, super admin | (none) | agent commission invoice PDF |
 | GET | `/api/v1/admin/invoices?q=` | super admin | `q` searches member invoices | `{ agentInvoices, uninvoicedTotal, uninvoicedCount, awaitingRate, memberInvoices }` |
+| GET | `/api/v1/admin/network?period=` | super admin | `period` as above | `{ period, from, agents: { id, name, phone, panchayat, approved, members, joined, collected, commission, unpaid, paidOut }[], direct, totals }`. `joined`, `collected` and `commission` are for the period; `members`, `unpaid` and `paidOut` are all-time. `direct` is members who joined without an agent. |
+| GET | `/api/v1/admin/network/:agentId?period=` | super admin | `period` as above | `{ agent, ...same as /agent/network }` |
 | GET | `/api/v1/admin/draws` | admin | (none) | every batch with its draws, `nextMonth`, `opensOn` and `canRun` |
 | POST | `/api/v1/admin/draws` | admin | `{ batchId, monthNo }` (must be the next month not drawn yet) | `{ id, monthNo, seed, eligibleCount, winners }` (201). Eligible: ACTIVE enrolments with no overdue month. Winners become `WON` and their unpaid months after `monthNo` are `WAIVED`. Winners are `pickWinners(seed, sorted eligible tokens, winnersPerDraw)` in `src/server/draws.ts`, so anyone with the seed and list can re-check them. |
 | POST | `/api/v1/admin/agent-invoices` | super admin | `{ period: "YYYY-MM" }` (a month that has ended) | the invoices created (201): one per agent with unbilled commission up to the end of that month |

@@ -20,8 +20,10 @@ export type EnrolmentView = {
   tokenNumber: string;
   status: string;
   wonMonth: number | null; // monthly draw this enrolment won
+  createdAt: Date;
   scheme: { code: string; nameEn: string; nameHi: string };
   member: { name: string; phone: string };
+  agentId: string | null;
   agent: { name: string; phone: string } | null; // null: joined directly
   summary: TrackerSummary;
 };
@@ -31,8 +33,10 @@ const toView = (e: Row, today: string): EnrolmentView => ({
   tokenNumber: e.tokenNumber,
   status: e.status,
   wonMonth: e.drawWins[0]?.draw.monthNo ?? null,
+  createdAt: e.createdAt,
   scheme: { code: e.batch.scheme.code, nameEn: e.batch.scheme.nameEn, nameHi: e.batch.scheme.nameHi },
   member: e.member,
+  agentId: e.agentId,
   agent: e.agent,
   summary: summarize(
     e.installments.map((i) => ({
@@ -48,6 +52,13 @@ const toView = (e: Row, today: string): EnrolmentView => ({
   ),
 });
 
+/** Enrolments matching `where` as views, by token number. Callers check access first. */
+export async function enrolmentViews(where: Prisma.EnrolmentWhereInput): Promise<EnrolmentView[]> {
+  const rows = await db.enrolment.findMany({ where, include, orderBy: { tokenNumber: "asc" } });
+  const today = todayInIndia();
+  return rows.map((r) => toView(r, today));
+}
+
 /** The signed-in member's enrolments, newest first. */
 export async function listMyEnrolments(user: SessionUser | null): Promise<EnrolmentView[]> {
   const member = requireRole(user, ["MEMBER"]);
@@ -60,9 +71,7 @@ export async function listMyEnrolments(user: SessionUser | null): Promise<Enrolm
 export async function listAgentEnrolments(user: SessionUser | null): Promise<EnrolmentView[]> {
   const agent = requireRole(user, ["AGENT"]);
   // shortcut: loads all of an agent's enrolments with installments; fine for a few hundred members per agent, paginate beyond that.
-  const rows = await db.enrolment.findMany({ where: { agentId: agent.id }, include, orderBy: { tokenNumber: "asc" } });
-  const today = todayInIndia();
-  return rows.map((r) => toView(r, today)).sort((a, b) => b.summary.dueNowTotal - a.summary.dueNowTotal);
+  return (await enrolmentViews({ agentId: agent.id })).sort((a, b) => b.summary.dueNowTotal - a.summary.dueNowTotal);
 }
 
 /** The signed-in member's profile and, per enrolment, who enrolled them (null agent: joined directly). */

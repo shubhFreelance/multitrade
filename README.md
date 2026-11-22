@@ -58,6 +58,8 @@ A full pass, start to finish:
 
 10. **Joining directly:** log out and open **/join** (or **Join a scheme** under the login form). Enter a new number, pick a batch, use the code from the terminal and fill in your details: you are logged in as the new member, with no Panchayat Leader. **My details** shows how each scheme was joined. A signed-in member can join more schemes under **Join a scheme**.
 
+11. **Tracking:** as an agent, **My members** shows members, schemes joined and commission for this week, this month or all time, and each member's progress and commission; **Details** opens one member. As the super admin, **Agents and members** shows every agent (and members who joined directly) with collections and commission; tap an agent to see their members.
+
 Things worth checking: paying a later month before an earlier one is refused; a paid month can't be paid again; paying all 12 marks the scheme Matured; Hindi and English both read correctly.
 
 Set `PAYMENT_PROVIDER` to nothing to switch online payment off (the Pay button disappears). The test checkout never runs unless it is set to `test`, so keep it unset in production.

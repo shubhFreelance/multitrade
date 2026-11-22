@@ -123,6 +123,13 @@
         "CANCELLED": "Cancelled"
       },
       "pdf": "PDF"
+    },
+    "nav": {
+      "label": "Sections",
+      "home": "Home",
+      "members": "My members",
+      "enrol": "Enrol a member",
+      "commission": "My commission"
     }
   },
   "admin": {
@@ -135,7 +142,8 @@
       "agents": "Agents",
       "cash": "Cash",
       "invoices": "Invoices",
-      "draws": "Draws"
+      "draws": "Draws",
+      "network": "Agents and members"
     },
     "schemes": {
       "title": "Schemes",
@@ -410,5 +418,39 @@
     "nominee": "Nominee",
     "none": "None",
     "changeDetails": "To change these details, ask the office."
+  },
+  "network": {
+    "period": {
+      "label": "Period",
+      "week": "This week",
+      "month": "This month",
+      "all": "All time",
+      "in": {
+        "week": "this week",
+        "month": "this month"
+      }
+    },
+    "people": "Members",
+    "schemes": "Schemes joined",
+    "members": "Members",
+    "joinedIn": "{period, select, week {Schemes joined this week} month {Schemes joined this month} other {Schemes joined}}",
+    "commissionIn": "{period, select, week {Commission this week} month {Commission this month} other {Commission, all time}}",
+    "collectedIn": "{period, select, week {Collected this week} month {Collected this month} other {Collected, all time}}",
+    "unpaid": "Commission not paid yet",
+    "paidOut": "Commission paid out",
+    "commissionLine": "{period, select, all {Commission: {total} in all.} other {Commission: {amount} {label}, {total} in all.}}",
+    "joinedOn": "Joined {day}.",
+    "details": "Details",
+    "call": "Call",
+    "callName": "Call {name}",
+    "commissionFrom": "Commission from this member",
+    "paidOn": "Paid {day}.",
+    "adminTitle": "Agents and members",
+    "adminIntro": "Who enrolled whom, money collected from their members, and what each agent earned. Commission figures are before TDS.",
+    "agentLine": "{panchayat} panchayat, {phone}",
+    "notApproved": "not approved",
+    "direct": "Joined directly on the website (no agent)",
+    "noMembers": "This agent hasn't enrolled anyone yet.",
+    "enrolledBy": "Enrolled by {name} ({phone})"
   }
 }

@@ -123,6 +123,13 @@
         "CANCELLED": "रद्द"
       },
       "pdf": "PDF"
+    },
+    "nav": {
+      "label": "विभाग",
+      "home": "होम",
+      "members": "मेरे सदस्य",
+      "enrol": "सदस्य जोड़ें",
+      "commission": "मेरा कमीशन"
     }
   },
   "admin": {
@@ -135,7 +142,8 @@
       "agents": "एजेंट",
       "cash": "नकद",
       "invoices": "इनवॉइस",
-      "draws": "ड्रॉ"
+      "draws": "ड्रॉ",
+      "network": "एजेंट और सदस्य"
     },
     "schemes": {
       "title": "योजनाएँ",
@@ -410,5 +418,39 @@
     "nominee": "नॉमिनी",
     "none": "कोई नहीं",
     "changeDetails": "यह जानकारी बदलने के लिए दफ़्तर से संपर्क करें।"
+  },
+  "network": {
+    "period": {
+      "label": "समय",
+      "week": "इस हफ़्ते",
+      "month": "इस महीने",
+      "all": "अब तक",
+      "in": {
+        "week": "इस हफ़्ते",
+        "month": "इस महीने"
+      }
+    },
+    "people": "सदस्य",
+    "schemes": "जुड़ी योजनाएँ",
+    "members": "सदस्य",
+    "joinedIn": "{period, select, week {इस हफ़्ते जुड़ी योजनाएँ} month {इस महीने जुड़ी योजनाएँ} other {जुड़ी योजनाएँ}}",
+    "commissionIn": "{period, select, week {इस हफ़्ते कमीशन} month {इस महीने कमीशन} other {कुल कमीशन}}",
+    "collectedIn": "{period, select, week {इस हफ़्ते वसूली} month {इस महीने वसूली} other {कुल वसूली}}",
+    "unpaid": "कमीशन, अभी भुगतान बाकी",
+    "paidOut": "कमीशन, भुगतान हो चुका",
+    "commissionLine": "{period, select, all {कमीशन: कुल {total}।} other {कमीशन: {label} {amount}, कुल {total}।}}",
+    "joinedOn": "{day} को जुड़े।",
+    "details": "पूरी जानकारी",
+    "call": "कॉल करें",
+    "callName": "{name} को कॉल करें",
+    "commissionFrom": "इस सदस्य से कमीशन",
+    "paidOn": "{day} को जमा।",
+    "adminTitle": "एजेंट और सदस्य",
+    "adminIntro": "किसने किसे जोड़ा, उनके सदस्यों से कितनी वसूली हुई, और हर एजेंट ने कितना कमाया। कमीशन TDS से पहले का है।",
+    "agentLine": "{panchayat} पंचायत, {phone}",
+    "notApproved": "मंज़ूरी बाकी",
+    "direct": "वेबसाइट से खुद जुड़े (कोई एजेंट नहीं)",
+    "noMembers": "इस एजेंट ने अभी किसी को नहीं जोड़ा है।",
+    "enrolledBy": "{name} ({phone}) ने जोड़ा"
   }
 }
