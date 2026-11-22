@@ -20,13 +20,13 @@ export function PageHeader({
   children?: React.ReactNode;
 }) {
   return (
-    <header className={`glass glass-${tone} flex min-h-40 flex-col justify-between gap-6 p-5`}>
+    <header className={`glass glass-${tone} flex min-h-40 flex-col justify-between gap-6 p-5 lg:min-h-48 lg:p-8`}>
       <span aria-hidden className="grid size-11 place-items-center rounded-full bg-white/20 ring-1 ring-white/35">
         <Icon className="size-5" />
       </span>
       <div>
-        <h1 className="text-[30px] leading-[1.1] font-semibold tracking-tight">{title}</h1>
-        {intro && <p className="mt-1.5 text-white/90">{intro}</p>}
+        <h1 className="text-[30px] leading-[1.1] font-semibold tracking-tight lg:text-[40px]">{title}</h1>
+        {intro && <p className="mt-1.5 max-w-3xl text-white/90 lg:text-lg">{intro}</p>}
         {children}
       </div>
     </header>

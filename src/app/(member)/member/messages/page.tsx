@@ -27,7 +27,7 @@ export default async function MessagesPage() {
   await markAllRead(user); // opening the page reads them; this render still shows which were new
 
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-col gap-5">
+    <div className="flex flex-col gap-5 lg:gap-6">
       <PageHeader tone="blue" icon={Bell} title={t("title")} />
       {list.length === 0 ? (
         <p className="rounded-2xl bg-card p-4">{t("empty")}</p>

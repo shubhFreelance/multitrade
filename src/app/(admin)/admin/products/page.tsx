@@ -20,6 +20,7 @@ export default async function ProductsPage() {
     <div className="flex flex-col gap-6">
       <PageHeader tone="peach" icon={Package} title={t("title")} />
 
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
       {products.length === 0 ? (
         <p className="text-sm text-muted-foreground">{t("empty")}</p>
       ) : (
@@ -54,6 +55,7 @@ export default async function ProductsPage() {
           <ProductFields />
         </ActionForm>
       </section>
+      </div>
     </div>
   );
 }

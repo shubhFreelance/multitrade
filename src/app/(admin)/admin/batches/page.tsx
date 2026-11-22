@@ -20,6 +20,7 @@ export default async function BatchesPage() {
     <div className="flex flex-col gap-6">
       <PageHeader tone="violet" icon={Layers} title={t("title")} />
 
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
       <ul className="flex flex-col divide-y divide-border overflow-hidden rounded-[28px] bg-card">
         {batches.map((b) => (
           <li key={b.id}>
@@ -56,6 +57,7 @@ export default async function BatchesPage() {
           </div>
         </ActionForm>
       </section>
+      </div>
     </div>
   );
 }

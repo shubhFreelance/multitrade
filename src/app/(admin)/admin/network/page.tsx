@@ -48,10 +48,10 @@ export default async function NetworkPage({ searchParams }: PageProps<"/admin/ne
           [t("commissionIn", { period: o.period }), formatPaise(o.totals.commission)],
         ]}
       />
-      <ul className="flex flex-col gap-3">
+      <ul className="grid items-start gap-3 lg:grid-cols-2 lg:gap-4">
         {o.agents.map((a) => (
           <li key={a.id}>
-            <Link href={`/admin/network/${a.id}?period=${o.period}`} className="flex flex-col gap-3 rounded-[28px] bg-card p-5 hover:ring-2 hover:ring-primary/10">
+            <Link href={`/admin/network/${a.id}?period=${o.period}`} className="lift flex flex-col gap-3 rounded-[28px] bg-card p-5">
               <div className="flex items-center gap-3">
                 <Avatar name={a.name} tint={a.approved ? "violet" : "amber"} />
                 <div className="min-w-0">

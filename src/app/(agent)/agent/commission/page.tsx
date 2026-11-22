@@ -19,12 +19,14 @@ export default async function CommissionPage() {
   const paidNet = invoices.filter((i) => i.status === "PAID").reduce((t, i) => t + i.net, 0);
 
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-col gap-6">
-      <Link href="/agent" className="-my-2 inline-flex min-h-11 items-center self-start text-[15px] hover:underline">
+    <div className="flex flex-col gap-6">
+      <Link href="/agent" className="-my-2 inline-flex min-h-11 items-center self-start text-[15px] hover:underline md:hidden">
         ← {tc("back")}
       </Link>
       <PageHeader tone="violet" icon={Wallet} title={t("title")} intro={t("cardHint")} />
 
+      <div className="grid items-start gap-6 lg:grid-cols-2">
+      <div className="flex flex-col gap-6 lg:sticky lg:top-6">
       <dl className="grid grid-cols-2 gap-3">
         <div className="glass glass-blue flex min-h-36 flex-col-reverse justify-end gap-1 p-4">
           <dt className="text-[15px] text-white/90">{t("earned")}</dt>
@@ -67,6 +69,7 @@ export default async function CommissionPage() {
         )}
       </section>
 
+      </div>
       <section aria-labelledby="lines" className="flex flex-col gap-3">
         <SectionTitle id="lines" tint="blue" count={lines.length}>
           {t("lines")}
@@ -102,6 +105,7 @@ export default async function CommissionPage() {
           </ul>
         )}
       </section>
+      </div>
     </div>
   );
 }

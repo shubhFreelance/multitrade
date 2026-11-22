@@ -20,7 +20,7 @@ export function Glass({
   as?: "section" | "article" | "div";
 } & React.HTMLAttributes<HTMLElement>) {
   return (
-    <Tag className={cn("glass p-5", `glass-${tone}`, className)} {...rest}>
+    <Tag className={cn("glass p-5", `glass-${tone}`, href && "lift", className)} {...rest}>
       {href && (
         <Link
           href={href}

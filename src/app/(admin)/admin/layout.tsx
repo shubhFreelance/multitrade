@@ -29,7 +29,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
       <AppHeader user={user} />
       <div className="flex flex-1 flex-col gap-3 pt-2 md:flex-row md:gap-0">
         <SideNav label={t("label")} links={links} mobile="pills" />
-        <main className="mx-auto w-full max-w-4xl min-w-0 flex-1 p-4 md:px-6 md:pt-0">{children}</main>
+        <main className="mx-auto w-full max-w-[1600px] min-w-0 flex-1 p-4 md:px-8 md:pt-0 md:pb-10">{children}</main>
       </div>
     </>
   );

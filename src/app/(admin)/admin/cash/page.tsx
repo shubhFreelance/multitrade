@@ -21,7 +21,7 @@ export default async function CashPage() {
   return (
     <div className="flex flex-col gap-5">
       <PageHeader tone="blue" icon={Banknote} title={t("title")} intro={pending.length ? t("summary", { count: pending.length, amount: formatPaise(total) }) : t("empty")} />
-      <ul className="flex flex-col gap-3">
+      <ul className="grid items-start gap-3 lg:grid-cols-2 lg:gap-4">
         {pending.map((p) => (
           <li key={p.id} className="flex flex-col gap-3 rounded-[28px] bg-card p-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex gap-3">

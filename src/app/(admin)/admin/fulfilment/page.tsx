@@ -144,7 +144,7 @@ export default async function FulfilmentPage() {
           <SectionTitle id={`g-${status}`} tint={groupTint[status]}>
             {t(`group.${status}`, { count: items.length })}
           </SectionTitle>
-          {items.length === 0 ? <p className="text-muted-foreground">{t("none")}</p> : <ul className="flex flex-col gap-3">{items.map(card)}</ul>}
+          {items.length === 0 ? <p className="text-muted-foreground">{t("none")}</p> : <ul className="grid items-start gap-3 lg:gap-4 xl:grid-cols-2">{items.map(card)}</ul>}
         </section>
       ))}
     </div>

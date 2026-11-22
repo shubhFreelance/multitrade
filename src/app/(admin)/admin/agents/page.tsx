@@ -15,7 +15,7 @@ export default async function AgentsPage() {
     <div className="flex flex-col gap-6">
       <PageHeader tone="blue" icon={Users} title={t("title")} />
       {agents.length === 0 && <p className="text-sm text-muted-foreground">{t("empty")}</p>}
-      <ul className="flex flex-col gap-3">
+      <ul className="grid items-start gap-3 lg:grid-cols-2 lg:gap-4 2xl:grid-cols-3">
         {agents.map((a) => {
           const approved = a.agentProfile?.approved ?? false;
           const suspended = a.status === "SUSPENDED";

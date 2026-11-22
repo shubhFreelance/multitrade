@@ -37,7 +37,9 @@ const figureTints: Tint[] = ["violet", "blue", "sunrise", "coral"];
 /** A few figures side by side on pastel tiles, each with its label underneath. Tints rotate unless given. */
 export function Figures({ items }: { items: [label: string, value: string, tint?: Tint][] }) {
   return (
-    <dl className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+    // Four across only when the space it sits in (not the window) is wide enough.
+    <div className="@container">
+    <dl className="grid grid-cols-2 gap-2.5 @2xl:grid-cols-4">
       {items.map(([label, value, tint], i) => (
         <div key={label} className={`tint-${tint ?? figureTints[i % figureTints.length]} flex flex-col-reverse justify-end gap-1.5 rounded-3xl px-4 py-4`}>
           <dt className="text-[14px] leading-snug text-foreground/70">{label}</dt>
@@ -45,6 +47,7 @@ export function Figures({ items }: { items: [label: string, value: string, tint?
         </div>
       ))}
     </dl>
+    </div>
   );
 }
 
@@ -114,7 +117,7 @@ export async function MemberDetail({ e, children }: { e: Awaited<ReturnType<type
   const total = e.commission.filter((l) => l.status !== "REVERSED").reduce((s, l) => s + l.amount, 0);
 
   return (
-    <>
+    <div className="grid items-start gap-5 lg:grid-cols-2 lg:gap-6">
       <article className="overflow-hidden rounded-[28px] bg-card">
         <header className={`glass-${schemeTone[e.scheme.code] ?? "violet"} flex flex-wrap items-end justify-between gap-x-4 gap-y-1 px-5 pt-5 pb-4 text-white`}>
           <h1 className="text-[26px] leading-tight font-semibold tracking-tight">{e.member.name}</h1>
@@ -164,6 +167,6 @@ export async function MemberDetail({ e, children }: { e: Awaited<ReturnType<type
           </ul>
         )}
       </section>
-    </>
+    </div>
   );
 }

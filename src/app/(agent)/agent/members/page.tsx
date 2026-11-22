@@ -31,7 +31,7 @@ export default async function AgentMembers({ searchParams }: PageProps<"/agent/m
   );
 
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-col gap-5">
+    <div className="flex flex-col gap-5 lg:gap-6">
       <PageHeader tone="blue" icon={Users} title={t("title")} />
       <PeriodTabs current={net.period} base="/agent/members" />
       <Figures
@@ -51,7 +51,7 @@ export default async function AgentMembers({ searchParams }: PageProps<"/agent/m
               <SectionTitle id="due-now" tint="coral">
                 {t("dueNow", { count: dueNow.length })}
               </SectionTitle>
-              <ul className="mt-3 flex flex-col gap-3">{dueNow.map(row)}</ul>
+              <ul className="mt-3 grid items-start gap-3 lg:grid-cols-2 lg:gap-4 2xl:grid-cols-3">{dueNow.map(row)}</ul>
             </section>
           )}
           {upToDate.length > 0 && (
@@ -59,7 +59,7 @@ export default async function AgentMembers({ searchParams }: PageProps<"/agent/m
               <SectionTitle id="up-to-date" tint="sunrise">
                 {t("upToDate", { count: upToDate.length })}
               </SectionTitle>
-              <ul className="mt-3 flex flex-col gap-3">{upToDate.map(row)}</ul>
+              <ul className="mt-3 grid items-start gap-3 lg:grid-cols-2 lg:gap-4 2xl:grid-cols-3">{upToDate.map(row)}</ul>
             </section>
           )}
         </>

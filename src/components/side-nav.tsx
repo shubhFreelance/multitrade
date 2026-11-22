@@ -66,7 +66,7 @@ export function SideNav({ links, label, mobile }: { links: NavLink[]; label: str
   return (
     <>
       {/* Wide screens */}
-      <nav aria-label={label} className="hidden md:block md:w-60 md:shrink-0 md:pl-6">
+      <nav aria-label={label} className="hidden md:block md:w-64 md:shrink-0 md:pl-8">
         <ul className="sticky top-4 flex flex-col gap-1 rounded-[28px] bg-card p-3">
           {links.map((l) => {
             const Icon = icons[l.icon];

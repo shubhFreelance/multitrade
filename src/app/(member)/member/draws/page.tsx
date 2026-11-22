@@ -16,8 +16,9 @@ export default async function MyDrawsPage() {
   const [draws, bonusDraws] = await Promise.all([listMyDraws(user), listBonusDraws(user)]);
 
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-col gap-5">
+    <div className="flex flex-col gap-5 lg:gap-6">
       <PageHeader tone="violet" icon={Trophy} title={t("memberTitle")} intro={t("memberIntro")} />
+      <div className="grid items-start gap-4 md:grid-cols-2 lg:gap-6 2xl:grid-cols-3">
       {bonusDraws.map((d) => {
         const won = d.winners.some((w) => w.mine);
         return (
@@ -38,7 +39,7 @@ export default async function MyDrawsPage() {
           </article>
         );
       })}
-      {draws.length === 0 && bonusDraws.length === 0 && <p className="rounded-2xl bg-card p-4">{t("none")}</p>}
+      {draws.length === 0 && bonusDraws.length === 0 && <p className="col-span-full rounded-2xl bg-card p-4">{t("none")}</p>}
       {draws.map((d) => {
         const won = d.winners.some((w) => w.mine);
         return (
@@ -61,6 +62,7 @@ export default async function MyDrawsPage() {
           </article>
         );
       })}
+      </div>
     </div>
   );
 }

@@ -18,8 +18,9 @@ export async function BonusDrawAdmin({ prizes }: { prizes: Awaited<ReturnType<ty
         </h2>
         <p className="text-muted-foreground">{t("adminIntro")}</p>
       </div>
+      <div className="grid items-start gap-4 lg:grid-cols-2 lg:gap-6">
       {prizes.map((p) => (
-        <article key={p.prize} className="flex flex-col gap-3 rounded-xl bg-card p-4">
+        <article key={p.prize} className="flex flex-col gap-3 rounded-[28px] bg-card p-5">
           <div>
             <h3 className="text-lg font-semibold">{tb(p.prize, { count: p.count })}</h3>
             <p className="text-muted-foreground">{t("unlockAt", { months: p.needed, eligible: p.eligibleNow })}</p>
@@ -59,6 +60,7 @@ export async function BonusDrawAdmin({ prizes }: { prizes: Awaited<ReturnType<ty
           )}
         </article>
       ))}
+      </div>
     </section>
   );
 }

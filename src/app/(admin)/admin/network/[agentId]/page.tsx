@@ -44,7 +44,7 @@ export default async function AgentNetworkPage({ params, searchParams }: PagePro
       {net.members.length === 0 ? (
         <p className="rounded-xl bg-card p-4">{t("noMembers")}</p>
       ) : (
-        <ul className="flex flex-col gap-3">
+        <ul className="grid items-start gap-3 lg:grid-cols-2 lg:gap-4 2xl:grid-cols-3">
           {net.members.map((e) => (
             <MemberRow key={e.id} e={e} period={net.period} href={`/admin/network/members/${e.id}`} />
           ))}

@@ -119,7 +119,8 @@
       "confirm": "Enrol member",
       "back": "Change number or batch",
       "done": "Member enrolled. Their token number is:",
-      "another": "Enrol another member"
+      "another": "Enrol another member",
+      "intro": "Enter the member's mobile number and pick a scheme. A code goes to their phone; they read it to you to agree, and the scheme starts with its own token number."
     },
     "greeting": "Namaste, {name}",
     "summaryOwing": "{members, plural, one {# member} other {# members}}. {owing} owe {amount} now.",

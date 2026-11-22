@@ -25,8 +25,9 @@ export default async function DrawsPage() {
         <h2 className="text-lg font-semibold">{t("monthlyTitle")}</h2>
         <p className="text-muted-foreground">{t("adminIntro")}</p>
       </div>
+      <div className="grid items-start gap-4 lg:grid-cols-2 lg:gap-6 2xl:grid-cols-3">
       {batches.map((b) => (
-        <section key={b.id} className="overflow-hidden rounded-xl bg-card">
+        <section key={b.id} className="overflow-hidden rounded-[28px] bg-card">
           <header className="flex flex-wrap items-baseline justify-between gap-x-4 border-b px-4 py-3">
             <h2 className="text-lg font-semibold">
               {locale === "hi" ? b.scheme.nameHi : b.scheme.nameEn} <span className="font-bold tracking-wider [font-stretch:75%]">{b.label}</span>
@@ -68,6 +69,7 @@ export default async function DrawsPage() {
           </div>
         </section>
       ))}
+      </div>
     </div>
   );
 }

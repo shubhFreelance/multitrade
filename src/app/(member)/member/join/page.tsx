@@ -16,9 +16,10 @@ export default async function MemberJoinPage() {
   const batches = await listJoinableBatches();
 
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-col gap-5">
+    <div className="flex flex-col gap-5 lg:gap-6">
       <PageHeader tone="sunrise" icon={Plus} title={t("title")} intro={t("memberIntro")} />
       {batches.length === 0 && <p className="rounded-2xl bg-card p-4">{t("noBatches")}</p>}
+      <div className="grid items-start gap-4 md:grid-cols-2 lg:gap-6 xl:grid-cols-3">
       {batches.map((b) => {
         const scheme = locale === "hi" ? b.schemeNameHi : b.schemeNameEn;
         return (
@@ -42,6 +43,7 @@ export default async function MemberJoinPage() {
           </article>
         );
       })}
+      </div>
     </div>
   );
 }

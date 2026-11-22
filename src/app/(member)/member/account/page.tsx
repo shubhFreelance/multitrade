@@ -21,9 +21,10 @@ export default async function AccountPage() {
   ];
 
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-col gap-5">
+    <div className="flex flex-col gap-5 lg:gap-6">
       <PageHeader tone="pink" icon={UserRound} title={t("title")} />
 
+      <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_420px] lg:gap-6">
       <section aria-labelledby="joined" className="flex flex-col gap-3">
         <h2 id="joined" className="text-lg font-semibold">
           {t("howJoined")}
@@ -77,6 +78,7 @@ export default async function AccountPage() {
         </dl>
         <p className="mt-2 text-[15px] text-muted-foreground">{t("changeDetails")}</p>
       </section>
+      </div>
     </div>
   );
 }

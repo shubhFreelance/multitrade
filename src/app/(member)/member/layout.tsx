@@ -23,7 +23,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
             { href: "/member/account", text: t("account"), short: t("short.account"), icon: "me" },
           ]}
         />
-        <main className="min-w-0 flex-1 p-4 pb-28 md:px-6 md:pt-0 md:pb-8">{children}</main>
+        <main className="mx-auto w-full max-w-[1600px] min-w-0 flex-1 p-4 pb-28 md:px-8 md:pt-0 md:pb-10">{children}</main>
       </div>
     </>
   );

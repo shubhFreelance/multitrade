@@ -7,7 +7,7 @@ import type { SessionUser } from "@/shared/auth";
 export async function AppHeader({ user }: { user: SessionUser }) {
   const t = await getTranslations("app");
   return (
-    <header className="flex items-center justify-between gap-3 px-4 pt-4 pb-2 md:px-6">
+    <header className="flex items-center justify-between gap-3 px-4 pt-4 pb-2 md:px-8 md:pt-6 md:pb-4">
       <div className="flex min-w-0 items-center gap-3">
         <span aria-hidden className="grid size-11 shrink-0 place-items-center rounded-2xl bg-primary text-lg font-bold text-primary-foreground">
           S

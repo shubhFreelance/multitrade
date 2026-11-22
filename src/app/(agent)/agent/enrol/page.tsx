@@ -17,16 +17,17 @@ export default async function EnrolPage() {
   const hi = (await getLocale()) === "hi";
 
   return (
-    <div className="mx-auto flex w-full max-w-md flex-col gap-4">
-      <Link href="/agent" className="-my-2 inline-flex min-h-11 items-center self-start text-[15px] hover:underline">
+    <div className="grid items-start gap-4 lg:grid-cols-2 lg:gap-6">
+      <Link href="/agent" className="-my-2 inline-flex min-h-11 items-center self-start text-[15px] hover:underline md:hidden lg:col-span-2">
         ← {tc("back")}
       </Link>
-      <PageHeader tone="peach" icon={UserPlus} title={t("enrol.title")} />
+      <PageHeader tone="peach" icon={UserPlus} title={t("enrol.title")} intro={t("enrol.intro")} />
       {!approved ? (
         <p className="rounded-[28px] bg-card p-5">{t("awaitingApproval")}</p>
       ) : batches.length === 0 ? (
         <p className="rounded-[28px] bg-card p-5">{t("enrol.noBatches")}</p>
       ) : (
+        <div className="rounded-[28px] bg-card p-5 lg:p-6">
         <EnrolForm
           batches={batches.map((b) => ({
             id: b.id,
@@ -40,6 +41,7 @@ export default async function EnrolPage() {
             }),
           }))}
         />
+        </div>
       )}
     </div>
   );

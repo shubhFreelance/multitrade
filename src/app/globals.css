@@ -207,4 +207,9 @@
   .tint-peach { background-color: #fdebe0; --tint-ink: #a8431a; }
   .tint-amber { background-color: #fbf1dc; --tint-ink: #7a5000; }
   .text-tint { color: var(--tint-ink); }
+
+  /* Cards that are links lift slightly under the pointer. */
+  .lift { transition: transform 160ms ease, box-shadow 160ms ease; }
+  .lift:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgb(18 19 22 / 0.08); }
+  @media (prefers-reduced-motion: reduce) { .lift, .lift:hover { transition: none; transform: none; } }
 }

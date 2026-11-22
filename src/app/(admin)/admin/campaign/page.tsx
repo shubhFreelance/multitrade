@@ -20,6 +20,7 @@ export default async function CampaignPage() {
     <div className="flex flex-col gap-6">
       <PageHeader tone="sunrise" icon={Megaphone} title={t("adminTitle")} intro={t("adminIntro")} />
 
+      <div className="grid items-start gap-6 lg:grid-cols-2">
       {c && (
         <section aria-labelledby="standings" className="flex flex-col gap-3">
           <h2 id="standings" className="text-lg font-semibold">
@@ -54,7 +55,7 @@ export default async function CampaignPage() {
         </section>
       )}
 
-      <section aria-labelledby="settings" className="flex flex-col gap-3 rounded-xl bg-card p-4">
+      <section aria-labelledby="settings" className="flex flex-col gap-3 rounded-[28px] bg-card p-5">
         <h2 id="settings" className="text-lg font-semibold">
           {t("settings")}
         </h2>
@@ -79,6 +80,7 @@ export default async function CampaignPage() {
           <p className="text-[15px] text-muted-foreground">{t("settingsHint")}</p>
         </ActionForm>
       </section>
+      </div>
     </div>
   );
 }

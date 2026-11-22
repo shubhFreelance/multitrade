@@ -20,6 +20,7 @@ export default async function SchemesPage() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader tone="violet" icon={BookOpen} title={t("title")} />
+      <div className="grid items-start gap-6 xl:grid-cols-3">
       {schemes.map((s) => {
         const rule = s.commissionRule as Rule;
         return (
@@ -52,6 +53,7 @@ export default async function SchemesPage() {
           </section>
         );
       })}
+      </div>
     </div>
   );
 }

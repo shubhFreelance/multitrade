@@ -42,17 +42,17 @@ export default async function Page() {
 
   return (
     <div className="flex flex-col gap-5">
-      <h1 className="px-1 text-[30px] leading-tight font-semibold tracking-tight">{t("title")}</h1>
+      <h1 className="px-1 text-[30px] leading-tight font-semibold tracking-tight lg:text-[36px]">{t("title")}</h1>
 
       {o.money && (
         <div className="grid gap-3 lg:grid-cols-[1.6fr_1fr]">
-          <Glass tone="violet" href="/admin/network" linkLabel={t("nav.network")} className="flex flex-col gap-4">
+          <Glass tone="violet" href="/admin/network" linkLabel={t("nav.network")} className="flex flex-col gap-4 lg:min-h-80 lg:justify-between lg:p-8">
             <p className="text-[15px] text-white/85">{td("collectedMonth")}</p>
             <p className="-mt-3 flex flex-wrap items-baseline gap-x-3">
-              <span className="text-[44px] leading-none font-semibold tracking-tight tabular-nums">{formatPaise(o.money.collectedMonth)}</span>
+              <span className="text-[44px] leading-none font-semibold tracking-tight tabular-nums lg:text-[64px]">{formatPaise(o.money.collectedMonth)}</span>
               <span className="text-white/85">{td("acrossPayments", { count: o.money.rhythm.count })}</span>
             </p>
-            <DotRhythm values={o.money.rhythm.counts} rows={7} highlight={o.money.rhythm.today - 1} labels={["1", "15", String(o.money.rhythm.counts.length)]} />
+            <DotRhythm values={o.money.rhythm.counts} rows={8} highlight={o.money.rhythm.today - 1} labels={["1", "15", String(o.money.rhythm.counts.length)]} />
           </Glass>
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-1">
             <Glass tone="blue" className="flex min-h-36 flex-col justify-end p-4">
@@ -67,6 +67,7 @@ export default async function Page() {
         </div>
       )}
 
+      <div className="grid items-start gap-5 lg:grid-cols-2 lg:gap-6">
       <section aria-labelledby="todo" className="rounded-[28px] bg-card p-2">
         <h2 id="todo" className="px-3 pt-3 pb-1 text-lg font-semibold">
           {td("todo")}
@@ -97,6 +98,7 @@ export default async function Page() {
         </ul>
       </section>
 
+      <div className="flex flex-col gap-5">
       <section aria-labelledby="members" className="flex flex-col gap-2">
         <h2 id="members" className="px-1 text-lg font-semibold">
           {td("members")}
@@ -124,7 +126,10 @@ export default async function Page() {
           />
         </section>
       )}
+      </div>
+      </div>
 
+      <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:gap-6">
       {user.role === "SUPER_ADMIN" && (
         <section aria-labelledby="exports" className="flex flex-col gap-3 rounded-[28px] bg-card p-5">
           <div>
@@ -165,6 +170,7 @@ export default async function Page() {
           <ActionForm action={runDailyAction} submitLabel={t("daily.run")} />
         </section>
       )}
+      </div>
     </div>
   );
 }

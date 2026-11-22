@@ -13,7 +13,7 @@ export default async function AdminMemberPage({ params }: PageProps<"/admin/netw
     toAppError(err).code === "NOT_FOUND" ? notFound() : Promise.reject(err),
   );
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-col gap-5">
+    <div className="flex flex-col gap-5 lg:gap-6">
       <Link href={e.agentId ? `/admin/network/${e.agentId}` : "/admin/network"} className="-my-2 inline-flex min-h-11 items-center self-start text-[15px] hover:underline">
         ← {tc("back")}
       </Link>
