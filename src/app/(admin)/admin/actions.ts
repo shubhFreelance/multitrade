@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { rupeesToPaise } from "@/lib/money";
+import { updateAgent } from "@/server/agents";
 import { createBatch, createProduct, updateBatch, updateProduct, updateScheme } from "@/server/catalog";
 import { AppError, toAppError } from "@/server/errors";
 import { getCurrentUser } from "@/server/session";
@@ -64,3 +65,8 @@ export const createProductAction = async (_: FormState, fd: FormData) =>
 
 export const updateProductAction = async (id: string, _: FormState, fd: FormData) =>
   run((u) => updateProduct(u, id, { ...productFields(fd), active: fd.get("active") === "on" }));
+
+export const approveAgentAction = async (id: string) => run((u) => updateAgent(u, id, { approved: true }));
+
+export const setAgentStatusAction = async (id: string, status: "ACTIVE" | "SUSPENDED") =>
+  run((u) => updateAgent(u, id, { status }));

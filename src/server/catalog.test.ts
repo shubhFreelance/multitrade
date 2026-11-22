@@ -1,16 +1,11 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { db } from "@/lib/db";
-import type { Role, SessionUser } from "@/shared/auth";
-import { failsWith, resetDb } from "../../test/db";
+import type { SessionUser } from "@/shared/auth";
+import { failsWith, makeUser, resetDb } from "../../test/db";
 import { createBatch, createProduct, listSchemes, updateBatch, updateProduct, updateScheme } from "./catalog";
 
 let admin: SessionUser;
 let schemeId: string;
-
-const makeUser = async (role: Role, phone: string): Promise<SessionUser> => {
-  const u = await db.user.create({ data: { phone, name: role, role } });
-  return { id: u.id, phone, name: u.name, role, language: "hi" };
-};
 
 beforeEach(async () => {
   await resetDb();

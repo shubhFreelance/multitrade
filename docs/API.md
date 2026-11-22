@@ -23,6 +23,8 @@ REST endpoints under `/api/v1`, shared by the web app and the future mobile app.
 | POST | `/api/v1/admin/products` | admin | `{ name, nameHi?, price, schemes: SchemeCode[], stock, active? }` | `Product` (201) |
 | GET | `/api/v1/admin/products/:id` | admin | (none) | `Product` |
 | PATCH | `/api/v1/admin/products/:id` | admin | any product field | `Product` |
+| GET | `/api/v1/admin/agents` | admin | (none) | `{ id, phone, name, status, createdAt, agentProfile: { panchayat, approved } }[]`, waiting-for-approval first |
+| PATCH | `/api/v1/admin/agents/:id` | admin | `{ approved?, status?: "ACTIVE" \| "SUSPENDED" }` | `{ updated: true }`. Suspending logs the agent out everywhere. Non-agent ids are `NOT_FOUND`. |
 
 "admin" means role `ADMIN` or `SUPER_ADMIN`. Money fields (`installmentAmount`, `price`) are integer paise. Every admin change is written to the audit log.
 

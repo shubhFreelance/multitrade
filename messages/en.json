@@ -33,7 +33,8 @@
     "title": "My schemes"
   },
   "agent": {
-    "title": "Agent dashboard"
+    "title": "Agent dashboard",
+    "awaitingApproval": "Your account is waiting for approval by the office. You can enrol members once it is approved."
   },
   "admin": {
     "title": "Admin dashboard",
@@ -41,7 +42,8 @@
       "home": "Home",
       "schemes": "Schemes",
       "batches": "Batches",
-      "products": "Products"
+      "products": "Products",
+      "agents": "Agents"
     },
     "schemes": {
       "title": "Schemes",
@@ -85,6 +87,16 @@
       "schemes": "Available in schemes",
       "active": "Active (shown to members and admins)",
       "inStock": "{count} in stock"
+    },
+    "agents": {
+      "title": "Agents",
+      "empty": "No agents yet.",
+      "pending": "Waiting for approval",
+      "approved": "Approved",
+      "suspended": "Suspended",
+      "approve": "Approve",
+      "suspend": "Suspend",
+      "reactivate": "Reactivate"
     }
   },
   "common": {

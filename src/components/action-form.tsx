@@ -14,7 +14,7 @@ export function ActionForm({
 }: {
   action: (prev: FormState, fd: FormData) => Promise<FormState>;
   submitLabel: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }) {
   const t = useTranslations();
   const [state, formAction, pending] = useActionState(action, {});
