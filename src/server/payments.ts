@@ -1,11 +1,14 @@
-// Online installment payments. The provider (test simulator now, Cashfree later) only collects the money;
-// `confirmPayment` is the one place that marks money as received.
+// Installment payments, online and cash. Providers and agents only collect money;
+// `settleSuccess` is the one place that counts money as received.
 import { randomBytes } from "node:crypto";
+import type { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
 import { adminRoles, type SessionUser } from "@/shared/auth";
+import { audit } from "./audit";
 import { requireRole } from "./auth";
 import { AppError } from "./errors";
 
+type Tx = Prisma.TransactionClient;
 export type PaymentProvider = "TEST" | "CASHFREE";
 
 /** Set by PAYMENT_PROVIDER in the environment. Unset means online payment is switched off. */
@@ -17,29 +20,60 @@ export function paymentProvider(): PaymentProvider | null {
 // shortcut: only the test provider exists; wire Cashfree (create order, redirect, webhook calling confirmPayment) when the client sends sandbox keys.
 export const canPayOnline = () => paymentProvider() === "TEST";
 
-/** Member starts paying one installment: creates the order and returns where to send them. */
+const newOrderId = (prefix: string) => `${prefix}-${Date.now().toString(36).toUpperCase()}-${randomBytes(3).toString("hex").toUpperCase()}`;
+
+/**
+ * Checks this installment is the one to pay next: not paid, and the oldest month that is neither paid
+ * nor already covered by cash awaiting verification.
+ */
+async function checkPayable(client: Tx, installmentId: string, enrolmentId: string, status: string) {
+  if (status === "PAID" || status === "WAIVED") throw new AppError("ALREADY_PAID", "This installment is already paid", 409);
+  const pending = await client.payment.findFirst({ where: { installmentId, status: "PENDING" } });
+  if (pending) throw new AppError("CASH_PENDING", "Cash for this month is waiting for the office to verify it", 409);
+  const oldest = await client.installment.findFirst({
+    where: { enrolmentId, status: { in: ["DUE", "OVERDUE"] }, payments: { none: { status: "PENDING" } } },
+    orderBy: { monthNo: "asc" },
+  });
+  if (oldest?.id !== installmentId) throw new AppError("PAY_OLDEST_FIRST", "Pay the oldest unpaid month first", 409);
+}
+
+/**
+ * Counts a received payment: the installment becomes PAID and the enrolment MATURED after its last month.
+ * Money for a month that is already paid is kept as DUPLICATE for the office to refund.
+ * The caller must hold the payment row lock inside `tx`.
+ */
+async function settleSuccess(tx: Tx, paymentId: string, data: Prisma.PaymentUpdateInput) {
+  const p = await tx.payment.findUniqueOrThrow({ where: { id: paymentId } });
+  await tx.$queryRaw`select id from "Installment" where id = ${p.installmentId} for update`;
+  const inst = await tx.installment.findUniqueOrThrow({ where: { id: p.installmentId }, include: { enrolment: true } });
+  const alreadyPaid = inst.status === "PAID" || inst.status === "WAIVED";
+  const settled = await tx.payment.update({
+    where: { id: p.id },
+    data: { ...data, status: alreadyPaid ? "DUPLICATE" : "SUCCESS", paidAt: new Date() },
+  });
+  if (alreadyPaid) return settled;
+
+  await tx.installment.update({ where: { id: inst.id }, data: { status: "PAID" } });
+  const unpaid = await tx.installment.count({ where: { enrolmentId: inst.enrolmentId, status: { in: ["DUE", "OVERDUE"] } } });
+  if (unpaid === 0 && inst.enrolment.status === "ACTIVE") {
+    await tx.enrolment.update({ where: { id: inst.enrolmentId }, data: { status: "MATURED" } });
+  }
+  return settled;
+}
+
+// ---- Online ----
+
+/** Member starts paying one installment online: creates the order and returns where to send them. */
 export async function startPayment(user: SessionUser | null, installmentId: string) {
   const member = requireRole(user, ["MEMBER"]);
   if (!canPayOnline()) throw new AppError("PAYMENTS_DISABLED", "Online payment is not available yet", 503);
 
   const inst = await db.installment.findFirst({ where: { id: installmentId, enrolment: { memberId: member.id } } });
   if (!inst) throw new AppError("NOT_FOUND", "Not found", 404);
-  if (inst.status === "PAID" || inst.status === "WAIVED") throw new AppError("ALREADY_PAID", "This installment is already paid", 409);
-  const oldest = await db.installment.findFirst({
-    where: { enrolmentId: inst.enrolmentId, status: { in: ["DUE", "OVERDUE"] } },
-    orderBy: { monthNo: "asc" },
-  });
-  if (oldest?.id !== inst.id) throw new AppError("PAY_OLDEST_FIRST", "Pay the oldest unpaid month first", 409);
+  await checkPayable(db, inst.id, inst.enrolmentId, inst.status);
 
   const payment = await db.payment.create({
-    data: {
-      installmentId,
-      memberId: member.id,
-      method: "ONLINE",
-      provider: "TEST",
-      amount: inst.amount,
-      orderId: `SM-${Date.now().toString(36).toUpperCase()}-${randomBytes(3).toString("hex").toUpperCase()}`,
-    },
+    data: { installmentId, memberId: member.id, method: "ONLINE", provider: "TEST", amount: inst.amount, orderId: newOrderId("SM") },
   });
   return { paymentId: payment.id, orderId: payment.orderId, checkoutUrl: `/member/pay/${payment.id}` };
 }
@@ -47,7 +81,7 @@ export async function startPayment(user: SessionUser | null, installmentId: stri
 type Outcome = { status: "SUCCESS" | "FAILED"; gatewayPaymentId: string; amount: number };
 
 /**
- * Records the gateway's verdict on an order. Safe to call any number of times (webhook retries):
+ * Records the gateway's verdict on an online order. Safe to call any number of times (webhook retries):
  * only the first call for an order changes anything.
  */
 export async function confirmPayment(orderId: string, outcome: Outcome) {
@@ -55,7 +89,7 @@ export async function confirmPayment(orderId: string, outcome: Outcome) {
     // Lock the order so two deliveries of the same webhook can't both settle it.
     await tx.$queryRaw`select id from "Payment" where "orderId" = ${orderId} for update`;
     const p = await tx.payment.findUnique({ where: { orderId } });
-    if (!p) throw new AppError("NOT_FOUND", "Unknown order", 404);
+    if (!p || p.method !== "ONLINE") throw new AppError("NOT_FOUND", "Unknown order", 404);
     if (p.status !== "CREATED") return p;
 
     if (outcome.status === "FAILED") {
@@ -65,23 +99,7 @@ export async function confirmPayment(orderId: string, outcome: Outcome) {
       console.error(`Payment ${orderId}: gateway says ${outcome.amount} paise, order is ${p.amount}`);
       throw new AppError("AMOUNT_MISMATCH", "Paid amount does not match the order", 400);
     }
-
-    await tx.$queryRaw`select id from "Installment" where id = ${p.installmentId} for update`;
-    const inst = await tx.installment.findUniqueOrThrow({ where: { id: p.installmentId }, include: { enrolment: true } });
-    // Money for an installment that another order already paid: keep the record, flag it for refund.
-    const alreadyPaid = inst.status === "PAID" || inst.status === "WAIVED";
-    const settled = await tx.payment.update({
-      where: { id: p.id },
-      data: { status: alreadyPaid ? "DUPLICATE" : "SUCCESS", gatewayPaymentId: outcome.gatewayPaymentId, paidAt: new Date() },
-    });
-    if (alreadyPaid) return settled;
-
-    await tx.installment.update({ where: { id: inst.id }, data: { status: "PAID" } });
-    const unpaid = await tx.installment.count({ where: { enrolmentId: inst.enrolmentId, status: { in: ["DUE", "OVERDUE"] } } });
-    if (unpaid === 0 && inst.enrolment.status === "ACTIVE") {
-      await tx.enrolment.update({ where: { id: inst.enrolmentId }, data: { status: "MATURED" } });
-    }
-    return settled;
+    return settleSuccess(tx, p.id, { gatewayPaymentId: outcome.gatewayPaymentId });
   });
 }
 
@@ -94,6 +112,76 @@ export async function simulateTestPayment(user: SessionUser | null, paymentId: s
   return confirmPayment(p.orderId, { status, gatewayPaymentId: `TEST-${randomBytes(6).toString("hex").toUpperCase()}`, amount: p.amount });
 }
 
+// ---- Cash ----
+
+/** The enrolling agent records cash taken from the member. It counts only after an admin verifies it. */
+export async function recordCash(user: SessionUser | null, installmentId: string) {
+  const agent = requireRole(user, ["AGENT"]);
+  return db.$transaction(async (tx) => {
+    // Lock the month so two taps can't record the same cash twice.
+    await tx.$queryRaw`select id from "Installment" where id = ${installmentId} for update`;
+    const inst = await tx.installment.findFirst({ where: { id: installmentId, enrolment: { agentId: agent.id } }, include: { enrolment: true } });
+    if (!inst) throw new AppError("NOT_FOUND", "Not found", 404);
+    await checkPayable(tx, inst.id, inst.enrolmentId, inst.status);
+    return tx.payment.create({
+      data: {
+        installmentId,
+        memberId: inst.enrolment.memberId,
+        method: "CASH",
+        provider: "CASH",
+        amount: inst.amount,
+        orderId: newOrderId("CASH"),
+        status: "PENDING",
+        collectedById: agent.id,
+      },
+    });
+  });
+}
+
+/** Cash waiting for verification, oldest first. */
+export async function listPendingCash(user: SessionUser | null) {
+  requireRole(user, adminRoles);
+  return db.payment.findMany({
+    where: { method: "CASH", status: "PENDING" },
+    include: {
+      member: { select: { name: true, phone: true } },
+      collectedBy: { select: { name: true, phone: true } },
+      installment: { include: { enrolment: { select: { tokenNumber: true } } } },
+    },
+    orderBy: { createdAt: "asc" },
+  });
+}
+
+/** Admin confirms the office received the cash: it now counts as paid. */
+export async function verifyCash(user: SessionUser | null, paymentId: string) {
+  const admin = requireRole(user, adminRoles);
+  return db.$transaction(async (tx) => {
+    await tx.$queryRaw`select id from "Payment" where id = ${paymentId} for update`;
+    const p = await tx.payment.findUnique({ where: { id: paymentId } });
+    if (!p || p.method !== "CASH") throw new AppError("NOT_FOUND", "Not found", 404);
+    if (p.status !== "PENDING") throw new AppError("CASH_NOT_PENDING", "This cash entry was already handled", 409);
+    const settled = await settleSuccess(tx, p.id, { verifiedBy: { connect: { id: admin.id } }, verifiedAt: new Date() });
+    await audit(tx, admin.id, "cash.verify", "Payment", p.id, { amount: p.amount, result: settled.status });
+    return settled;
+  });
+}
+
+/** Admin rejects a cash entry (not received, wrong amount): the month is unpaid again. */
+export async function rejectCash(user: SessionUser | null, paymentId: string) {
+  const admin = requireRole(user, adminRoles);
+  return db.$transaction(async (tx) => {
+    await tx.$queryRaw`select id from "Payment" where id = ${paymentId} for update`;
+    const p = await tx.payment.findUnique({ where: { id: paymentId } });
+    if (!p || p.method !== "CASH") throw new AppError("NOT_FOUND", "Not found", 404);
+    if (p.status !== "PENDING") throw new AppError("CASH_NOT_PENDING", "This cash entry was already handled", 409);
+    const rejected = await tx.payment.update({ where: { id: p.id }, data: { status: "FAILED", verifiedById: admin.id, verifiedAt: new Date() } });
+    await audit(tx, admin.id, "cash.reject", "Payment", p.id, { amount: p.amount });
+    return rejected;
+  });
+}
+
+// ---- Reading ----
+
 /** A payment with what a receipt needs. Members see their own; agents those of members they enrolled; admins all. */
 export async function getPayment(user: SessionUser | null, paymentId: string) {
   const u = requireRole(user, ["MEMBER", "AGENT", ...adminRoles]);
@@ -102,6 +190,7 @@ export async function getPayment(user: SessionUser | null, paymentId: string) {
     where: { id: paymentId, ...scope },
     include: {
       member: { select: { name: true, phone: true } },
+      collectedBy: { select: { name: true } },
       installment: { include: { enrolment: { include: { batch: { include: { scheme: true } } } } } },
     },
   });

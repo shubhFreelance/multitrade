@@ -13,6 +13,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
     ["/admin/batches", t("batches")],
     ["/admin/products", t("products")],
     ["/admin/agents", t("agents")],
+    ["/admin/cash", t("cash")],
   ];
   return (
     <>

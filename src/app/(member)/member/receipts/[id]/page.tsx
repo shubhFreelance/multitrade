@@ -25,14 +25,14 @@ export default async function Receipt({ params }: PageProps<"/member/receipts/[i
   );
 
   if (p.status !== "SUCCESS") {
-    const message = { FAILED: t("failed"), CREATED: t("unfinished"), DUPLICATE: t("duplicate") }[p.status];
+    const message = { FAILED: t("failed"), CREATED: t("unfinished"), DUPLICATE: t("duplicate"), PENDING: t("pending") }[p.status];
     return (
       <div className="mx-auto flex w-full max-w-md flex-col gap-5">
         <h1 className="text-[28px] leading-tight font-semibold">{t(`title${p.status}`)}</h1>
-        <p role="status" className={`rounded-2xl bg-card p-4 ring-1 ${p.status === "DUPLICATE" ? "ring-due" : "ring-overdue"}`}>
+        <p role="status" className={`rounded-2xl bg-card p-4 ring-1 ${p.status === "DUPLICATE" || p.status === "PENDING" ? "ring-due" : "ring-overdue"}`}>
           {message}
         </p>
-        {p.status === "FAILED" && (
+        {p.status === "FAILED" && p.method === "ONLINE" && (
           <ActionForm
             action={payAction.bind(null, p.installmentId)}
             submitLabel={t("tryAgain", { amount: formatPaise(p.amount), month })}
@@ -55,9 +55,9 @@ export default async function Receipt({ params }: PageProps<"/member/receipts/[i
     [t("scheme"), scheme],
     [t("installment"), t("installmentOf", { month, n: p.installment.monthNo })],
     [t("paidOn"), paidAtFormat(p.paidAt!, locale)],
-    [t("method"), p.provider === "TEST" ? t("methodTest") : t("methodOnline")],
+    [t("method"), p.method === "CASH" ? t("methodCash", { agent: p.collectedBy?.name ?? "" }) : p.provider === "TEST" ? t("methodTest") : t("methodOnline")],
     [t("orderId"), p.orderId],
-    [t("paymentId"), p.gatewayPaymentId ?? ""],
+    ...(p.gatewayPaymentId ? [[t("paymentId"), p.gatewayPaymentId] as [string, string]] : []),
   ];
 
   return (

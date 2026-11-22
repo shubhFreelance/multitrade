@@ -13,6 +13,7 @@ const stateText: Record<SlotState, string> = {
   PAID: "text-paid",
   OVERDUE: "text-overdue font-semibold",
   DUE_NOW: "text-due-ink font-semibold",
+  PENDING: "text-primary font-medium",
   UPCOMING: "text-muted-foreground",
   WAIVED: "text-muted-foreground",
 };

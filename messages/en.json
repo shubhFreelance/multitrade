@@ -36,7 +36,9 @@
     "PAYMENTS_DISABLED": "Online payment is not available yet. Pay your Panchayat Leader in cash.",
     "ALREADY_PAID": "This month is already paid.",
     "PAY_OLDEST_FIRST": "Pay the oldest unpaid month first.",
-    "AMOUNT_MISMATCH": "The amount paid did not match. The office will check this payment."
+    "AMOUNT_MISMATCH": "The amount paid did not match. The office will check this payment.",
+    "CASH_PENDING": "Cash for this month is already with the office for checking.",
+    "CASH_NOT_PENDING": "This cash entry was already verified or rejected."
   },
   "member": {
     "title": "My schemes",
@@ -74,7 +76,9 @@
       "dueNow": "To collect now: {count}",
       "upToDate": "Up to date: {count}",
       "call": "Call",
-      "callName": "Call {name}"
+      "callName": "Call {name}",
+      "recordCash": "Record cash {amount} for {month}",
+      "confirmCash": "Did you receive {amount} cash from {name} for {month}? The office will verify it."
     }
   },
   "admin": {
@@ -84,7 +88,8 @@
       "schemes": "Schemes",
       "batches": "Batches",
       "products": "Products",
-      "agents": "Agents"
+      "agents": "Agents",
+      "cash": "Cash"
     },
     "schemes": {
       "title": "Schemes",
@@ -139,6 +144,15 @@
       "suspend": "Suspend",
       "reactivate": "Reactivate",
       "confirmSuspend": "Suspend {name}? They will be logged out on every device right away."
+    },
+    "cash": {
+      "title": "Cash to verify",
+      "empty": "No cash is waiting to be verified.",
+      "summary": "{count, plural, one {# entry} other {# entries}}, {amount} in total. Verify each once the money reaches the office.",
+      "line": "{token}, {month}. Collected by {agent} on {when}.",
+      "verify": "Verify",
+      "reject": "Reject",
+      "confirmReject": "Reject {amount} from {name}? The month will show as unpaid again."
     }
   },
   "common": {
@@ -157,7 +171,8 @@
       "DUE_NOW": "Due now",
       "OVERDUE": "Overdue",
       "UPCOMING": "Upcoming",
-      "WAIVED": "Waived"
+      "WAIVED": "Waived",
+      "PENDING": "Cash being checked"
     },
     "token": "Token number",
     "paidOf": "{paid} of {total} installments paid.",
@@ -169,7 +184,8 @@
     "monthByMonth": "Month by month",
     "yourAgent": "Your Panchayat Leader:",
     "pay": "Pay {amount} for {month}",
-    "receipt": "Receipt"
+    "receipt": "Receipt",
+    "pendingCash": "{amount} cash given to your Panchayat Leader, being checked by the office."
   },
   "pay": {
     "testTitle": "Test payment",
@@ -204,6 +220,9 @@
     "unfinished": "This payment was started but not completed.",
     "continue": "Continue payment",
     "titleDUPLICATE": "Already paid",
-    "duplicate": "This month was already paid before this payment arrived. The office will refund this extra payment."
+    "duplicate": "This month was already paid before this payment arrived. The office will refund this extra payment.",
+    "methodCash": "Cash, collected by {agent}",
+    "titlePENDING": "Cash being checked",
+    "pending": "The cash was given to your Panchayat Leader. It counts as paid once the office verifies it."
   }
 }

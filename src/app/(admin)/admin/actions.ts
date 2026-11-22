@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { rupeesToPaise } from "@/lib/money";
 import { updateAgent } from "@/server/agents";
+import { rejectCash, verifyCash } from "@/server/payments";
 import { createBatch, createProduct, updateBatch, updateProduct, updateScheme } from "@/server/catalog";
 import { AppError, toAppError } from "@/server/errors";
 import { getCurrentUser } from "@/server/session";
@@ -70,3 +71,6 @@ export const approveAgentAction = async (id: string) => run((u) => updateAgent(u
 
 export const setAgentStatusAction = async (id: string, status: "ACTIVE" | "SUSPENDED") =>
   run((u) => updateAgent(u, id, { status }));
+
+export const verifyCashAction = async (id: string) => run((u) => verifyCash(u, id));
+export const rejectCashAction = async (id: string) => run((u) => rejectCash(u, id));

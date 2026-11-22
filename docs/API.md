@@ -39,6 +39,11 @@ REST endpoints under `/api/v1`, shared by the web app and the future mobile app.
 | POST | `/api/v1/me/payments/:id/test` | member, test provider only | `{ status: "SUCCESS" \| "FAILED" }` | the settled `Payment` |
 | GET | `/api/v1/payments/:id` | the member who paid, the enrolling agent, admins | (none) | `Payment` with `member`, `installment.enrolment.batch.scheme` (receipt data) |
 
+| POST | `/api/v1/agent/cash` | the enrolling agent | `{ installmentId }` (oldest payable month) | `Payment` with status `PENDING` (201). Counts as paid only after an admin verifies it. |
+| GET | `/api/v1/admin/cash` | admin | (none) | cash waiting for verification, oldest first |
+| POST | `/api/v1/admin/cash/:id/verify` | admin | (none) | the `Payment`, now `SUCCESS` (or `DUPLICATE` if the month was already paid) |
+| POST | `/api/v1/admin/cash/:id/reject` | admin | (none) | the `Payment`, now `FAILED`; the month is unpaid again |
+
 Payments: `PAYMENT_PROVIDER` in the environment picks the provider (`test` now; `cashfree` once wired; unset = off). Every provider settles orders through one function, `confirmPayment`. It is safe to call repeatedly (webhook retries count once), refuses a wrong amount, and marks money for an already-paid month as `DUPLICATE` for refund. Paying the last unpaid month sets the enrolment to `MATURED`.
 
 Enrolment: the code is sent to the member's phone and only works for the batch it was sent for. On success the member is created if new, the next token number is assigned (`UPH-B01-0001`), and one installment per month of the tenure is created, due on the 1st of each month from the batch's start month.
@@ -69,5 +74,7 @@ Batch rules: `status` only moves forward (`OPEN` → `RUNNING` → `CLOSED`). On
 | `ALREADY_PAID` | 409 | Month is already paid or waived |
 | `PAY_OLDEST_FIRST` | 409 | An earlier month is still unpaid |
 | `AMOUNT_MISMATCH` | 400 | Gateway amount differs from the order |
+| `CASH_PENDING` | 409 | Cash for this month is waiting for verification |
+| `CASH_NOT_PENDING` | 409 | Cash entry already verified or rejected |
 | `UNAUTHENTICATED` | 401 | No valid session |
 | `FORBIDDEN` | 403 | Signed in, wrong role |

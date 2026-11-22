@@ -2,7 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { db } from "@/lib/db";
 import type { SessionUser } from "@/shared/auth";
 import { failsWith, makeUser, resetDb } from "../../test/db";
-import { confirmPayment, getPayment, simulateTestPayment, startPayment } from "./payments";
+import { confirmPayment, getPayment, listPendingCash, recordCash, rejectCash, simulateTestPayment, startPayment, verifyCash } from "./payments";
+import { listMyEnrolments } from "./tracker";
 
 let member: SessionUser, other: SessionUser, agent: SessionUser;
 let enrolmentId: string;
@@ -108,6 +109,76 @@ describe("gateway confirmation (webhook)", () => {
     const b = await startPayment(member, months[1].id);
     await failsWith(confirmPayment(b.orderId, { status: "SUCCESS", gatewayPaymentId: "CF-1", amount: 2_000_00 }), "CONFLICT");
     expect(await status(1)).toBe("DUE");
+  });
+});
+
+describe("cash collected by the agent", () => {
+  let admin: SessionUser;
+  beforeEach(async () => {
+    admin = await makeUser("ADMIN", "9000000001");
+  });
+  const view = async () => (await listMyEnrolments(member))[0].summary;
+
+  it("pending cash does not count as paid until an admin verifies it", async () => {
+    const cash = await recordCash(agent, months[0].id);
+    expect(cash).toMatchObject({ status: "PENDING", method: "CASH", amount: 2_000_00, collectedById: agent.id });
+    expect(await status(0)).toBe("DUE");
+    expect(await view()).toMatchObject({ paidCount: 0, paidTotal: 0, pendingCount: 1, pendingTotal: 2_000_00 });
+
+    await verifyCash(admin, cash.id);
+    expect(await status(0)).toBe("PAID");
+    expect(await view()).toMatchObject({ paidCount: 1, paidTotal: 2_000_00, pendingCount: 0 });
+    expect(await db.auditLog.findFirstOrThrow({ where: { entityId: cash.id } })).toMatchObject({ actorId: admin.id, action: "cash.verify" });
+  });
+
+  it("rejected cash leaves the month unpaid, and the member can pay it", async () => {
+    const cash = await recordCash(agent, months[0].id);
+    await rejectCash(admin, cash.id);
+    expect(await status(0)).toBe("DUE");
+    await failsWith(verifyCash(admin, cash.id), "CASH_NOT_PENDING");
+    await pay(0);
+    expect(await status(0)).toBe("PAID");
+  });
+
+  it("the same month can't be recorded twice or paid online while its cash is being checked", async () => {
+    await recordCash(agent, months[0].id);
+    await failsWith(recordCash(agent, months[0].id), "CASH_PENDING");
+    await failsWith(startPayment(member, months[0].id), "CASH_PENDING");
+    // ...but the next month can be paid online meanwhile
+    await pay(1);
+    expect(await status(1)).toBe("PAID");
+  });
+
+  it("two taps at once record the cash once", async () => {
+    const results = await Promise.allSettled([recordCash(agent, months[0].id), recordCash(agent, months[0].id)]);
+    expect(results.filter((r) => r.status === "fulfilled")).toHaveLength(1);
+    expect(await db.payment.count({ where: { status: "PENDING" } })).toBe(1);
+  });
+
+  it("verifying twice at once counts the cash once", async () => {
+    const cash = await recordCash(agent, months[0].id);
+    const results = await Promise.allSettled([verifyCash(admin, cash.id), verifyCash(admin, cash.id)]);
+    expect(results.filter((r) => r.status === "fulfilled")).toHaveLength(1);
+    expect(await db.payment.count({ where: { status: "SUCCESS" } })).toBe(1);
+  });
+
+  it("only the enrolling agent records cash; only admins verify or reject", async () => {
+    const otherAgent = await makeUser("AGENT", "9800000002");
+    await failsWith(recordCash(otherAgent, months[0].id), "NOT_FOUND");
+    await failsWith(recordCash(member, months[0].id), "FORBIDDEN");
+    const cash = await recordCash(agent, months[0].id);
+    await failsWith(verifyCash(agent, cash.id), "FORBIDDEN");
+    await failsWith(rejectCash(member, cash.id), "FORBIDDEN");
+    await failsWith(listPendingCash(agent), "FORBIDDEN");
+    expect(await status(0)).toBe("DUE");
+  });
+
+  it("an online order id can't be used to verify cash, and cash can't go through the gateway path", async () => {
+    const online = await startPayment(member, months[0].id);
+    await failsWith(verifyCash(admin, online.paymentId), "NOT_FOUND");
+    const cash = await recordCash(agent, months[0].id); // an unfinished online order doesn't block cash
+    await failsWith(confirmPayment(cash.orderId, { status: "SUCCESS", gatewayPaymentId: "X", amount: cash.amount }), "NOT_FOUND");
+    expect(await status(0)).toBe("DUE");
   });
 });
 

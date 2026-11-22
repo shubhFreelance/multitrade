@@ -37,6 +37,8 @@ model User {
   enrolments      Enrolment[] @relation("MemberEnrolments")
   agentEnrolments Enrolment[] @relation("AgentEnrolments")
   payments        Payment[]   @relation("MemberPayments")
+  cashCollected   Payment[]   @relation("CollectedPayments")
+  cashVerified    Payment[]   @relation("VerifiedPayments")
 }
 
 model AgentProfile {
@@ -207,7 +209,8 @@ enum PaymentMethod {
 }
 
 enum PaymentStatus {
-  CREATED // order made, member not yet paid
+  CREATED // online order made, member not yet paid
+  PENDING // cash handed to the agent, waiting for the office to verify it
   SUCCESS
   FAILED
   DUPLICATE // money received for an installment that was already paid: admin must refund
@@ -221,13 +224,18 @@ model Payment {
   memberId         String
   member           User          @relation("MemberPayments", fields: [memberId], references: [id])
   method           PaymentMethod
-  provider         String // "TEST" or "CASHFREE"
+  provider         String // "TEST", "CASHFREE" or "CASH"
   amount           Int // paise
   orderId          String        @unique // our order id, sent to the gateway
   gatewayPaymentId String?       @unique // the gateway's payment id; unique so one payment never counts twice
   status           PaymentStatus @default(CREATED)
   createdAt        DateTime      @default(now())
   paidAt           DateTime?
+  collectedById    String? // agent who took the cash
+  collectedBy      User?         @relation("CollectedPayments", fields: [collectedById], references: [id])
+  verifiedById     String? // admin who verified the cash
+  verifiedBy       User?         @relation("VerifiedPayments", fields: [verifiedById], references: [id])
+  verifiedAt       DateTime?
 
   @@index([installmentId])
   @@index([memberId])

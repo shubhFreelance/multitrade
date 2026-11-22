@@ -3,21 +3,30 @@ import { formatDay } from "@/lib/dates";
 import { formatPaise } from "@/lib/money";
 import type { TrackerSummary } from "@/shared/tracker";
 
-/** One plain sentence on what to pay next, coloured by urgency. */
+/** Plain sentences on cash being checked and what to pay next, coloured by urgency. */
 export async function NextDue({ summary }: { summary: TrackerSummary }) {
   const t = await getTranslations("tracker");
   const locale = await getLocale();
-  const { next, dueNowCount, dueNowTotal } = summary;
+  const { next, dueNowCount, dueNowTotal, pendingCount, pendingTotal } = summary;
 
-  if (!next) return <p className="font-medium text-paid">{t("settled")}</p>;
+  const pending = pendingCount > 0 && <p className="font-medium text-primary">{t("pendingCash", { amount: formatPaise(pendingTotal), count: pendingCount })}</p>;
 
-  const day = formatDay(next.dueDate, locale);
-  if (next.state === "OVERDUE") {
+  let line;
+  if (!next) {
+    line = pendingCount === 0 && <p className="font-medium text-paid">{t("settled")}</p>;
+  } else if (next.state === "OVERDUE") {
     const overdue = summary.slots.filter((s) => s.state === "OVERDUE").length;
-    return <p className="font-semibold text-overdue">{t("overdue", { amount: formatPaise(dueNowTotal), count: dueNowCount, overdue })}</p>;
+    line = <p className="font-semibold text-overdue">{t("overdue", { amount: formatPaise(dueNowTotal), count: dueNowCount, overdue })}</p>;
+  } else if (next.state === "DUE_NOW") {
+    line = <p className="font-semibold text-due-ink">{t("dueNow", { amount: formatPaise(dueNowTotal), count: dueNowCount, day: formatDay(next.dueDate, locale) })}</p>;
+  } else {
+    line = <p>{t("upcoming", { amount: formatPaise(next.amount), day: formatDay(next.dueDate, locale) })}</p>;
   }
-  if (next.state === "DUE_NOW") {
-    return <p className="font-semibold text-due-ink">{t("dueNow", { amount: formatPaise(dueNowTotal), count: dueNowCount, day })}</p>;
-  }
-  return <p>{t("upcoming", { amount: formatPaise(next.amount), day })}</p>;
+
+  return (
+    <>
+      {pending}
+      {line}
+    </>
+  );
 }

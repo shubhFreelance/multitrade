@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
+import { ActionForm } from "@/components/action-form";
 import { Ticks } from "@/components/tracker/beads";
 import { NextDue } from "@/components/tracker/next-due";
+import { formatMonthYear } from "@/lib/dates";
+import { formatPaise } from "@/lib/money";
 import { requirePageUser } from "@/server/session";
 import { listAgentEnrolments, type EnrolmentView } from "@/server/tracker";
+import { recordCashAction } from "../actions";
 
 export default async function AgentMembers() {
   const t = await getTranslations("agent.members");
@@ -36,6 +40,14 @@ export default async function AgentMembers() {
           {t("call")}
         </a>
       </div>
+      {e.summary.next && (
+        <ActionForm
+          action={recordCashAction.bind(null, e.summary.next.id!)}
+          submitLabel={t("recordCash", { amount: formatPaise(e.summary.next.amount), month: formatMonthYear(e.summary.next.dueDate, locale) })}
+          confirm={t("confirmCash", { amount: formatPaise(e.summary.next.amount), name: e.member.name, month: formatMonthYear(e.summary.next.dueDate, locale) })}
+          buttonClassName="h-11 w-full bg-card text-base text-primary ring-1 ring-primary hover:bg-mist"
+        />
+      )}
     </li>
   );
 

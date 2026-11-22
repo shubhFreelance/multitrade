@@ -7,10 +7,11 @@ const bead: Record<SlotState, string> = {
   PAID: "bg-paid text-white",
   OVERDUE: "bg-overdue text-white",
   DUE_NOW: "bg-card ring-[3px] ring-inset ring-due",
+  PENDING: "bg-card text-primary ring-2 ring-inset ring-primary [background-image:repeating-linear-gradient(135deg,var(--mist)_0_3px,transparent_3px_6px)]",
   UPCOMING: "bg-mist",
   WAIVED: "bg-card ring-1 ring-inset ring-input [background-image:repeating-linear-gradient(135deg,var(--mist)_0_3px,transparent_3px_6px)]",
 };
-const glyph: Partial<Record<SlotState, string>> = { PAID: "✓", OVERDUE: "!" };
+const glyph: Partial<Record<SlotState, string>> = { PAID: "✓", OVERDUE: "!", PENDING: "₹" };
 
 /** The months of an enrolment as beads on a thread, six to a row. */
 export async function Beads({ slots }: { slots: Slot[] }) {
@@ -49,6 +50,7 @@ export function Ticks({ slots }: { slots: Slot[] }) {
     PAID: "bg-paid",
     OVERDUE: "bg-overdue",
     DUE_NOW: "bg-due",
+    PENDING: "bg-primary/45",
     UPCOMING: "bg-mist",
     WAIVED: "bg-input",
   };
