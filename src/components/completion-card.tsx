@@ -78,7 +78,11 @@ export async function CompletionCard({ c }: { c: Completion }) {
                         {hi ? (p.nameHi ?? p.name) : p.name} <span className="tabular-nums">{formatPaise(p.price)}</span>
                       </span>
                       <span className={p.difference > 0 ? "text-due-ink" : "text-paid"}>
-                        {p.difference > 0 ? t("payDifference", { amount: formatPaise(p.difference) }) : t("covered")}
+                        {p.difference > 0
+                          ? t("payDifference", { amount: formatPaise(p.difference) })
+                          : p.notRefunded > 0
+                            ? t("coveredNotRefunded", { amount: formatPaise(p.notRefunded) })
+                            : t("covered")}
                       </span>
                     </span>
                   </label>

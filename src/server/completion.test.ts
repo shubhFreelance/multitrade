@@ -116,12 +116,17 @@ describe("answering the prompt", () => {
 
   it("Manpasand needs an available Manpasand product, and shows what is left to pay", async () => {
     const id = await finish("MANPASAND"); // 4 months: worth ₹8,000
-    const [tv, gone, gold] = await Promise.all([
+    const [tv, gone, gold, fan] = await Promise.all([
       db.product.create({ data: { name: "TV", price: 9_500_00, schemes: ["MANPASAND"], stock: 3 } }),
       db.product.create({ data: { name: "Fridge", price: 7_000_00, schemes: ["MANPASAND"], stock: 0 } }),
       db.product.create({ data: { name: "Coin", price: 7_000_00, schemes: ["GOLD"], stock: 3 } }),
+      db.product.create({ data: { name: "Fan", price: 6_000_00, schemes: ["MANPASAND"], stock: 1 } }),
     ]);
-    expect((await listMyCompletions(member))[0].products).toEqual([expect.objectContaining({ id: tv.id, difference: 1_500_00 })]);
+    // Cheaper than what was paid: no refund, and the member is told how much (client, #4).
+    expect((await listMyCompletions(member))[0].products).toEqual([
+      expect.objectContaining({ id: fan.id, difference: 0, notRefunded: 2_000_00 }),
+      expect.objectContaining({ id: tv.id, difference: 1_500_00, notRefunded: 0 }),
+    ]);
     await failsWith(confirmFulfilment(member, id, { address: "Ward 3, Kurud" }), "PRODUCT_UNAVAILABLE");
     await failsWith(confirmFulfilment(member, id, { address: "Ward 3, Kurud", productId: gone.id }), "PRODUCT_UNAVAILABLE");
     await failsWith(confirmFulfilment(member, id, { address: "Ward 3, Kurud", productId: gold.id }), "PRODUCT_UNAVAILABLE");

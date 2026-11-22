@@ -69,6 +69,8 @@ async function settleSuccess(tx: Tx, paymentId: string, data: Prisma.PaymentUpda
   await tx.installment.update({ where: { id: inst.id }, data: { status: "PAID" } });
   const { amount, ruleMissing } = commissionFor(inst.enrolment.batch.scheme.commissionRule, p.amount);
   // Members who joined directly have no agent, so nobody earns commission.
+  // Single level for now (client, #6). A second level would add one more line here: a share for the agent who
+  // recruited this agent (a "recruited by" link on AgentProfile), as its own Commission row so invoices pick it up.
   if (inst.enrolment.agentId) await tx.commission.create({ data: { agentId: inst.enrolment.agentId, paymentId: p.id, amount, ruleMissing } });
   let status = inst.enrolment.status;
   // A defaulted member who has caught up on every overdue month is back in the draws.

@@ -588,7 +588,8 @@
     "finalPrice": "कीमत {price}; इसमें आपके भरे हुए {value} जुड़े।",
     "payBeforeDelivery": "सामान मिलने से पहले दफ़्तर में {amount} भरें।",
     "differenceReceived": "बाकी रकम मिल गई है।",
-    "nothingToPay": "और कुछ नहीं भरना।"
+    "nothingToPay": "और कुछ नहीं भरना।",
+    "coveredNotRefunded": "शामिल। आपकी भरी रकम में से {amount} वापस नहीं मिलेंगे।"
   },
   "messages": {
     "title": "संदेश",

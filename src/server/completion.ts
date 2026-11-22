@@ -127,7 +127,7 @@ export async function listMyCompletions(user: SessionUser | null) {
       goldRate: f.enrolment.batch.scheme.code === "GOLD" && goldRate ? { ratePerGram: goldRate.ratePerGram, purity: goldRate.purity } : null,
       products:
         f.status === "PENDING" && f.enrolment.batch.scheme.code === "MANPASAND"
-          ? products.map((p) => ({ id: p.id, name: p.name, nameHi: p.nameHi, price: p.price, difference: Math.max(0, p.price - value) }))
+          ? products.map((p) => ({ id: p.id, name: p.name, nameHi: p.nameHi, price: p.price, difference: Math.max(0, p.price - value), notRefunded: Math.max(0, value - p.price) })) // no refund on a cheaper product (client, #4)
           : [],
     };
   });

@@ -588,7 +588,8 @@
     "finalPrice": "Price {price}; you have paid {value} towards it.",
     "payBeforeDelivery": "Pay {amount} to the office before delivery.",
     "differenceReceived": "Your payment of the difference is received.",
-    "nothingToPay": "Nothing more to pay."
+    "nothingToPay": "Nothing more to pay.",
+    "coveredNotRefunded": "Covered. {amount} of what you paid is not refunded."
   },
   "messages": {
     "title": "Messages",
