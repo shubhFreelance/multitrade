@@ -11,12 +11,14 @@ export function ActionForm({
   action,
   submitLabel,
   confirm,
+  buttonClassName = "h-11 self-start px-6",
   children,
 }: {
   action: (prev: FormState, fd: FormData) => Promise<FormState>;
   submitLabel: string;
   /** If set, asks this question first and only submits on OK. For actions that are hard to undo. */
   confirm?: string;
+  buttonClassName?: string;
   children?: React.ReactNode;
 }) {
   const t = useTranslations();
@@ -34,7 +36,7 @@ export function ActionForm({
         </p>
       )}
       {state.ok && !pending && <p className="text-sm text-muted-foreground">{t("common.saved")}</p>}
-      <Button type="submit" className="h-11 self-start px-6" disabled={pending}>
+      <Button type="submit" className={buttonClassName} disabled={pending}>
         {submitLabel}
       </Button>
     </form>

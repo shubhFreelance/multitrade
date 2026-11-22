@@ -7,7 +7,7 @@ import { requireRole } from "./auth";
 
 const include = {
   batch: { include: { scheme: true } },
-  installments: true,
+  installments: { include: { payments: { where: { status: "SUCCESS" }, select: { id: true }, take: 1 } } },
   member: { select: { name: true, phone: true } },
   agent: { select: { name: true, phone: true } },
 } satisfies Prisma.EnrolmentInclude;
@@ -32,7 +32,14 @@ const toView = (e: Row, today: string): EnrolmentView => ({
   member: e.member,
   agent: e.agent,
   summary: summarize(
-    e.installments.map((i) => ({ monthNo: i.monthNo, dueDate: i.dueDate.toISOString().slice(0, 10), amount: i.amount, status: i.status })),
+    e.installments.map((i) => ({
+      id: i.id,
+      monthNo: i.monthNo,
+      dueDate: i.dueDate.toISOString().slice(0, 10),
+      amount: i.amount,
+      status: i.status,
+      receiptId: i.payments[0]?.id ?? null,
+    })),
     today,
   ),
 });

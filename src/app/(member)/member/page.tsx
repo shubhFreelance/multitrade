@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { EnrolmentCard } from "@/components/tracker/enrolment-card";
+import { canPayOnline } from "@/server/payments";
 import { requirePageUser } from "@/server/session";
 import { listMyEnrolments } from "@/server/tracker";
 
@@ -17,7 +18,7 @@ export default async function MemberHome() {
       {enrolments.length === 0 ? (
         <p className="rounded-2xl bg-card p-4 ring-1 ring-border">{t("empty")}</p>
       ) : (
-        enrolments.map((e) => <EnrolmentCard key={e.id} e={e} />)
+        enrolments.map((e) => <EnrolmentCard key={e.id} e={e} canPay={canPayOnline()} />)
       )}
     </div>
   );

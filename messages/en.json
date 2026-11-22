@@ -32,7 +32,11 @@
     "PHONE_IN_USE": "This number belongs to a staff account and can't be enrolled as a member.",
     "BATCH_NOT_OPEN": "This batch is no longer taking enrolments.",
     "BATCH_FULL": "This batch is full. Choose another batch.",
-    "MEMBER_DETAILS_REQUIRED": "Enter the member name, village and address."
+    "MEMBER_DETAILS_REQUIRED": "Enter the member name, village and address.",
+    "PAYMENTS_DISABLED": "Online payment is not available yet. Pay your Panchayat Leader in cash.",
+    "ALREADY_PAID": "This month is already paid.",
+    "PAY_OLDEST_FIRST": "Pay the oldest unpaid month first.",
+    "AMOUNT_MISMATCH": "The amount paid did not match. The office will check this payment."
   },
   "member": {
     "title": "My schemes",
@@ -163,6 +167,43 @@
     "dueNow": "{count, plural, one {{amount} due now, since {day}.} other {{amount} due now for # months, since {day}.}}",
     "upcoming": "Next installment: {amount} on {day}.",
     "monthByMonth": "Month by month",
-    "yourAgent": "Your Panchayat Leader:"
+    "yourAgent": "Your Panchayat Leader:",
+    "pay": "Pay {amount} for {month}",
+    "receipt": "Receipt"
+  },
+  "pay": {
+    "testTitle": "Test payment",
+    "testBody": "No real money moves. This screen stands in for Cashfree while the app is being tested.",
+    "paying": "You are paying",
+    "forMonth": "for {month}, {scheme}",
+    "token": "Token number",
+    "simulateSuccess": "Pay {amount} (test)",
+    "simulateFailure": "Make this payment fail (test)",
+    "cancel": "Cancel and go back"
+  },
+  "receipt": {
+    "title": "Payment receipt",
+    "paid": "Paid",
+    "member": "Member",
+    "token": "Token number",
+    "scheme": "Scheme",
+    "installment": "Installment",
+    "installmentOf": "Month {n}: {month}",
+    "paidOn": "Paid on",
+    "method": "Paid by",
+    "methodOnline": "Online",
+    "methodTest": "Test payment",
+    "orderId": "Order number",
+    "paymentId": "Payment reference",
+    "testNote": "Test receipt. Not valid as proof of payment.",
+    "back": "Back to my schemes",
+    "titleFAILED": "Payment failed",
+    "failed": "No money was taken. You can try again.",
+    "tryAgain": "Try again: pay {amount} for {month}",
+    "titleCREATED": "Payment not finished",
+    "unfinished": "This payment was started but not completed.",
+    "continue": "Continue payment",
+    "titleDUPLICATE": "Already paid",
+    "duplicate": "This month was already paid before this payment arrived. The office will refund this extra payment."
   }
 }

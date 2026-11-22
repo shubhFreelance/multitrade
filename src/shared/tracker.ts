@@ -2,7 +2,8 @@
 
 export type InstallmentStatus = "DUE" | "PAID" | "OVERDUE" | "WAIVED";
 export type SlotState = "PAID" | "WAIVED" | "OVERDUE" | "DUE_NOW" | "UPCOMING";
-export type InstallmentRow = { monthNo: number; dueDate: string; amount: number; status: InstallmentStatus }; // dueDate "YYYY-MM-DD"
+// dueDate "YYYY-MM-DD"; receiptId is the successful payment of a PAID month
+export type InstallmentRow = { monthNo: number; dueDate: string; amount: number; status: InstallmentStatus; receiptId?: string | null; id?: string };
 export type Slot = InstallmentRow & { state: SlotState };
 
 export type TrackerSummary = {

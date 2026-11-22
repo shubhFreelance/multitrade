@@ -35,6 +35,12 @@ REST endpoints under `/api/v1`, shared by the web app and the future mobile app.
 
 `EnrolmentView`: `{ id, tokenNumber, status, scheme: { code, nameEn, nameHi }, member: { name, phone }, agent: { name, phone }, summary }`. `summary` is computed with `summarize()` from `src/shared/tracker.ts` using today's date in India: `{ slots: [{ monthNo, dueDate, amount, status, state }], total, paidCount, paidTotal, next, dueNowCount, dueNowTotal }`, where `state` is `PAID`, `WAIVED`, `OVERDUE`, `DUE_NOW` (due date reached, not paid) or `UPCOMING`.
 
+| POST | `/api/v1/me/payments` | member | `{ installmentId }` (must be the oldest unpaid month) | `{ paymentId, orderId, checkoutUrl }` (201). Send the member to `checkoutUrl`. |
+| POST | `/api/v1/me/payments/:id/test` | member, test provider only | `{ status: "SUCCESS" \| "FAILED" }` | the settled `Payment` |
+| GET | `/api/v1/payments/:id` | the member who paid, the enrolling agent, admins | (none) | `Payment` with `member`, `installment.enrolment.batch.scheme` (receipt data) |
+
+Payments: `PAYMENT_PROVIDER` in the environment picks the provider (`test` now; `cashfree` once wired; unset = off). Every provider settles orders through one function, `confirmPayment`. It is safe to call repeatedly (webhook retries count once), refuses a wrong amount, and marks money for an already-paid month as `DUPLICATE` for refund. Paying the last unpaid month sets the enrolment to `MATURED`.
+
 Enrolment: the code is sent to the member's phone and only works for the batch it was sent for. On success the member is created if new, the next token number is assigned (`UPH-B01-0001`), and one installment per month of the tenure is created, due on the 1st of each month from the batch's start month.
 
 "admin" means role `ADMIN` or `SUPER_ADMIN`. Money fields (`installmentAmount`, `price`) are integer paise. Every admin change is written to the audit log.
@@ -59,5 +65,9 @@ Batch rules: `status` only moves forward (`OPEN` → `RUNNING` → `CLOSED`). On
 | `BATCH_NOT_OPEN` | 409 | Batch isn't taking enrolments |
 | `BATCH_FULL` | 409 | Batch has no free seat |
 | `MEMBER_DETAILS_REQUIRED` | 400 | New member without name, village or address |
+| `PAYMENTS_DISABLED` | 503 | Online payment is switched off |
+| `ALREADY_PAID` | 409 | Month is already paid or waived |
+| `PAY_OLDEST_FIRST` | 409 | An earlier month is still unpaid |
+| `AMOUNT_MISMATCH` | 400 | Gateway amount differs from the order |
 | `UNAUTHENTICATED` | 401 | No valid session |
 | `FORBIDDEN` | 403 | Signed in, wrong role |

@@ -36,6 +36,23 @@ Demo users are never created when `NODE_ENV=production`. Settings and schemes ar
 
 Login is phone + 6-digit code. In dev no SMS is sent: the code is printed in the `npm run dev` terminal (`[sms] to 99999…: Saksham Multitrade login code: 123456`). Only numbers that already exist in the `User` table can log in. Seed users arrive in Feature 2.
 
+## Testing payments (QA)
+
+Online payment uses a built-in **test checkout** while `PAYMENT_PROVIDER="test"` is set in `.env` (it is in `.env.example`). No real money moves; every test screen and receipt says so. Cashfree replaces the checkout later. The rest of the payment logic (marking months paid, duplicate protection, maturity, receipts) is the real code.
+
+A full pass, start to finish:
+
+1. Log in as agent **9800000001** and tap **Enrol a member**. Use a new number (any 10 digits starting 6–9), pick a batch, and send the code. The code is in the `npm run dev` terminal. Fill in the details and enrol.
+2. Log out and log in as that new member. **My schemes** shows the 12 months and a **Pay** button for the oldest unpaid month.
+3. Tap **Pay**. On the test checkout, try **Make this payment fail (test)** first: the month stays unpaid and you can **Try again**. Then pay successfully: you get a receipt, and the month turns green with a **Receipt** link under **Month by month**.
+4. Log back in as the agent. **My members** shows the member's progress.
+
+Things worth checking: paying a later month before an earlier one is refused; a paid month can't be paid again; paying all 12 marks the scheme Matured; Hindi and English both read correctly.
+
+Set `PAYMENT_PROVIDER` to nothing to switch online payment off (the Pay button disappears). The test checkout never runs unless it is set to `test`, so keep it unset in production.
+
+## Schema changes
+
 After editing `prisma/schema.prisma`, run `npm run db:migrate` and then `npx prisma generate`. Prisma 7 doesn't regenerate the client on migrate.
 
 ## Checks

@@ -36,6 +36,7 @@ model User {
 
   enrolments      Enrolment[] @relation("MemberEnrolments")
   agentEnrolments Enrolment[] @relation("AgentEnrolments")
+  payments        Payment[]   @relation("MemberPayments")
 }
 
 model AgentProfile {
@@ -195,6 +196,39 @@ model Installment {
   dueDate     DateTime          @db.Date
   amount      Int // paise, copied from the scheme at enrolment
   status      InstallmentStatus @default(DUE)
+  payments    Payment[]
 
   @@unique([enrolmentId, monthNo])
+}
+
+enum PaymentMethod {
+  ONLINE
+  CASH
+}
+
+enum PaymentStatus {
+  CREATED // order made, member not yet paid
+  SUCCESS
+  FAILED
+  DUPLICATE // money received for an installment that was already paid: admin must refund
+}
+
+// One attempt to pay one installment. Online orders are confirmed by the gateway (or the test provider).
+model Payment {
+  id               String        @id @default(cuid())
+  installmentId    String
+  installment      Installment   @relation(fields: [installmentId], references: [id])
+  memberId         String
+  member           User          @relation("MemberPayments", fields: [memberId], references: [id])
+  method           PaymentMethod
+  provider         String // "TEST" or "CASHFREE"
+  amount           Int // paise
+  orderId          String        @unique // our order id, sent to the gateway
+  gatewayPaymentId String?       @unique // the gateway's payment id; unique so one payment never counts twice
+  status           PaymentStatus @default(CREATED)
+  createdAt        DateTime      @default(now())
+  paidAt           DateTime?
+
+  @@index([installmentId])
+  @@index([memberId])
 }

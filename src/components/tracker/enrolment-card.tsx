@@ -1,4 +1,7 @@
+import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
+import { payAction } from "@/app/(member)/member/actions";
+import { ActionForm } from "@/components/action-form";
 import { formatMonthYear } from "@/lib/dates";
 import { formatPaise } from "@/lib/money";
 import type { EnrolmentView } from "@/server/tracker";
@@ -15,7 +18,7 @@ const stateText: Record<SlotState, string> = {
 };
 
 /** A member's passbook page for one enrolment. */
-export async function EnrolmentCard({ e }: { e: EnrolmentView }) {
+export async function EnrolmentCard({ e, canPay }: { e: EnrolmentView; canPay: boolean }) {
   const locale = await getLocale();
   const t = await getTranslations("tracker");
   const s = e.summary;
@@ -40,6 +43,14 @@ export async function EnrolmentCard({ e }: { e: EnrolmentView }) {
           <NextDue summary={s} />
         </div>
 
+        {canPay && s.next && (
+          <ActionForm
+            action={payAction.bind(null, s.next.id!)}
+            submitLabel={t("pay", { amount: formatPaise(s.next.amount), month: formatMonthYear(s.next.dueDate, locale) })}
+            buttonClassName="h-14 w-full text-lg font-semibold"
+          />
+        )}
+
         <details className="group border-t border-border pt-2">
           <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between font-medium [&::-webkit-details-marker]:hidden">
             {t("monthByMonth")}
@@ -53,7 +64,13 @@ export async function EnrolmentCard({ e }: { e: EnrolmentView }) {
                 <span>{formatMonthYear(m.dueDate, locale)}</span>
                 <span className="flex items-baseline gap-3">
                   <span className="tabular-nums">{formatPaise(m.amount)}</span>
-                  <span className={`w-24 text-right ${stateText[m.state]}`}>{t(`state.${m.state}`)}</span>
+                  {m.receiptId ? (
+                    <Link href={`/member/receipts/${m.receiptId}`} className={`w-24 text-right underline underline-offset-4 ${stateText[m.state]}`}>
+                      {t("receipt")}
+                    </Link>
+                  ) : (
+                    <span className={`w-24 text-right ${stateText[m.state]}`}>{t(`state.${m.state}`)}</span>
+                  )}
                 </span>
               </li>
             ))}
