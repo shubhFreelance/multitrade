@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { confirmEnrolmentAction, sendEnrolmentCodeAction } from "@/app/(agent)/agent/actions";
+import { confirmJoinAction, sendJoinCodeAction } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,7 +20,9 @@ function TextField(props: { id: string; label: string; value: string; onChange: 
   );
 }
 
-export function EnrolForm({ batches }: { batches: BatchOption[] }) {
+/** Two steps: phone and batch, then the code (and details for a new member). "agent": an agent enrols someone; "join": a person joins directly. */
+export function EnrolForm({ batches, mode = "agent" }: { batches: BatchOption[]; mode?: "agent" | "join" }) {
+  const ns = mode === "agent" ? "agent.enrol" : "join";
   const t = useTranslations();
   const [step, setStep] = useState<"start" | "confirm" | "done">("start");
   const [f, setF] = useState({ phone: "", batchId: batches[0]?.id ?? "", name: "", village: "", address: "", nominee: "", code: "" });
@@ -32,7 +35,7 @@ export function EnrolForm({ batches }: { batches: BatchOption[] }) {
 
   const sendCode = () =>
     startTransition(async () => {
-      const res = await sendEnrolmentCodeAction(f.phone, f.batchId);
+      const res = await (mode === "agent" ? sendEnrolmentCodeAction : sendJoinCodeAction)(f.phone, f.batchId);
       if ("error" in res) return setError(res.error);
       setError(undefined);
       setExisting(res.existingMember);
@@ -42,17 +45,18 @@ export function EnrolForm({ batches }: { batches: BatchOption[] }) {
   const confirm = () =>
     startTransition(async () => {
       const details = existing ? {} : { name: f.name, village: f.village, address: f.address, nominee: f.nominee || undefined };
-      const res = await confirmEnrolmentAction({ phone: f.phone, batchId: f.batchId, code: f.code, ...details });
-      if ("error" in res) return setError(res.error);
+      const input = { phone: f.phone, batchId: f.batchId, code: f.code, ...details };
+      const res = mode === "agent" ? await confirmEnrolmentAction(input) : await confirmJoinAction(input); // join redirects on success
+      if ("error" in res && res.error) return setError(res.error);
       setError(undefined);
-      setToken(res.tokenNumber);
+      if ("tokenNumber" in res) setToken(res.tokenNumber);
       setStep("done");
     });
 
   if (step === "done") {
     return (
       <div className="flex flex-col gap-4 rounded-xl border p-4" role="status">
-        <p>{t("agent.enrol.done")}</p>
+        <p>{t(`${ns}.done`)}</p>
         <p className="text-2xl font-semibold tracking-wide">{token}</p>
         <Button
           className="h-12 self-start px-6"
@@ -61,7 +65,7 @@ export function EnrolForm({ batches }: { batches: BatchOption[] }) {
             setStep("start");
           }}
         >
-          {t("agent.enrol.another")}
+          {t(`${ns}.another`)}
         </Button>
       </div>
     );
@@ -78,9 +82,9 @@ export function EnrolForm({ batches }: { batches: BatchOption[] }) {
     >
       {step === "start" ? (
         <>
-          <TextField id="phone" label={t("agent.enrol.phone")} value={f.phone} onChange={digits("phone")} inputMode="numeric" maxLength={10} required autoFocus />
+          <TextField id="phone" label={t(`${ns}.phone`)} value={f.phone} onChange={digits("phone")} inputMode="numeric" maxLength={10} required autoFocus />
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="batch">{t("agent.enrol.batch")}</Label>
+            <Label htmlFor="batch">{t(`${ns}.batch`)}</Label>
             <select id="batch" className="h-12 rounded-lg border border-input bg-transparent px-2.5" value={f.batchId} onChange={(e) => set("batchId")(e.target.value)}>
               {batches.map((b) => (
                 <option key={b.id} value={b.id}>
@@ -93,19 +97,19 @@ export function EnrolForm({ batches }: { batches: BatchOption[] }) {
       ) : (
         <>
           <p className="text-sm text-muted-foreground">
-            {t(existing ? "agent.enrol.existingMember" : "agent.enrol.newMember", { phone: f.phone })}
+            {t(`${ns}.${existing ? "existingMember" : "newMember"}`, { phone: f.phone })}
           </p>
           {!existing && (
             <>
-              <TextField id="name" label={t("agent.enrol.name")} value={f.name} onChange={set("name")} required />
-              <TextField id="village" label={t("agent.enrol.village")} value={f.village} onChange={set("village")} required />
-              <TextField id="address" label={t("agent.enrol.address")} value={f.address} onChange={set("address")} required />
-              <TextField id="nominee" label={t("agent.enrol.nominee")} value={f.nominee} onChange={set("nominee")} />
+              <TextField id="name" label={t(`${ns}.name`)} value={f.name} onChange={set("name")} required />
+              <TextField id="village" label={t(`${ns}.village`)} value={f.village} onChange={set("village")} required />
+              <TextField id="address" label={t(`${ns}.address`)} value={f.address} onChange={set("address")} required />
+              <TextField id="nominee" label={t(`${ns}.nominee`)} value={f.nominee} onChange={set("nominee")} />
             </>
           )}
           <TextField
             id="code"
-            label={t("agent.enrol.code")}
+            label={t(`${ns}.code`)}
             value={f.code}
             onChange={digits("code")}
             inputMode="numeric"
@@ -123,11 +127,11 @@ export function EnrolForm({ batches }: { batches: BatchOption[] }) {
       )}
 
       <Button type="submit" className="h-12 text-base" disabled={pending}>
-        {step === "start" ? t("agent.enrol.sendCode") : t("agent.enrol.confirm")}
+        {step === "start" ? t(`${ns}.sendCode`) : t(`${ns}.confirm`)}
       </Button>
       {step === "confirm" && (
         <Button type="button" variant="link" className="self-start" onClick={() => { setStep("start"); setF({ ...f, code: "" }); setError(undefined); }}>
-          {t("agent.enrol.back")}
+          {t(`${ns}.back`)}
         </Button>
       )}
     </form>

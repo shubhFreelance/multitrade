@@ -87,10 +87,16 @@ export async function EnrolmentCard({ e, canPay }: { e: EnrolmentView; canPay: b
         </details>
 
         <p className="border-t border-border pt-3 text-[15px] text-muted-foreground">
-          {t("yourAgent")}{" "}
-          <a href={`tel:+91${e.agent.phone}`} className="font-medium text-foreground underline underline-offset-4">
-            {e.agent.name}
-          </a>
+          {e.agent ? (
+            <>
+              {t("yourAgent")}{" "}
+              <a href={`tel:+91${e.agent.phone}`} className="font-medium text-foreground underline underline-offset-4">
+                {e.agent.name}
+              </a>
+            </>
+          ) : (
+            t("joinedDirectly")
+          )}
         </p>
       </div>
     </article>

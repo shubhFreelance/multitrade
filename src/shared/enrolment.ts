@@ -21,3 +21,6 @@ export const tokenNumber = (code: SchemeCode, batchNumber: number, seq: number) 
 
 // POST /api/v1/agent/enrolments response
 export type EnrolmentResult = { id: string; tokenNumber: string; installments: number };
+
+// POST /api/v1/me/enrolments: a signed-in member joins a batch directly
+export const joinBatchInput = z.object({ batchId: z.string().min(1) });

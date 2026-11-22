@@ -3,9 +3,11 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { logout, requestOtp, verifyOtp } from "@/server/auth";
+import { confirmJoin, sendJoinCode } from "@/server/enrolment";
 import { toAppError } from "@/server/errors";
 import { clearSessionCookie, getRequestToken, setSessionCookie } from "@/server/session";
 import { homeFor, requestOtpInput, verifyOtpInput } from "@/shared/auth";
+import type { EnrolConfirm } from "@/shared/enrolment";
 
 type ActionResult = { error?: string };
 
@@ -42,4 +44,24 @@ export async function logoutAction() {
 
 export async function setLocaleAction(locale: string) {
   (await cookies()).set("locale", locale === "en" ? "en" : "hi", { path: "/", maxAge: 365 * 24 * 60 * 60 });
+}
+
+// ---- Joining directly on the website ----
+
+export async function sendJoinCodeAction(phone: string, batchId: string) {
+  try {
+    return await sendJoinCode({ phone, batchId });
+  } catch (e) {
+    return { error: errorCode(e) };
+  }
+}
+
+/** Creates the enrolment, logs the member in and opens their schemes. */
+export async function confirmJoinAction(input: EnrolConfirm): Promise<ActionResult> {
+  try {
+    await setSessionCookie((await confirmJoin(input, "web")).login);
+  } catch (e) {
+    return { error: errorCode(e) };
+  }
+  redirect("/member");
 }

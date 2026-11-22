@@ -49,7 +49,7 @@ describe("member view", () => {
     const mine = await listMyEnrolments(memberA);
     expect(mine.map((e) => e.tokenNumber)).toEqual(["UPH-B01-0001"]);
     expect(mine[0].summary).toMatchObject({ paidCount: 4, paidTotal: 8_000_00, dueNowCount: 8, dueNowTotal: 16_000_00 });
-    expect(mine[0].agent.phone).toBe(agentA.phone);
+    expect(mine[0].agent?.phone).toBe(agentA.phone);
   });
 
   it("agents and admins can't use the member view", async () => {

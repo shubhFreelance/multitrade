@@ -34,7 +34,7 @@ Demo users are never created when `NODE_ENV=production`. Settings and schemes ar
 
 ### Logging in (dev)
 
-Login is phone + 6-digit code. In dev no SMS is sent: the code is printed in the `npm run dev` terminal (`[sms] to 99999…: Saksham Multitrade login code: 123456`). Only numbers that already exist in the `User` table can log in. Seed users arrive in Feature 2.
+Login is phone + 6-digit code. In dev no SMS is sent: the code is printed in the `npm run dev` terminal (`[sms] to 99999…: Saksham Multitrade login code: 123456`). Only numbers that already exist in the `User` table can log in; new members join at `/join`.
 
 ## Testing payments (QA)
 
@@ -55,6 +55,8 @@ A full pass, start to finish:
 8. **Bonus draw:** a member's dashboard ends with a bonus card. Scooters unlock at 6 confirmed payments in one scheme, the gold chain at 12; cash waiting for the office doesn't count.
 
 9. **Draws:** as an admin, open **Draws** and tap **Run the month 1 draw** on a batch whose first month has started (the seeded batches start in December; create a batch with an earlier start month to test now). Winners see a green "You won" note on their scheme card and the result under **Draw results**.
+
+10. **Joining directly:** log out and open **/join** (or **Join a scheme** under the login form). Enter a new number, pick a batch, use the code from the terminal and fill in your details: you are logged in as the new member, with no Panchayat Leader. **My details** shows how each scheme was joined. A signed-in member can join more schemes under **Join a scheme**.
 
 Things worth checking: paying a later month before an earlier one is refused; a paid month can't be paid again; paying all 12 marks the scheme Matured; Hindi and English both read correctly.
 

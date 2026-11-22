@@ -14,7 +14,9 @@ export default async function Layout({ children }: { children: React.ReactNode }
           label={t("label")}
           links={[
             ["/member", t("schemes")],
+            ["/member/join", t("join")],
             ["/member/draws", t("draws")],
+            ["/member/account", t("account")],
           ]}
         />
         <main className="min-w-0 flex-1 p-4">{children}</main>

@@ -22,7 +22,7 @@ export type EnrolmentView = {
   wonMonth: number | null; // monthly draw this enrolment won
   scheme: { code: string; nameEn: string; nameHi: string };
   member: { name: string; phone: string };
-  agent: { name: string; phone: string };
+  agent: { name: string; phone: string } | null; // null: joined directly
   summary: TrackerSummary;
 };
 
@@ -63,4 +63,29 @@ export async function listAgentEnrolments(user: SessionUser | null): Promise<Enr
   const rows = await db.enrolment.findMany({ where: { agentId: agent.id }, include, orderBy: { tokenNumber: "asc" } });
   const today = todayInIndia();
   return rows.map((r) => toView(r, today)).sort((a, b) => b.summary.dueNowTotal - a.summary.dueNowTotal);
+}
+
+/** The signed-in member's profile and, per enrolment, who enrolled them (null agent: joined directly). */
+export async function getMyAccount(user: SessionUser | null) {
+  const member = requireRole(user, ["MEMBER"]);
+  return db.user.findUniqueOrThrow({
+    where: { id: member.id },
+    select: {
+      name: true,
+      phone: true,
+      createdAt: true,
+      memberProfile: { select: { village: true, address: true, nominee: true } },
+      enrolments: {
+        orderBy: { createdAt: "asc" },
+        select: {
+          id: true,
+          tokenNumber: true,
+          status: true,
+          createdAt: true,
+          batch: { select: { scheme: { select: { nameEn: true, nameHi: true } } } },
+          agent: { select: { name: true, phone: true, agentProfile: { select: { panchayat: true } } } },
+        },
+      },
+    },
+  });
 }

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { LanguageSwitch } from "@/components/language-switch";
@@ -17,6 +18,12 @@ export default async function LoginPage() {
         <LanguageSwitch />
       </div>
       <LoginForm />
+      <p className="text-muted-foreground">
+        {t("join.newHere")}{" "}
+        <Link href="/join" className="font-medium text-foreground underline underline-offset-4">
+          {t("join.title")}
+        </Link>
+      </p>
     </main>
   );
 }

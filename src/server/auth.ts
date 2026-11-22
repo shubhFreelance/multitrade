@@ -20,11 +20,14 @@ export async function requestOtp(phone: string): Promise<void> {
 
 export async function verifyOtp(phone: string, code: string, device?: string): Promise<LoginResult> {
   await consumeCode(phone, "LOGIN", code, "");
-  const user = await findActiveUser(phone);
+  return createSession(await findActiveUser(phone), device);
+}
+
+/** Logs the user in: a new session token (only its hash is stored). */
+export async function createSession(user: { id: string; phone: string; name: string; role: Role; language: string }, device?: string): Promise<LoginResult> {
   const token = randomBytes(32).toString("base64url");
   const expiresAt = new Date(Date.now() + SESSION_TTL_MS);
   await db.session.create({ data: { userId: user.id, tokenHash: sha256(token), expiresAt, device } });
-
   return { token, expiresAt: expiresAt.toISOString(), user: toSessionUser(user) };
 }
 

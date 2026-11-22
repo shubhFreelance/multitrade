@@ -30,6 +30,10 @@ REST endpoints under `/api/v1`, shared by the web app and the future mobile app.
 | POST | `/api/v1/agent/enrolments/code` | approved agent | `{ phone, batchId }` | `{ existingMember }`. Texts the member a code that approves joining that batch. |
 | POST | `/api/v1/agent/enrolments` | approved agent | `{ phone, batchId, code, name?, village?, address?, nominee? }` (name, village, address required for a new phone) | `{ id, tokenNumber, installments }` (201) |
 
+| GET | `/api/v1/batches/open` | anyone | (none) | batches taking enrolments with a free seat: `{ id, label, schemeCode, schemeNameEn, schemeNameHi, installmentAmount, tenureMonths, startMonth, seatsLeft }[]` |
+| POST | `/api/v1/join/code` | anyone | `{ phone, batchId }` | `{ existingMember }`; texts a code to the phone |
+| POST | `/api/v1/join` | anyone | `{ phone, batchId, code, name?, village?, address?, nominee?, device? }` (details needed for a new number) | `{ enrolment: { id, tokenNumber, installments }, token, expiresAt, user }` (201). The member joins directly: no agent, so no commission. Also logs them in. |
+| POST | `/api/v1/me/enrolments` | member | `{ batchId }` | `{ id, tokenNumber, installments }` (201): a signed-in member joins another batch directly |
 | GET | `/api/v1/me/enrolments` | member | (none) | the member's own enrolments, newest first: `EnrolmentView[]` |
 | GET | `/api/v1/me/draws` | member | (none) | monthly draw results for the member's batches, newest first: `{ batch, scheme, monthNo, createdAt, seed, eligibleCount, winners: [{ token, mine }] }[]` |
 | GET | `/api/v1/me/bonus` | member | (none) | `{ prize: "SCOOTER" | "GOLD_CHAIN", count, needed, paid, remaining, unlocked }[]`: scooters unlock at 6 paid months, the gold chain at 12 (setting `bonusUnlock`); worked out from PAID installments (pending cash, waived months and defaulted enrolments don't count) |

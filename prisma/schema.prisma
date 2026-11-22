@@ -174,8 +174,8 @@ model Enrolment {
   id           String          @id @default(cuid())
   memberId     String
   member       User            @relation("MemberEnrolments", fields: [memberId], references: [id])
-  agentId      String
-  agent        User            @relation("AgentEnrolments", fields: [agentId], references: [id])
+  agentId      String? // null: the member joined directly on the website (no commission)
+  agent        User?           @relation("AgentEnrolments", fields: [agentId], references: [id])
   batchId      String
   batch        Batch           @relation(fields: [batchId], references: [id])
   seq          Int // 457 → token ...-0457

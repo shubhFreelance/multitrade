@@ -53,7 +53,15 @@
     "nav": {
       "label": "Sections",
       "schemes": "My schemes",
-      "draws": "Draw results"
+      "draws": "Draw results",
+      "join": "Join a scheme",
+      "account": "My details"
+    },
+    "status": {
+      "ACTIVE": "paying",
+      "MATURED": "all months paid",
+      "DEFAULTED": "defaulted",
+      "WON": "won a draw"
     }
   },
   "agent": {
@@ -254,7 +262,8 @@
     "receipt": "Invoice",
     "pendingCash": "{amount} cash handed over, waiting for the office to check it.",
     "won": "You won the month {month} draw. Your remaining months are waived.",
-    "seeDraw": "See the draw"
+    "seeDraw": "See the draw",
+    "joinedDirectly": "You joined this scheme directly on the website."
   },
   "pay": {
     "testTitle": "Test payment",
@@ -357,5 +366,49 @@
     "memberIntro": "Winners for each month in your batches. A winner stops paying and gets the product early.",
     "none": "No draws yet in your batches. Results appear here after each month's draw.",
     "youWon": "You won this draw."
+  },
+  "join": {
+    "title": "Join a scheme",
+    "intro": "Pay a fixed amount every month and get your product at the end. Each month a draw picks a few members who get it early and stop paying.",
+    "memberIntro": "Join another scheme on your own. It is tracked separately, with its own token number.",
+    "noBatches": "No scheme is taking new members right now. Please check again later.",
+    "phone": "Your mobile number",
+    "batch": "Scheme and batch",
+    "sendCode": "Send me a code",
+    "newMember": "A code was sent to {phone}. Fill in your details and enter the code.",
+    "existingMember": "This number already has an account. A code was sent to {phone}: enter it to join.",
+    "name": "Your name",
+    "village": "Village",
+    "address": "Address",
+    "nominee": "Nominee (optional)",
+    "code": "Code from the SMS",
+    "confirm": "Join",
+    "back": "Change number or batch",
+    "done": "You have joined. Your token number is:",
+    "another": "Join another",
+    "haveAccount": "Already a member?",
+    "login": "Log in",
+    "newHere": "New here?",
+    "terms": "{amount} a month for {months} months, from {start}.",
+    "seats": "{seats, plural, one {# seat left} other {# seats left}}",
+    "joinThis": "Join {scheme}",
+    "confirmJoin": "Join {scheme}? You will pay {amount} a month for {months} months."
+  },
+  "account": {
+    "title": "My details",
+    "howJoined": "How you joined",
+    "throughAgent": "Enrolled by your Panchayat Leader",
+    "agentLine": "{panchayat} panchayat, phone {phone}",
+    "direct": "You joined directly on the website. No Panchayat Leader is linked to this scheme.",
+    "joinedOn": "Joined {day}",
+    "noSchemes": "You haven't joined a scheme yet.",
+    "profile": "Your profile",
+    "name": "Name",
+    "phone": "Mobile",
+    "village": "Village",
+    "address": "Address",
+    "nominee": "Nominee",
+    "none": "None",
+    "changeDetails": "To change these details, ask the office."
   }
 }
