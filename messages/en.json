@@ -304,6 +304,36 @@
       "deliver": "Mark delivered",
       "confirmDeliver": "Has {name} ({token}) received the product?",
       "deliveredOn": "Delivered on {day}."
+    },
+    "dashboard": {
+      "todo": "To do",
+      "pendingCash": "{count, plural, =0 {No cash to verify} one {# cash entry to verify ({amount})} other {# cash entries to verify ({amount})}}",
+      "toAllocate": "{count, plural, =0 {No product to allocate} one {# product to allocate} other {# products to allocate}}",
+      "toDeliver": "{count, plural, =0 {Nothing to deliver} one {# product to deliver} other {# products to deliver}}",
+      "drawsReady": "{count, plural, =0 {No monthly draw ready} one {# monthly draw ready to run} other {# monthly draws ready to run}}",
+      "agentsWaiting": "{count, plural, =0 {No agent waiting for approval} one {# agent waiting for approval} other {# agents waiting for approval}}",
+      "dueNow": "{count, plural, =0 {No installment due now} one {# installment due now ({amount})} other {# installments due now ({amount})}}",
+      "overdue": "{count, plural, =0 {No overdue month} one {# month overdue} other {# months overdue}}",
+      "members": "Members",
+      "people": "Members",
+      "active": "Schemes paying",
+      "finished": "Schemes finished or won",
+      "defaulted": "Schemes defaulted",
+      "money": "Money",
+      "collectedMonth": "Collected this month",
+      "collectedAll": "Collected, all time",
+      "commissionNotInvoiced": "Commission not yet invoiced",
+      "invoicesUnpaid": "{count, plural, one {# agent invoice unpaid} other {# agent invoices unpaid}}",
+      "exports": "Exports (CSV)",
+      "exportsIntro": "For accounts and records. Files hold members' personal details: keep them safe.",
+      "from": "From",
+      "to": "To",
+      "export": {
+        "enrolments": "Download all enrolments",
+        "agents": "Download all agents",
+        "payments": "Download payments",
+        "commission": "Download commission"
+      }
     }
   },
   "common": {

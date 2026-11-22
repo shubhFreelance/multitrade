@@ -304,6 +304,36 @@
       "deliver": "दे दिया, दर्ज करें",
       "confirmDeliver": "क्या {name} ({token}) को सामान मिल गया?",
       "deliveredOn": "{day} को दिया।"
+    },
+    "dashboard": {
+      "todo": "करना है",
+      "pendingCash": "{count, plural, =0 {जाँचने को कोई नकद नहीं} other {जाँचने को # नकद ({amount})}}",
+      "toAllocate": "{count, plural, =0 {तय करने को कोई सामान नहीं} other {तय करने को # सामान}}",
+      "toDeliver": "{count, plural, =0 {देने को कुछ नहीं} other {देने को # सामान}}",
+      "drawsReady": "{count, plural, =0 {कोई मासिक ड्रॉ तैयार नहीं} other {# मासिक ड्रॉ चलाने को तैयार}}",
+      "agentsWaiting": "{count, plural, =0 {मंज़ूरी के लिए कोई एजेंट नहीं} other {# एजेंट मंज़ूरी के इंतज़ार में}}",
+      "dueNow": "{count, plural, =0 {अभी कोई किस्त देय नहीं} other {# किस्तें अभी देय ({amount})}}",
+      "overdue": "{count, plural, =0 {कोई किस्त बकाया नहीं} other {# किस्तें बकाया}}",
+      "members": "सदस्य",
+      "people": "सदस्य",
+      "active": "चालू योजनाएँ",
+      "finished": "पूरी या जीती योजनाएँ",
+      "defaulted": "डिफ़ॉल्ट योजनाएँ",
+      "money": "पैसा",
+      "collectedMonth": "इस महीने वसूली",
+      "collectedAll": "कुल वसूली",
+      "commissionNotInvoiced": "कमीशन, इनवॉइस बाकी",
+      "invoicesUnpaid": "{count} एजेंट इनवॉइस का भुगतान बाकी",
+      "exports": "एक्सपोर्ट (CSV)",
+      "exportsIntro": "हिसाब और रिकॉर्ड के लिए। इन फ़ाइलों में सदस्यों की निजी जानकारी है: इन्हें सुरक्षित रखें।",
+      "from": "से",
+      "to": "तक",
+      "export": {
+        "enrolments": "सभी योजनाएँ डाउनलोड करें",
+        "agents": "सभी एजेंट डाउनलोड करें",
+        "payments": "भुगतान डाउनलोड करें",
+        "commission": "कमीशन डाउनलोड करें"
+      }
     }
   },
   "common": {

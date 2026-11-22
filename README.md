@@ -72,6 +72,8 @@ A full pass, start to finish:
 
 17. **Payouts and statements:** payouts are the monthly agent invoices (step 7): the super admin marks each paid with a UTR, after TDS. Agents download their full statement (commission, bonuses, payouts) as CSV from **My commission**; the super admin can download any agent's from **Agents and members**.
 
+18. **Admin dashboard:** the admin home lists what needs doing (cash to verify, products to allocate or deliver, draws ready, agents waiting, installments due and overdue) with links, and member counts. The super admin also sees money collected and unpaid commission, and can download CSV exports of enrolments, agents, payments and commission.
+
 Things worth checking: paying a later month before an earlier one is refused; a paid month can't be paid again; paying all 12 marks the scheme Matured; Hindi and English both read correctly.
 
 Set `PAYMENT_PROVIDER` to nothing to switch online payment off (the Pay button disappears). The test checkout never runs unless it is set to `test`, so keep it unset in production.
